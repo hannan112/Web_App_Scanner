@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     # Custom apps
     'authentication',
+    'projects',
 
     # OAuth related
     'django.contrib.sites',

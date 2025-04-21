@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Global input styling */
+input,
+textarea,
+select {
+  color: #000000 !important;
+  background-color: #ffffff;
+}
+
+/* Dark mode overrides if needed */
+[data-theme='dark'] input,
+[data-theme='dark'] textarea,
+[data-theme='dark'] select {
+  color: #000000 !important;
+  background-color: #ffffff;
+}
+
+/* Placeholder color */
+::placeholder {
+  color: #666666 !important;
+  opacity: 1;
+}

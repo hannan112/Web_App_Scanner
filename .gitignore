@@ -6,6 +6,12 @@ backend/*/*/*/__pycache__/
 backend/*.pyc
 backend/db.sqlite3
 backend/.env
+backend/logs/
+backend/media/
+backend/*.log
+backend/local_settings.py
+backend/secrets.json
+backend/credentials.json
 
 # Frontend
 frontend/node_modules/
@@ -14,18 +20,78 @@ frontend/.env*
 frontend/.vercel
 frontend/*.log
 frontend/.DS_Store
+frontend/build/
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+frontend/.env.test
+frontend/auth.json
+frontend/credentials.json
 
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-workspace
+*.sublime-project
 
 # Environment
 venv/
 env/
 .env
+.env.*
+*.env
+.python-version
+.virtualenv
+pip-log.txt
 
 # System files
 .DS_Store
 Thumbs.db
+*.bak
+*.tmp
+*.temp
+
+# Security & Keys
+*.pem
+*.key
+*.cert
+*.crt
+*.csr
+*.p12
+*.pfx
+*.ppk
+id_rsa
+id_dsa
+*.gpg
+*.asc
+*.secret
+
+# Database
+*.sqlite3
+*.sqlite
+*.db
+*.sql
+dump.rdb
+*.dump
+
+# Logs & Reports
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+report.*.json
+coverage/
+.coverage
+htmlcov/
+
+# Cache
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.eslintcache
+.npm
+.yarn-cache

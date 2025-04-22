@@ -2,6 +2,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import ProfileDropdown from '@/components/layout/ProfileDropdown';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -23,23 +24,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link 
-                href="/projects/new" 
+              <Link
+                href="/projects/new"
                 className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
               >
                 New Project
               </Link>
-              <Link href="/profile" className="text-gray-600 hover:text-gray-900">
-                Profile
-              </Link>
+              {/* Replace the simple Profile link with the ProfileDropdown component */}
+              <ProfileDropdown />
             </div>
           </div>
         </header>
-        
         <main className="flex-grow">
           {children}
         </main>
-        
         <footer className="bg-white border-t">
           <div className="max-w-7xl mx-auto px-4 py-4 text-sm text-gray-500">
             <p>Security Scanner &copy; {new Date().getFullYear()}</p>

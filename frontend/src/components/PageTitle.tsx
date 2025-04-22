@@ -1,26 +1,18 @@
 import React from 'react';
 
 interface PageTitleProps {
-  children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
+  title: string;
+  subtitle?: string;
 }
 
-const PageTitle: React.FC<PageTitleProps> = ({ 
-  children, 
-  size = 'lg',
-  className = '' 
-}) => {
-  const sizeClasses = {
-    sm: 'text-lg',
-    md: 'text-xl',
-    lg: 'text-2xl'
-  };
-
+const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
   return (
-    <h1 className={`font-semibold text-gray-800 mb-6 ${sizeClasses[size]} ${className}`}>
-      {children}
-    </h1>
+    <div className="mb-6">
+      <h1 className="text-2xl font-semibold text-gray-700 hover:text-gray-800 transition-colors">{title}</h1>
+      {subtitle && (
+        <p className="mt-1 text-sm text-gray-500 hover:text-gray-600 transition-colors">{subtitle}</p>
+      )}
+    </div>
   );
 };
 

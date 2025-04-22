@@ -9,7 +9,9 @@ declare module "next-auth" {
     user: {
       /** User ID from your database */
       id?: string;
-      /** User name from your database or from auth provider */
+      /** User name from your database */
+      name?: string;
+      /** Username from your database */
       username?: string;
       /** Access token for authenticated API requests */
       accessToken?: string;
@@ -17,6 +19,8 @@ declare module "next-auth" {
       refreshToken?: string;
       /** Provider used for authentication (e.g. 'credentials', 'google') */
       provider?: string;
+      /** User email */
+      email?: string;
     } & DefaultSession["user"];
     accessToken?: string;
     refreshToken?: string;

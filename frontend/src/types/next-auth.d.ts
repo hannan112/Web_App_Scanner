@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/types/next-auth.d.ts (create or update this file)
-
+// src/types/next-auth.d.ts 
 import NextAuth, { DefaultSession } from "next-auth"
 import { JWT } from "next-auth/jwt"
 
@@ -15,7 +13,6 @@ declare module "next-auth" {
     error?: string
     user: {
       id?: string
-      provider?: string
     } & DefaultSession["user"]
   }
 
@@ -26,7 +23,6 @@ declare module "next-auth" {
     id: string
     accessToken?: string
     refreshToken?: string
-    username?: string
   }
 }
 
@@ -35,8 +31,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string
     refreshToken?: string
-    provider?: string
-    user?: any
     error?: string
   }
 }

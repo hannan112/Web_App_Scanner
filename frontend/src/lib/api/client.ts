@@ -1,21 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/lib/api/client.ts
 import axios from 'axios';
+import { getSession } from 'next-auth/react';
 
 // Base API URL
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const apiClient = axios.create({
-  baseURL: API_URL, // Use just the base URL here, not combined with /api
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Add request interceptor
+// Add request interceptor with async token retrieval
 apiClient.interceptors.request.use(
-  (config) => {
-    // Get token from localStorage directly each time
+  async (config) => {
+    // Try to get token from nextauth session first (more reliable)
+    try {
+      const session = await getSession();
+      const token = session?.accessToken;
+      
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        return config;
+      }
+    } catch (e) {
+      console.error("Error getting session:", e);
+    }
+    
+    // Fallback to localStorage
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('accessToken');
       
@@ -30,41 +43,48 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Add response interceptor for 401 errors
+// Improve the response interceptor for 401 errors
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle 401 errors (unauthorized)
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
       try {
-        // Get the refresh token
+        // Get refresh token
         const refreshToken = localStorage.getItem('refreshToken');
         
         if (refreshToken) {
-          // Call your token refresh endpoint
-          const response = await axios.post('/api/auth/token/refresh/', { 
-            refresh: refreshToken 
+          // Try to refresh the token
+          const response = await axios.post(`${API_URL}/api/auth/token/refresh/`, {
+            refresh: refreshToken
           });
           
-          const { access } = response.data;
-          
-          // Update stored token
-          localStorage.setItem('accessToken', access);
-          
-          // Update the authorization header
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          
-          // Retry the original request
-          return axios(originalRequest);
+          if (response.data.access) {
+            // Update tokens in localStorage
+            localStorage.setItem('accessToken', response.data.access);
+            
+            // Update the authorization header
+            originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
+            
+            // Retry the original request
+            return axios(originalRequest);
+          }
         }
       } catch (refreshError) {
-        // If refresh fails, redirect to login
+        console.error("Token refresh failed:", refreshError);
+        
+        // Clear tokens and redirect to login
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/login?error=session_expired';
+        
+        // Only redirect if in browser
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login?error=session_expired';
+        }
       }
     }
     

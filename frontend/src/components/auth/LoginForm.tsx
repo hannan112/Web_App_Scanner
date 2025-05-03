@@ -56,10 +56,18 @@ export default function LoginForm() {
     setGoogleLoading(true);
     
     try {
+      console.log("Starting Google login flow");
+      
       // Use callbackUrl to ensure proper redirection after Google auth
       const result = await signIn("google", { 
         callbackUrl: `${window.location.origin}/dashboard`,
         redirect: false
+      });
+      
+      console.log("Google sign-in result:", { 
+        success: !result?.error,
+        error: result?.error,
+        hasUrl: !!result?.url 
       });
       
       if (result?.error) {

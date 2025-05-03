@@ -3,6 +3,7 @@
 import apiClient from './client';
 import { Project, ProjectStats, DashboardData } from "@/types/project";
 import { PROJECT_ENDPOINTS } from './constants';
+import axios from 'axios';
 
 /**
  * Handles API error consistently
@@ -29,10 +30,25 @@ const handleApiError = (error: unknown) => {
  */
 export const getProjectDashboard = async (): Promise<DashboardData> => {
   try {
-    // Use a direct string URL here instead of the constants object
+    // Check if token exists before making the request
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      throw new Error("No access token available");
+    }
+    
+    // Log the request for debugging
+    console.log("Requesting dashboard data with token:", token.substring(0, 10) + '...');
+    
     const response = await apiClient.get('/api/projects/dashboard/');
     return response.data;
   } catch (error) {
+    console.error("Dashboard API error:", error);
+    
+    // Check for 401 errors
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      throw new Error("Authentication failed (401). Please log in again.");
+    }
+    
     throw handleApiError(error);
   }
 };

@@ -18,8 +18,12 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
+            console.log("Missing email or password");
             throw new Error("Missing email or password");
           }
+
+          // Log the auth attempt (remove in production)
+          console.log("Attempting login for:", credentials.email);
 
           const response = await fetch(`${API_URL}/auth/login/`, {
             method: "POST",
@@ -30,11 +34,18 @@ export const authOptions: NextAuthOptions = {
             }),
           });
 
+          // Log the response status
+          console.log("Auth response status:", response.status);
+
+          // Improved error handling
           if (!response.ok) {
-            throw new Error("Invalid credentials");
+            const errorData = await response.json().catch(() => ({}));
+            console.error("Auth error response:", errorData);
+            throw new Error(errorData.detail || "Invalid credentials");
           }
 
           const data = await response.json();
+          console.log("Auth success, token received:", !!data.access);
 
           if (data.access) {
             return {
@@ -48,7 +59,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         } catch (error) {
           console.error("Auth error:", error);
-          return null;
+          throw error;
         }
       },
     }),
@@ -70,8 +81,19 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
+        console.log("JWT callback - initial sign in:", {
+          provider: account.provider,
+          hasUser: !!user,
+        });
+        
         if (account.provider === "google") {
           try {
+            console.log("Google auth - attempting token exchange with backend");
+            console.log("Google tokens:", { 
+              accessTokenAvailable: !!account.access_token,
+              idTokenAvailable: !!account.id_token
+            });
+            
             // Exchange Google token for backend token
             const response = await fetch(`${API_URL}/auth/google/`, {
               method: 'POST',
@@ -82,11 +104,22 @@ export const authOptions: NextAuthOptions = {
               }),
             });
             
+            console.log(`Google token exchange response: ${response.status}`);
+            
             if (!response.ok) {
+              const errorData = await response.text();
+              console.error('Google auth backend error:', errorData);
               throw new Error('Failed to authenticate with backend');
             }
             
             const data = await response.json();
+            console.log("Response data:", data);
+            
+            // Make sure tokens and user info exist
+            if (!data.access || !data.refresh) {
+              console.error("Missing tokens in backend response", data);
+              throw new Error('Invalid response from backend - missing tokens');
+            }
             
             return {
               ...token,
@@ -113,6 +146,11 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       if (token) {
+        console.log("Session callback - token available:", {
+          hasAccessToken: !!token.accessToken,
+          hasUserId: !!token.userId
+        });
+        
         session.user = {
           ...session.user,
           id: (token.userId as string) || (token.sub as string),
@@ -121,6 +159,8 @@ export const authOptions: NextAuthOptions = {
         session.accessToken = token.accessToken as string;
         session.refreshToken = token.refreshToken as string;
         session.error = token.error as string | undefined;
+      } else {
+        console.warn("Session callback - no token available");
       }
       
       return session;
@@ -135,6 +175,9 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  
+  // Add debug option to see detailed logs in development
+  debug: process.env.NODE_ENV === 'development',
 };
 
 const handler = NextAuth(authOptions);

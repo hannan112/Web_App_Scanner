@@ -1,4 +1,6 @@
 import logging
+from django.contrib.auth import get_user_model  # Add this import
+from django.forms import ValidationError
 from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
@@ -181,7 +183,7 @@ class GoogleLoginView(SocialLoginView):
     
     def post(self, request, *args, **kwargs):
         try:
-            # Log received data for debugging (remove in production)
+            # Log received data for debugging
             logger.info(f"Google login request received: {request.data}")
             
             # Ensure required fields are present
@@ -194,6 +196,33 @@ class GoogleLoginView(SocialLoginView):
             
             # Pass to parent implementation
             response = super().post(request, *args, **kwargs)
+            
+            # If the response contains 'key', transform it to access/refresh format
+            if response.status_code == 200 and 'key' in response.data:
+                # Get the user associated with this key
+                from django.contrib.auth import get_user_model
+                User = get_user_model()
+                
+                # This line assumes dj-rest-auth is using token authentication
+                # You might need to adjust this if using a different auth method
+                from rest_framework.authtoken.models import Token
+                token = Token.objects.get(key=response.data['key'])
+                user = token.user
+                
+                # Generate JWT tokens
+                from rest_framework_simplejwt.tokens import RefreshToken
+                refresh = RefreshToken.for_user(user)
+                
+                # Return the expected format
+                return Response({
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh),
+                    'user': {
+                        'id': user.id,
+                        'email': user.email,
+                        'username': user.username
+                    }
+                })
             
             # Log successful login
             if status.is_success(response.status_code):

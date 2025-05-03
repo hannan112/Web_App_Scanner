@@ -21,15 +21,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Link href="/projects" className="text-gray-600 hover:text-gray-900">
                   Projects
                 </Link>
+                <Link href="/scans" className="text-gray-600 hover:text-gray-900">
+                  Scans
+                </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link
-                href="/projects/new"
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-              >
-                New Project
-              </Link>
+              {/* You can add more icons or links here */}
               {/* Replace the simple Profile link with the ProfileDropdown component */}
               <ProfileDropdown />
             </div>

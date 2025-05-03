@@ -1,3 +1,5 @@
+import logging
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +15,9 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 
 
 from .models import CustomUser, EmailVerification, PasswordResetToken
@@ -24,6 +29,7 @@ from .serializers import (
 )
 from .utils import send_verification_email, send_password_reset_email
 
+logger = logging.getLogger(__name__)
 
 class UserRegistrationView(APIView):
     """View for user registration"""
@@ -172,3 +178,80 @@ class GoogleLoginView(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     callback_url = settings.FRONTEND_URL
     client_class = OAuth2Client
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            # Log received data for debugging (remove in production)
+            logger.info(f"Google login request received: {request.data}")
+            
+            # Ensure required fields are present
+            if 'access_token' not in request.data and 'id_token' not in request.data:
+                logger.error("Missing required tokens in request")
+                return Response(
+                    {"error": "Missing required tokens"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Pass to parent implementation
+            response = super().post(request, *args, **kwargs)
+            
+            # Log successful login
+            if status.is_success(response.status_code):
+                logger.info(f"Google login successful for user ID: {response.data.get('user', {}).get('id')}")
+            
+            return response
+            
+        except Exception as e:
+            logger.exception(f"Google login error: {str(e)}")
+            return Response(
+                {"error": "Authentication failed", "detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GoogleAuthCallbackView(APIView):
+    """
+    Callback endpoint for Google OAuth flow
+    """
+    authentication_classes = []  # No authentication for callback
+    permission_classes = []      # No permissions for callback
+    
+    def get(self, request):
+        """Handle OAuth callback from Google"""
+        code = request.GET.get('code')
+        state = request.GET.get('state')
+        error = request.GET.get('error')
+        
+        if error:
+            logger.error(f"Google OAuth error: {error}")
+            return HttpResponse(f"Authentication error: {error}", status=400)
+        
+        if not code:
+            logger.error("No authorization code in callback")
+            return HttpResponse("No authorization code provided", status=400)
+        
+        # Log successful callback
+        logger.info(f"Google OAuth callback received with code: {code[:5]}... and state: {state}")
+        
+        # Redirect to frontend with a success message
+        redirect_url = f"{settings.FRONTEND_URL}/oauth-callback?success=true&provider=google"
+        
+        return HttpResponse(
+            f"<html><body>Authentication successful. <a href='{redirect_url}'>Click here</a> if not redirected automatically."
+            f"<script>window.location.href='{redirect_url}';</script></body></html>"
+        )
+        
+class AuthStatusView(APIView):
+    """
+    Debug endpoint to check authentication status
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({
+            "authenticated": True,
+            "user_id": request.user.id,
+            "email": request.user.email,
+            "username": request.user.username,
+        })

@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import GoogleLoginView
+from .views import AuthStatusView, GoogleAuthCallbackView, GoogleLoginView
 from .views import (
     UserRegistrationView,
     EmailVerificationView,
@@ -17,5 +17,7 @@ urlpatterns = [
     path('password-reset/', PasswordResetRequestView.as_view(), name='password-reset'),
     path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
     path('request-password-reset/', PasswordResetRequestView.as_view(), name='password-reset-request'),
-     path('google/', GoogleLoginView.as_view(), name='google_login'),
+    path('google/', GoogleLoginView.as_view(), name='google_login'),
+    path('status/', AuthStatusView.as_view(), name='auth_status'),
+    path('google/callback/', GoogleAuthCallbackView.as_view(), name='google_callback'),
 ]

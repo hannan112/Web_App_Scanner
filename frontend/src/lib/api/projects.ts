@@ -1,227 +1,92 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/lib/api/projects.ts
+import apiClient from './client';
 import { Project, ProjectStats, DashboardData } from "@/types/project";
+import { PROJECT_ENDPOINTS } from './constants';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-
-interface ApiError extends Error {
-  response?: {
-    data?: {
-      detail?: string;
-      message?: string;
-    };
-    status?: number;
-  };
-}
-
-// Add utility function to safely get access token
-const getAccessToken = (): string | null => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('accessToken');
-  }
-  return null;
-};
-
-// Function to handle API errors
-const handleApiError = async (error: ApiError | any): Promise<never> => {
+/**
+ * Handles API error consistently
+ */
+const handleApiError = (error: unknown) => {
   console.error('API Error:', error);
-  
-  if (error instanceof Response) {
-    try {
-      const errorData = await error.json();
-      throw new Error(errorData.detail || errorData.message || 'Network response was not ok');
-    } catch (e) {
-      throw new Error(`HTTP Error: ${error.status} ${error.statusText}`);
-    }
-  }
-  
-  if (error.response?.data?.detail) {
-    throw new Error(error.response.data.detail);
+
+  if (typeof error === 'object' && error !== null && 'response' in error &&
+      typeof error.response === 'object' && error.response !== null &&
+      'data' in error.response && typeof error.response.data === 'object' &&
+      error.response.data !== null && 'detail' in error.response.data) {
+    return new Error(error.response.data.detail as string);
   }
 
-  if (error.message && typeof error.message === 'string') {
-    throw new Error(error.message);
+  if (typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string') {
+    return new Error(error.message);
   }
-  
-  throw new Error('An unknown error occurred');
+
+  return new Error('An unknown error occurred');
 };
 
-// Get project dashboard data
+/**
+ * Get project dashboard data
+ */
 export const getProjectDashboard = async (): Promise<DashboardData> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/dashboard/`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    const data = await response.json();
-    if (!data) {
-      throw new Error('No data received from server');
-    }
-
-    return data;
+    // Use a direct string URL here instead of the constants object
+    const response = await apiClient.get('/api/projects/dashboard/');
+    return response.data;
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
 
-// Get all projects
+// Similarly update other functions
 export const getProjects = async (): Promise<Project[]> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    return await response.json();
+    const response = await apiClient.get('/api/projects/');
+    return response.data;
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
 
-// Get project by ID
 export const getProjectById = async (id: number | string): Promise<Project> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/${id}/`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    return await response.json();
+    const response = await apiClient.get(`/api/projects/${id}/`);
+    return response.data;
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
 
-// Get project statistics
 export const getProjectStats = async (id: number | string): Promise<ProjectStats> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/${id}/stats/`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    return await response.json();
+    const response = await apiClient.get(`/api/projects/${id}/stats/`);
+    return response.data;
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
 
-// Create new project
 export const createProject = async (projectData: Partial<Project>): Promise<Project> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(projectData),
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    return await response.json();
+    const response = await apiClient.post('/api/projects/', projectData);
+    return response.data;
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
 
-// Update project
 export const updateProject = async (id: number | string, projectData: Partial<Project>): Promise<Project> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/${id}/`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(projectData),
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    return await response.json();
+    const response = await apiClient.patch(`/api/projects/${id}/`, projectData);
+    return response.data;
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
 
-// Delete project
 export const deleteProject = async (id: number | string): Promise<void> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      throw new Error('No access token found');
-    }
-
-    const response = await fetch(`${API_URL}/projects/${id}/`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw response;
-    }
+    await apiClient.delete(`/api/projects/${id}/`);
   } catch (error) {
-    throw await handleApiError(error);
+    throw handleApiError(error);
   }
 };
-

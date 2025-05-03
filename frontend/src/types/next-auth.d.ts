@@ -1,29 +1,42 @@
-// src/types/next-auth.d.ts
-import { DefaultSession } from "next-auth";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// src/types/next-auth.d.ts (create or update this file)
+
+import NextAuth, { DefaultSession } from "next-auth"
+import { JWT } from "next-auth/jwt"
 
 declare module "next-auth" {
   /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   * Extend the built-in session types
    */
   interface Session {
+    accessToken?: string
+    refreshToken?: string
+    error?: string
     user: {
-      /** User ID from your database */
-      id?: string;
-      /** User name from your database */
-      name?: string;
-      /** Username from your database */
-      username?: string;
-      /** Access token for authenticated API requests */
-      accessToken?: string;
-      /** Refresh token for refreshing the access token */
-      refreshToken?: string;
-      /** Provider used for authentication (e.g. 'credentials', 'google') */
-      provider?: string;
-      /** User email */
-      email?: string;
-    } & DefaultSession["user"];
-    accessToken?: string;
-    refreshToken?: string;
-    error?: string;
+      id?: string
+      provider?: string
+    } & DefaultSession["user"]
+  }
+
+  /**
+   * Extend the built-in user types
+   */
+  interface User {
+    id: string
+    accessToken?: string
+    refreshToken?: string
+    username?: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  /** Extend the built-in JWT types */
+  interface JWT {
+    accessToken?: string
+    refreshToken?: string
+    provider?: string
+    user?: any
+    error?: string
   }
 }

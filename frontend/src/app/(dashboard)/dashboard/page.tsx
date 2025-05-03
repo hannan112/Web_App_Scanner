@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { getProjectDashboard } from "@/lib/api/projects";
 import { DashboardData } from "@/types/project";
 
+
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -63,6 +64,8 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
+      {/* Debug component - remove after fixing the issue */}
+      
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Dashboard</h1>
 
       {/* Stats Overview Cards */}

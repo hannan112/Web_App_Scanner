@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # Custom apps
     'authentication',
     'projects',
+    'scanning',
 
     # OAuth related
     'django.contrib.sites',
@@ -187,12 +188,11 @@ DEFAULT_FROM_EMAIL = 'Security Scanner <noreply@securityscanner.com>'
 
 # JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
-    'UPDATE_LAST_LOGIN': False,
-
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Increase from 1 day to 14 days for longer sessions
+    'ROTATE_REFRESH_TOKENS': True,  # Change to True to enable refresh token rotation
+    'BLACKLIST_AFTER_ROTATION': False,  # Keep as False unless you're using a token blacklist
+    'UPDATE_LAST_LOGIN': True,  # Change to True to update last login timestamp
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': os.environ.get('SECRET_KEY', 'your-secret-key'),
     'VERIFYING_KEY': None,
@@ -200,27 +200,24 @@ SIMPLE_JWT = {
     'ISSUER': None,
     'JWK_URL': None,
     'LEEWAY': 0,
-
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
-
     'JTI_CLAIM': 'jti',
-
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=60),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=14),  # Match the refresh token lifetime
 }
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Adjust this for your Next.js frontend
 ]
+CORS_ALLOW_ALL_ORIGINS = True  # For development only; restrict in production
 
 # Frontend URL for email links
 FRONTEND_URL = 'http://localhost:3000'  # Adjust this for your Next.js frontend
@@ -240,7 +237,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'email',
         ],
         'AUTH_PARAMS': {
-            'access_type': 'online',
+            'access_type': 'offline',
         }
     }
 }
@@ -250,7 +247,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300  # 5 minutes

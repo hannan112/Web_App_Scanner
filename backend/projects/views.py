@@ -73,7 +73,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             from scanning.serializers import ScanSerializer
             
             # Get scan counts by type
-            scan_counts = Scan.objects.filter(project=project).values('scan_type').annotate(count=Count('id'))
+            scan_counts = Scan.objects.filter(project=project).values('configuration__scan_type').annotate(count=Count('id'))
             
             # Get recent scans
             recent_scans = Scan.objects.filter(project=project).order_by('-start_time')[:5]
@@ -88,7 +88,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 
             scan_data = {
                 'total_scans': Scan.objects.filter(project=project).count(),
-                'scan_counts_by_type': {item['scan_type']: item['count'] for item in scan_counts},
+                'scan_counts_by_type': {item['configuration__scan_type']: item['count'] for item in scan_counts},
                 'recent_scans': recent_scans_serialized,
                 'vulnerability_counts': vuln_data
             }

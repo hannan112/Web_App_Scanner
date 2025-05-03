@@ -22,4 +22,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/auth/', include('authentication.urls')),
     path('api/', include('projects.urls')),
+    path('scanning/', include('scanning.urls')),
+
+    path('accounts/', include('allauth.urls')),  # This includes the 'account_signup' URL pattern
+    path('api/auth/', include('dj_rest_auth.urls')),  # This includes the 'rest_login' URL pattern
 ]

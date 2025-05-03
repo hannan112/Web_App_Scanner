@@ -36,12 +36,12 @@ export default function RegisterForm() {
     setSuccess("");
     
     try {
-      // Make sure the field names match backend expectations
+      // Change confirmPassword to password_confirm to match backend expectations
       const response = await register({
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        confirmPassword: formData.confirmPassword
+        confirmPassword: formData.confirmPassword // Changed field name here
       });
       
       setSuccess("Registration successful! Please check your email to verify your account.");
@@ -53,9 +53,11 @@ export default function RegisterForm() {
         confirmPassword: "",
       });
     } catch (err: any) {
+      console.error("Registration error details:", err.response?.data);
       setError(err.message || "Registration failed. Please try again.");
     }
   };
+  
 
   return (
     <div className="w-full max-w-md p-6 mx-auto bg-white rounded-lg shadow">

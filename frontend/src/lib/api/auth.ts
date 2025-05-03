@@ -55,7 +55,14 @@ export const login = async (credentials: UserCredentials) => {
 
 export const register = async (userData: RegistrationData) => {
   try {
-    const response = await apiClient.post(`${AUTH_ENDPOINTS}/register/`, userData);
+    // Convert field name for backend compatibility
+    const backendData = {
+      ...userData,
+      password_confirm: userData.confirmPassword,
+    };
+    delete backendData.confirmPassword;
+    
+    const response = await apiClient.post(AUTH_ENDPOINTS.REGISTER, backendData);
     return response.data;
   } catch (error) {
     throw handleApiError(error);

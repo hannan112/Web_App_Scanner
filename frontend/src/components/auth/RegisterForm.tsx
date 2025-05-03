@@ -30,31 +30,18 @@ export default function RegisterForm() {
     return regex.test(password);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    // Validate password strength
-    if (!validatePassword(formData.password)) {
-      setError("Password must be at least 8 characters and include at least one number and one special character");
-      return;
-    }
-
-    setLoading(true);
-
     try {
-      await register({
+      // Make sure the field names match backend expectations
+      const response = await register({
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        confirmPassword: formData.confirmPassword,
+        confirmPassword: formData.confirmPassword
       });
       
       setSuccess("Registration successful! Please check your email to verify your account.");
@@ -67,8 +54,6 @@ export default function RegisterForm() {
       });
     } catch (err: any) {
       setError(err.message || "Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 

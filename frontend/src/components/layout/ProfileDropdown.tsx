@@ -58,12 +58,12 @@ export default function ProfileDropdown() {
         <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
           {session?.user?.name?.[0]?.toUpperCase() ?? "U"}
         </div>
-        <span className="hidden md:inline text-sm font-medium">
+        <span className="hidden md:inline text-sm font-medium text-gray-700 hover:text-gray-800 transition-colors">
           {session?.user?.name ?? session?.user?.email ?? "User"}
         </span>
         {/* Dropdown arrow */}
         <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-gray-800 transition-transform ${isOpen ? "rotate-180" : ""}`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"

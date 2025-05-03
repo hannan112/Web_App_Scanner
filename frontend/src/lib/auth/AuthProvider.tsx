@@ -2,36 +2,28 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-//mport "../../types/next-auth"; // Ensure the extended types are imported
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import "next-auth"
-
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string
-    }
-    accessToken?: string
-    refreshToken?: string
-  }
-}
 
 function TokenPersistence() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     if (session?.accessToken) {
-      // Store the token for API calls
-      localStorage.setItem('accessToken', session.accessToken as string);
+      localStorage.setItem('accessToken', session.accessToken);
       if (session.refreshToken) {
-        localStorage.setItem('refreshToken', session.refreshToken as string);
+        localStorage.setItem('refreshToken', session.refreshToken);
       }
-    } else {
-      // Clear tokens when session is invalid
+      
+      console.log('Token stored in localStorage:', session.accessToken.substring(0, 10) + '...');
+    } else if (status === "unauthenticated") {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
     }
-  }, [session]);
+  }, [session, status]);
+  
   return null;
 }
 

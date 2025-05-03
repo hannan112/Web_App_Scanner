@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Project
 import requests
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 class ProjectListSerializer(serializers.ModelSerializer):
     """Serializer for listing projects"""

@@ -1,12 +1,12 @@
+from backend import settings
+
+
 def send_verification_email(email, token):
     """Send verification email to user"""
     verification_url = f"{settings.FRONTEND_URL}/verify-email/{token}"
     
-    # For testing, just print the verification URL
+    # For testing or development, print the URL
     print(f"Verification URL for {email}: {verification_url}")
-    
-    # Comment out the email sending for now
-    # send_mail(...)
 
 def send_password_reset_email(email, token):
     """Send password reset email to user"""

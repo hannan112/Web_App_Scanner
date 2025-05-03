@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/project.ts
 
+import { Key, ReactNode } from "react";
+
 // Basic project information
 export interface Project {
     id: number;
@@ -69,6 +71,11 @@ export interface Project {
   
   // Scan configuration interface
   export interface ScanConfig {
+    id: Key | null | undefined;
+    name: ReactNode;
+    scan_type: ReactNode;
+    crawl_depth: ReactNode;
+    max_pages: ReactNode;
     scan_depth: number;
     respect_robots_txt: boolean;
     scan_intensity: number;
@@ -91,6 +98,7 @@ export interface Project {
   
   // Scan interface
   export interface Scan {
+    configuration_name: string;
     id: number;
     project_id: number;
     status: 'pending' | 'in_progress' | 'completed' | 'failed';

@@ -11,10 +11,11 @@ import { getScanById, checkScanStatus, stopScan } from "@/lib/api/scans";
 import { getProjectById } from "@/lib/api/projects";
 import PageTitle from "@/components/PageTitle";
 
-export default function ScanStatusPage({ params }: { params: { id: string } }) {
+export default function ScanStatusPage({ params }: { params: Promise<{ id: string }> }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   
+  const [scanId, setScanId] = useState<string>("");
   const [scanData, setScanData] = useState<any>(null);
   const [projectName, setProjectName] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
@@ -27,6 +28,13 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
   
   // Keep a ref to the polling interval to properly clean it up
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Resolve params first
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setScanId(resolvedParams.id);
+    });
+  }, [params]);
 
   // Helper function to get more detailed progress stage information
   const getProgressStage = (progress: number): string => {
@@ -64,8 +72,9 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
     }
     
     const fetchScanData = async () => {
+      if (!scanId) return;
       try {
-        const scan = await getScanById(params.id);
+        const scan = await getScanById(scanId);
         setScanData(scan);
         setScanStatus(scan.status);
         setProgress(scan.progress || 0);
@@ -90,15 +99,15 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
     if (status === "authenticated") {
       fetchScanData();
     }
-  }, [params.id, status, router]);
+  }, [scanId, status, router]);
   
   // Poll for status updates
   const pollStatus = useCallback(async () => {
-    if (!params.id) return;
+    if (!scanId) return;
     
     try {
       setPollCount(prev => prev + 1);
-      const statusData = await checkScanStatus(params.id);
+      const statusData = await checkScanStatus(scanId);
       
       // Update UI with new status
       setScanStatus(statusData.status);
@@ -128,7 +137,7 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
         }
       }
     }
-  }, [params.id, pollCount]);
+  }, [scanId, pollCount]);
   
   // Set up polling interval
   useEffect(() => {
@@ -160,16 +169,16 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
       
       return () => clearTimeout(timer);
     } else if (redirectCountdown === 0) {
-      router.push(`/scans/${params.id}/results`);
+      router.push(`/scans/${scanId}/results`);
     }
-  }, [redirectCountdown, router, params.id]);
+  }, [redirectCountdown, router, scanId]);
   
   // Handle stop scan
   const handleStopScan = async () => {
     setIsStopping(true);
     
     try {
-      await stopScan(params.id);
+      await stopScan(scanId);
       setScanStatus('stopped');
       
       // Clear polling interval
@@ -249,7 +258,7 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
                 Scan for {projectName}
               </h2>
               <p className="mt-1 text-sm text-gray-500">
-                Scan ID: {params.id}
+                Scan ID: {scanId}
               </p>
             </div>
             <div className="mt-2 sm:mt-0">
@@ -371,7 +380,7 @@ export default function ScanStatusPage({ params }: { params: { id: string } }) {
             
             {scanStatus === 'completed' && (
               <Link
-                href={`/scans/${params.id}/results`}
+                href={`/scans/${scanId}/results`}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 View Results

@@ -309,3 +309,33 @@ def check_spf_dkim_dmarc(scan, domain):
         'spf_found': spf_found,
         'dmarc_found': dmarc_found
     }
+
+def _analyze_dns(self):
+    """
+    Analyze DNS records for the target domain
+    """
+    logger.info(f"Starting DNS analysis for {self.domain}")
+    
+    try:
+        # Import DNS analyzer
+        from scanning.passive.analyzers.domain_analyzer import perform_dns_lookup, check_subdomains
+        
+        # Perform DNS lookup
+        dns_records = perform_dns_lookup(self.domain)
+        self.results['dns_records'] = dns_records
+        
+        # Check for subdomains if supported
+        try:
+            subdomains = check_subdomains(self.scan, self.domain)
+            if subdomains:
+                self.results['subdomains'] = subdomains
+        except Exception as subnet_err:
+            logger.warning(f"Error checking subdomains: {str(subnet_err)}")
+        
+        # Update progress
+        self.update_progress(25, "DNS analysis completed")
+        
+    except Exception as e:
+        logger.error(f"Error in DNS analysis: {str(e)}")
+        self._add_error_finding("DNS Analysis Error", str(e))
+        self.update_progress(25, "DNS analysis failed")

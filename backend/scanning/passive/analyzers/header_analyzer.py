@@ -2,6 +2,8 @@
 Security header analyzer for passive scanning
 """
 import logging
+
+import requests
 from scanning.models.vulnerability import Vulnerability
 
 logger = logging.getLogger(__name__)
@@ -348,6 +350,57 @@ def check_cors_headers(scan, headers):
             confidence=0.8
         )
         logger.info("Permissive CORS Policy detected")
+
+def _analyze_headers(self):
+    """
+    Analyze HTTP security headers
+    """
+    logger.info(f"Analyzing security headers for {self.target_url}")
+    
+    try:
+        # Check if we have a response object from basic HTTP analysis
+        if not hasattr(self, 'response') or not self.response:
+            # Make a new request if needed
+            response = requests.get(self.target_url, headers=self.headers, timeout=10)
+            headers = dict(response.headers)
+        else:
+            # Use existing response
+            headers = dict(self.response.headers)
+        
+        # Store headers in results if not already stored
+        if not self.results.get('response_headers'):
+            self.results['response_headers'] = headers
+        
+        # Import and use header analyzer
+        from scanning.passive.analyzers.header_analyzer import analyze_security_headers
+        analyze_security_headers(self.scan, headers)
+        
+        # Try to use ZAP if available for more comprehensive header analysis
+        if self.available_tools.get('zap', {}).get('available', False):
+            try:
+                from scanning.integrations.zap_adapter import ZAPAdapter
+                adapter = ZAPAdapter(config={
+                    'zap_host': self.available_tools['zap']['host'],
+                    'zap_port': self.available_tools['zap']['port'],
+                    'zap_api_key': self.config.zap_config.get('api_key', '') if hasattr(self.config, 'zap_config') else ''
+                })
+                
+                header_findings = adapter.check_headers(self.target_url)
+                if header_findings:
+                    logger.info(f"ZAP found {len(header_findings)} header-related issues")
+                    for finding in header_findings:
+                        finding['source'] = 'zap'
+                        self._add_finding(finding)
+            except Exception as zap_err:
+                logger.warning(f"Error using ZAP for header analysis: {str(zap_err)}")
+        
+        # Update progress
+        self.update_progress(60, "Security headers analysis completed")
+        
+    except Exception as e:
+        logger.error(f"Error in security headers analysis: {str(e)}")
+        self._add_error_finding("Security Headers Analysis Error", str(e))
+        self.update_progress(60, "Security headers analysis failed")
 
 def check_cache_control(scan, headers):
     """

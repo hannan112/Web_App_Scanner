@@ -28,13 +28,65 @@ class ScanConfiguration(models.Model):
     scan_js_files = models.BooleanField(default=True)
     scan_forms = models.BooleanField(default=True)
     
+    # Confidence settings
+    min_confidence = models.FloatField(
+        default=0.7,
+        help_text="Minimum confidence level for findings (0.0-1.0)"
+    )
+    
     # Advanced options
     user_agent = models.CharField(max_length=255, blank=True, null=True)
     request_delay = models.FloatField(default=0.5)  # in seconds
     custom_headers = models.JSONField(blank=True, null=True)
     
+    # Tool preferences (new field)
+    tool_preferences = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Tool preferences for various analysis types"
+    )
+
+    reduce_false_positives = models.BooleanField(
+    default=False,
+    help_text="Use enhanced scanning tools to reduce false positives"
+)
+
+    allow_analyzer_fallbacks = models.BooleanField(
+        default=True,
+        help_text="Whether to allow fallback to built-in analyzers when external tools are unavailable"
+    )
+    
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    # Tool-specific configuration fields
+    # (These can remain the same as the old implementation)
+    use_sslyze = models.BooleanField(
+        default=True,
+        help_text="Use SSLyze for SSL/TLS scanning"
+    )
+    
+    use_zap = models.BooleanField(
+        default=True,
+        help_text="Use OWASP ZAP for passive scanning"
+    )
+    
+    use_nuclei = models.BooleanField(
+        default=False,
+        help_text="Use Nuclei for passive scanning"
+    )
+    
+    use_wappalyzer = models.BooleanField(
+        default=True,
+        help_text="Use Wappalyzer for technology detection"
+    )
+    
+    # Tool configuration (JSON fields)
+    zap_config = models.JSONField(default=dict, blank=True)
+    sslyze_config = models.JSONField(default=dict, blank=True)
+    nuclei_config = models.JSONField(default=dict, blank=True)
+    wappalyzer_config = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return f"{self.project.name} - {self.scan_type} Configuration"
@@ -154,3 +206,33 @@ class ScanLog(models.Model):
 
     def __str__(self):
         return f"{self.scan.project.name} Log - {self.timestamp}"
+    
+
+class AjaxSpiderResult(models.Model):
+    """Model for storing AJAX spider results"""
+    scan = models.OneToOneField(Scan, on_delete=models.CASCADE, related_name='ajax_spider_result')
+    
+    # URLs discovered
+    urls_discovered = models.JSONField(blank=True, null=True)
+    
+    # Forms discovered
+    forms_discovered = models.JSONField(blank=True, null=True)
+    
+    # AJAX requests captured
+    ajax_requests = models.JSONField(blank=True, null=True)
+    
+    # JavaScript objects extracted
+    javascript_objects = models.JSONField(blank=True, null=True)
+    
+    # Timing information
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    duration = models.FloatField(default=0.0)
+    
+    # Pages crawled count
+    pages_crawled = models.IntegerField(default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"AJAX Spider Results for {self.scan.project.name}"

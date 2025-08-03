@@ -1,9 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
+from authentication import views
 from .views import (
     ScanConfigurationViewSet,
     ScanViewSet,
-    VulnerabilityViewSet
+    VulnerabilityViewSet,
+    check_tools_status
 )
 
 router = DefaultRouter()
@@ -13,4 +16,6 @@ router.register(r'vulnerabilities', VulnerabilityViewSet, basename='vulnerabilit
 
 urlpatterns = [
     path('', include(router.urls)),
+    # scanning/urls.py - Add to existing urlpatterns
+    path('tools-status/', check_tools_status, name='tools-status'),
 ]

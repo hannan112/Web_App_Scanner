@@ -1,0 +1,64 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Virtualenv
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Documentation
+README.md
+LICENSE
+docs/
+
+# Local development
+local_settings.py
+db.sqlite3
+media/
+static/
+logs/
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# Temporary files
+*.log
+*.tmp

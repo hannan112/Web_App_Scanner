@@ -54,6 +54,27 @@ def check_cors_policy(scan, url):
     except Exception as e:
         logger.error(f"Error checking CORS policy for {url}: {str(e)}")
 
+def _analyze_cors(self):
+    """
+    Analyze CORS policy for security issues
+    """
+    logger.info(f"Analyzing CORS policy for {self.target_url}")
+    
+    try:
+        # Import and use CORS analyzer
+        from scanning.passive.analyzers.cors_analyzer import check_cors_policy
+        
+        # Check CORS policy
+        check_cors_policy(self.scan, self.target_url)
+        
+        # Update progress
+        self.update_progress(85, "CORS analysis completed")
+        
+    except Exception as e:
+        logger.error(f"Error in CORS analysis: {str(e)}")
+        self._add_error_finding("CORS Analysis Error", str(e))
+        self.update_progress(85, "CORS analysis failed")
+
 def check_permissive_cors(scan, url, cors_headers):
     """
     Check for permissive CORS policy (e.g., Allow-Origin: *)

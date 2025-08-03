@@ -12,16 +12,24 @@ import { getProjectById } from "@/lib/api/projects";
 import ScanResults from "@/components/scanning/ScanResults";
 import PageTitle from "@/components/PageTitle";
 
-export default function ScanResultsPage({ params }: { params: { id: string } }) {
+export default function ScanResultsPage({ params }: { params: Promise<{ id: string }> }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   
+  const [scanId, setScanId] = useState<string>("");
   const [scanData, setScanData] = useState<any>(null);
   const [projectData, setProjectData] = useState<any>(null);
   const [resultData, setResultData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
+  
+  // Resolve params first
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setScanId(resolvedParams.id);
+    });
+  }, [params]);
   
   // Fetch scan and project data
   useEffect(() => {
@@ -31,19 +39,20 @@ export default function ScanResultsPage({ params }: { params: { id: string } }) 
     }
     
     const fetchData = async () => {
+      if (!scanId) return;
       try {
         // Get scan data
-        const scan = await getScanById(params.id);
+        const scan = await getScanById(scanId);
         setScanData(scan);
         
         // Only allow viewing completed scans
         if (scan.status !== 'completed') {
-          router.push(`/scans/${params.id}/status`);
+          router.push(`/scans/${scanId}/status`);
           return;
         }
         
         // Get scan results
-        const results = await getScanResults(params.id);
+        const results = await getScanResults(scanId);
         setResultData(results);
 
         // Get project data if project_id exists and is defined
@@ -66,14 +75,14 @@ export default function ScanResultsPage({ params }: { params: { id: string } }) 
     if (status === "authenticated") {
       fetchData();
     }
-  }, [params.id, status, router]);
+  }, [scanId, status, router]);
   
   // Handle report generation
   const handleGenerateReport = async () => {
     setIsGeneratingReport(true);
     
     try {
-      const reportBlob = await generateScanReport(params.id);
+      const reportBlob = await generateScanReport(scanId);
       
       if (!reportBlob) {
         throw new Error('Failed to generate report');
@@ -83,7 +92,7 @@ export default function ScanResultsPage({ params }: { params: { id: string } }) 
       const url = window.URL.createObjectURL(reportBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `security-scan-report-${params.id}.pdf`;
+      a.download = `security-scan-report-${scanId}.pdf`;
       document.body.appendChild(a);
       a.click();
       
@@ -186,7 +195,7 @@ export default function ScanResultsPage({ params }: { params: { id: string } }) 
       
       {/* Scan Results Component */}
       <ScanResults 
-        scanId={params.id} 
+        scanId={scanId} 
         projectId={scanData?.project_id} 
         vulnerabilities={resultData?.vulnerabilities || []}
         passiveReconData={resultData?.passive_data}

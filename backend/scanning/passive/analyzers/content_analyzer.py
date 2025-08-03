@@ -4,6 +4,7 @@ Content analyzer for passive scanning to detect information disclosure issues
 import logging
 import re
 from bs4 import BeautifulSoup
+import requests
 from scanning.models.vulnerability import Vulnerability
 
 logger = logging.getLogger(__name__)
@@ -75,6 +76,37 @@ def check_html_comments(scan, url, soup):
             confidence=0.7
         )
         logger.info(f"Found {len(sensitive_comments)} potentially sensitive HTML comments on {url}")
+
+def _analyze_content(self):
+    """
+    Analyze content for information disclosure
+    """
+    logger.info(f"Analyzing content for {self.target_url}")
+    
+    try:
+        # Check if we have response content from earlier requests
+        if hasattr(self, 'response') and self.response:
+            content = self.response.text
+            headers = dict(self.response.headers)
+        else:
+            # Make a new request
+            response = requests.get(self.target_url, headers=self.headers, timeout=10)
+            content = response.text
+            headers = dict(response.headers)
+        
+        # Import and use content analyzer
+        from scanning.passive.analyzers.content_analyzer import analyze_information_disclosure
+        
+        # Analyze for information disclosure
+        analyze_information_disclosure(self.scan, self.target_url, content, headers)
+        
+        # Update progress
+        self.update_progress(90, "Content analysis completed")
+        
+    except Exception as e:
+        logger.error(f"Error in content analysis: {str(e)}")
+        self._add_error_finding("Content Analysis Error", str(e))
+        self.update_progress(90, "Content analysis failed")
 
 def check_exposed_emails(scan, url, html_content):
     """Check for exposed email addresses."""

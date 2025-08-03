@@ -80,6 +80,123 @@ class Crawler:
         if self.respect_robots_txt:
             self._parse_robots_txt()
     
+    def _apply_rate_limit(self):
+        """Apply rate limiting to prevent aggressive crawling"""
+        current_time = time.time()
+        time_since_last_request = current_time - self.last_request_time
+        
+        if time_since_last_request < self.request_delay:
+            sleep_time = self.request_delay - time_since_last_request
+            time.sleep(sleep_time)
+            
+        self.last_request_time = time.time()
+    
+    def _crawl_url(self, url, depth):
+        """Crawl a single URL with improved performance"""
+        if url in self.visited_urls:
+            return []
+        
+        self.visited_urls.add(url)
+        
+        try:
+            logger.info(f"Crawling: {url} (depth: {depth})")
+            
+            # Apply rate limiting
+            self._apply_rate_limit()
+            
+            # Use conditional GET if supported
+            headers = self.headers.copy()
+            
+            response = requests.get(
+                url, 
+                headers=headers, 
+                timeout=self.timeout,
+                allow_redirects=True
+            )
+            
+            # Update last request time
+            self.last_request_time = time.time()
+            return response
+        except Exception as e:
+            logger.error(f"Error crawling {url}: {str(e)}")
+            return None
+
+    def _crawl_website(self):
+        """
+        Crawl website to discover URLs, forms, and cookies
+        """
+        logger.info(f"Starting website crawling for {self.target_url}")
+
+        try:
+            # Ensure the results dictionary has the required keys
+            if 'urls_discovered' not in self.results:
+                self.results['urls_discovered'] = []
+            if 'forms_discovered' not in self.results:
+                self.results['forms_discovered'] = []
+            if 'cookies' not in self.results:
+                self.results['cookies'] = {}
+
+            # Import and use the crawler
+            from scanning.discovery.crawler import Crawler
+
+            # Get crawler configuration from scan config with safe defaults
+            crawl_depth = getattr(self.config, 'crawl_depth', 2)
+            respect_robots_txt = getattr(self.config, 'respect_robots_txt', True)
+            crawl_max_pages = getattr(self.config, 'crawl_max_pages', 100)
+            crawl_timeout = getattr(self.config, 'crawl_timeout', 30)
+            user_agent = getattr(self.config, 'user_agent', None)
+
+            # Create crawler instance with safe defaults for headers
+            headers = getattr(self, 'headers', {'User-Agent': 'SecurityScannerBot/1.0'})
+            crawler = Crawler(
+                start_url=self.target_url,
+                max_depth=crawl_depth,
+                respect_robots_txt=respect_robots_txt,
+                max_pages=crawl_max_pages,
+                timeout=crawl_timeout,
+                user_agent=user_agent or headers.get('User-Agent')
+            )
+
+            # Define progress callback to update scan progress
+            def progress_callback(progress, urls, forms, cookies):
+                # Transform progress 0-100 to our scale of 65-75
+                adjusted_progress = 65 + (progress / 100 * 10)
+                self.update_progress(adjusted_progress, f"Website crawling in progress - {len(urls)} URLs discovered")
+            
+            # Run the crawler
+            crawl_results = crawler.start(progress_callback)
+            
+            # Store discovered URLs, forms, and cookies
+            if crawl_results.get('urls_discovered'):
+                self.results['urls_discovered'] = crawl_results.get('urls_discovered', [])
+            if crawl_results.get('forms_discovered'):
+                self.results['forms_discovered'] = crawl_results.get('forms_discovered', [])
+            
+            # Merge cookies with any existing cookies
+            if crawl_results.get('cookies'):
+                if self.results.get('cookies'):
+                    self.results['cookies'].update(crawl_results['cookies'])
+                else:
+                    self.results['cookies'] = crawl_results['cookies']
+            
+            # Create CrawlResult object in database
+            from scanning.models.scan import CrawlResult
+            CrawlResult.objects.create(
+                scan=self.scan,
+                urls_discovered=self.results.get('urls_discovered', []),
+                forms_discovered=self.results.get('forms_discovered', []),
+                cookies=self.results.get('cookies', {}),
+                pages_crawled=crawl_results.get('pages_crawled', 0)
+            )
+            
+            logger.info(f"Website crawling completed - discovered {len(self.results.get('urls_discovered', []))} URLs and {len(self.results.get('forms_discovered', []))} forms")
+            self.update_progress(75, "Website crawling completed")
+            
+        except Exception as e:
+            logger.error(f"Error in website crawling: {str(e)}")
+            self._add_error_finding("Website Crawling Error", str(e))
+            self.update_progress(75, "Website crawling failed")
+
     def _get_base_url(self, url):
         """Extract base URL from the starting URL"""
         parsed = urlparse(url)

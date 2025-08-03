@@ -5,6 +5,8 @@ import logging
 import re
 from http.cookies import SimpleCookie
 from urllib.parse import urlparse
+
+import requests
 from scanning.models.vulnerability import Vulnerability
 
 logger = logging.getLogger(__name__)
@@ -156,6 +158,57 @@ def create_cookie_vulnerability_reports(scan, insecure_cookies, httponly_missing
                 confidence=0.9
             )
             logger.info(f"Found insecure session cookies: {', '.join(set(session_insecure + session_not_httponly))}")
+
+def _analyze_cookies(self):
+    """
+    Analyze cookies for security issues
+    """
+    logger.info(f"Analyzing cookies for {self.target_url}")
+    
+    try:
+        # Get cookies from previous response or make a new request
+        if hasattr(self, 'response') and self.response:
+            cookies = dict(self.response.cookies)
+        else:
+            response = requests.get(self.target_url, headers=self.headers, timeout=10)
+            cookies = dict(response.cookies)
+        
+        # Store cookies in results
+        self.results['cookies'] = {k: str(v) for k, v in cookies.items()}
+        
+        # Use cookie analyzer
+        from scanning.passive.analyzers.cookie_analyzer import analyze_cookies
+        if self.response:
+            analyze_cookies(self.scan, cookies, dict(self.response.headers))
+        else:
+            analyze_cookies(self.scan, cookies)
+        
+        # Try to use ZAP if available for more comprehensive cookie analysis
+        if self.available_tools.get('zap', {}).get('available', False):
+            try:
+                from scanning.integrations.zap_adapter import ZAPAdapter
+                adapter = ZAPAdapter(config={
+                    'zap_host': self.available_tools['zap']['host'],
+                    'zap_port': self.available_tools['zap']['port'],
+                    'zap_api_key': self.config.zap_config.get('api_key', '') if hasattr(self.config, 'zap_config') else ''
+                })
+                
+                cookie_findings = adapter.check_cookies(self.target_url)
+                if cookie_findings:
+                    logger.info(f"ZAP found {len(cookie_findings)} cookie-related issues")
+                    for finding in cookie_findings:
+                        finding['source'] = 'zap'
+                        self._add_finding(finding)
+            except Exception as zap_err:
+                logger.warning(f"Error using ZAP for cookie analysis: {str(zap_err)}")
+        
+        # Update progress
+        self.update_progress(65, "Cookie analysis completed")
+        
+    except Exception as e:
+        logger.error(f"Error in cookie analysis: {str(e)}")
+        self._add_error_finding("Cookie Analysis Error", str(e))
+        self.update_progress(65, "Cookie analysis failed")
 
 def analyze_cookie_patterns(scan, cookies):
     """

@@ -102,3 +102,58 @@ class SitemapParser:
         except Exception as e:
             logger.error(f"Error parsing sitemap at {sitemap_url}: {str(e)}")
             return []
+        
+    def _analyze_robots_sitemap(self):
+        """
+        Analyze robots.txt and sitemap.xml files
+        """
+        logger.info(f"Analyzing robots.txt and sitemap for {self.target_url}")
+        
+        try:
+            # Parse robots.txt
+            robots_url = f"{self.scheme}://{self.domain}/robots.txt"
+            try:
+                response = requests.get(robots_url, headers=self.headers, timeout=10)
+                if response.status_code == 200:
+                    self.results['robots_txt'] = response.text
+                    logger.info(f"Successfully retrieved robots.txt")
+                    
+                    # Check for disallowed paths that might indicate sensitive areas
+                    disallowed_paths = []
+                    for line in response.text.splitlines():
+                        if line.lower().startswith('disallow:'):
+                            path = line.split(':', 1)[1].strip()
+                            if path:
+                                disallowed_paths.append(path)
+                    
+                    if disallowed_paths:
+                        self._add_finding({
+                            'name': 'Sensitive Paths in Robots.txt',
+                            'description': f"Found {len(disallowed_paths)} disallowed paths in robots.txt that might indicate sensitive areas of the application.",
+                            'severity': 'info',
+                            'confidence': 0.7,
+                            'evidence': f"Paths: {', '.join(disallowed_paths[:10])}",
+                            'remediation': "Review robots.txt to ensure it doesn't disclose sensitive paths."
+                        })
+                else:
+                    logger.info(f"No robots.txt found at {robots_url}")
+            except Exception as e:
+                logger.warning(f"Error retrieving robots.txt: {str(e)}")
+            
+            # Parse sitemap using SitemapParser
+            from scanning.discovery.sitemap_parser import SitemapParser
+            parser = SitemapParser(self.target_url)
+            try:
+                sitemap_urls = parser.parse()
+                if sitemap_urls:
+                    self.results['sitemap_xml'] = sitemap_urls
+                    logger.info(f"Successfully retrieved sitemap with {len(sitemap_urls)} URLs")
+            except Exception as e:
+                logger.warning(f"Error parsing sitemap: {str(e)}")
+            
+            # Update progress
+            self.update_progress(30, "Robots.txt and sitemap analysis completed")
+            
+        except Exception as e:
+            logger.error(f"Error in robots.txt and sitemap analysis: {str(e)}")
+            self.update_progress(30, "Robots.txt and sitemap analysis failed")

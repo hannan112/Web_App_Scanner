@@ -13,14 +13,22 @@ import { getAllScans } from "@/lib/api/scans";
 import { Scan } from "@/types/project";
 import PageTitle from "@/components/PageTitle";
 
-export default function ProjectScansPage({ params }: { params: { id: string } }) {
+export default function ProjectScansPage({ params }: { params: Promise<{ id: string }> }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   
+  const [projectId, setProjectId] = useState<string>("");
   const [project, setProject] = useState<any>(null);
   const [scans, setScans] = useState<Scan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Resolve params first
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setProjectId(resolvedParams.id);
+    });
+  }, [params]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -29,9 +37,11 @@ export default function ProjectScansPage({ params }: { params: { id: string } })
     }
     
     const fetchData = async () => {
+      if (!projectId) return;
+      
       try {
         // Fetch project details
-        const projectData = await getProjectById(params.id);
+        const projectData = await getProjectById(projectId);
         setProject(projectData);
         
         // Fetch all scans
@@ -39,7 +49,7 @@ export default function ProjectScansPage({ params }: { params: { id: string } })
         
         // Filter scans for this project
         const projectScans = allScans.filter(
-          (          scan: { project_id: { toString: () => string; }; }) => scan.project_id?.toString() === params.id
+          (scan: { project_id: { toString: () => string; }; }) => scan.project_id?.toString() === projectId
         );
         
         setScans(projectScans);
@@ -51,7 +61,7 @@ export default function ProjectScansPage({ params }: { params: { id: string } })
     };
     
     fetchData();
-  }, [params.id, status, router]);
+  }, [projectId, status, router]);
 
   // Function to format date
   const formatDate = (dateString: string) => {
@@ -108,13 +118,13 @@ export default function ProjectScansPage({ params }: { params: { id: string } })
         
         <div className="flex space-x-2">
           <Link 
-            href={`/projects/${params.id}/scan/new`}
+            href={`/projects/${projectId}/scan/new`}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Start New Scan
           </Link>
           <Link 
-            href={`/projects/${params.id}`}
+            href={`/projects/${projectId}`}
             className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
           >
             Back to Project
@@ -159,15 +169,15 @@ export default function ProjectScansPage({ params }: { params: { id: string } })
                     {scan.configuration_name || "Standard"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {scan.start_time ? formatDate(scan.start_time) : formatDate(scan.created_at)}
+                    {scan.started_at ? formatDate(scan.started_at) : formatDate(scan.created_at)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {scan.end_time ? formatDate(scan.end_time) : "-"}
+                    {scan.completed_at ? formatDate(scan.completed_at) : "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {scan.end_time && scan.start_time ? (
+                    {scan.completed_at && scan.started_at ? (
                       formatDuration(
-                        new Date(scan.end_time).getTime() - new Date(scan.start_time).getTime()
+                        new Date(scan.completed_at).getTime() - new Date(scan.started_at).getTime()
                       )
                     ) : (
                       scan.status === "in_progress" ? "Running..." : "-"
@@ -200,7 +210,7 @@ export default function ProjectScansPage({ params }: { params: { id: string } })
           <h2 className="text-xl font-semibold mb-4">No Scans Found</h2>
           <p className="text-gray-600 mb-6">No security scans have been performed for this project yet.</p>
           <Link 
-            href={`/projects/${params.id}/scan/new`}
+            href={`/projects/${projectId}/scan/new`}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Start Your First Scan

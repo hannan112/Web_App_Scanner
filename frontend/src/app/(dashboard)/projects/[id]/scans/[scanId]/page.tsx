@@ -1,22 +1,22 @@
 // src/app/(dashboard)/projects/[id]/scans/[scanId]/page.tsx
-
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-// This component redirects to the main scan page
 export default function ProjectScanDetailPage({ 
   params 
 }: { 
-  params: { id: string; scanId: string } 
+  params: Promise<{ id: string; scanId: string }> 
 }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to scan results page
-    router.push(`/scans/${params.scanId}/results`);
-  }, [params.scanId, router]);
+    // Resolve params in useEffect
+    params.then(resolvedParams => {
+      router.push(`/scans/${resolvedParams.scanId}/results`);
+    });
+  }, [params, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

@@ -255,3 +255,42 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300  # 5 minutes
 
 # Add this to allow Allauth to connect social accounts to existing users
 SOCIALACCOUNT_ADAPTER = 'authentication.adapters.CustomSocialAccountAdapter'
+
+
+# Configure logging for tool integrations
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'scanner.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'scanning': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'scanning.integrations': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+os.makedirs(os.path.join(BASE_DIR, 'logs'), exist_ok=True)

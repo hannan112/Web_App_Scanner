@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// src/components/scanning/ScanResults.tsx
 import React, { useState, useEffect } from 'react';
-import { PassiveReconResult, ScanResult } from '@/types/project';
+import { PassiveReconResult, ScanResult, AjaxSpiderResult, CrawlData } from '@/types/project';
 
 interface ScanResultsProps {
   scanId: string;
   projectId?: number | string;
   vulnerabilities: ScanResult[];
   passiveReconData?: PassiveReconResult;
-  crawlData?: {
-    pages_crawled: number;
-    urls_count: number;
-    forms_count: number;
-  };
+  crawlData?: CrawlData;
+  ajaxSpiderData?: AjaxSpiderResult;
   onError?: (message: string) => void;
 }
 
@@ -22,6 +20,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
   vulnerabilities = [], 
   passiveReconData, 
   crawlData,
+  ajaxSpiderData,
   onError
 }) => {
   // State for filtering vulnerabilities
@@ -30,6 +29,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
   const [showUrls, setShowUrls] = useState<boolean>(false);
   const [showForms, setShowForms] = useState<boolean>(false);
   const [showCookies, setShowCookies] = useState<boolean>(false);
+  const [showAjaxRequests, setShowAjaxRequests] = useState<boolean>(false);
 
   // Initialize with empty arrays/objects if data is missing
   useEffect(() => {
@@ -99,6 +99,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
   const toggleUrls = () => setShowUrls(!showUrls);
   const toggleForms = () => setShowForms(!showForms);
   const toggleCookies = () => setShowCookies(!showCookies);
+  const toggleAjaxRequests = () => setShowAjaxRequests(!showAjaxRequests);
 
   return (
     <div className="space-y-8">
@@ -422,6 +423,132 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                     <span className="ml-2 text-gray-600">{safeGetNestedValue(passiveReconData, 'server_info.ssl.validity.not_after', 'Unknown')}</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* AJAX Spider Results Section */}
+      {ajaxSpiderData && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">AJAX Spider Analysis</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-medium text-gray-700">Pages Analyzed</h3>
+              <p className="text-2xl font-bold text-blue-600">{ajaxSpiderData.pages_crawled}</p>
+              <p className="text-sm text-gray-500 mt-1">Duration: {ajaxSpiderData.duration.toFixed(2)}s</p>
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-medium text-gray-700">URLs Discovered</h3>
+              <p className="text-2xl font-bold text-blue-600">
+                {ajaxSpiderData.urls_discovered ? ajaxSpiderData.urls_discovered.length : 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Including dynamic content</p>
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-medium text-gray-700">AJAX Requests</h3>
+              <p className="text-2xl font-bold text-blue-600">
+                {ajaxSpiderData.ajax_requests ? ajaxSpiderData.ajax_requests.length : 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">XHR and Fetch requests</p>
+            </div>
+          </div>
+          
+          {/* Toggle buttons for detailed AJAX data */}
+          <div className="mb-4 flex flex-wrap gap-2">
+            {ajaxSpiderData.ajax_requests && ajaxSpiderData.ajax_requests.length > 0 && (
+              <button
+                onClick={toggleAjaxRequests}
+                className="px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 flex items-center"
+              >
+                <span>{showAjaxRequests ? "Hide" : "Show"} AJAX Requests</span>
+                <svg 
+                  className={`ml-1 w-4 h-4 transition-transform ${showAjaxRequests ? "rotate-180" : ""}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+          </div>
+          
+          {/* AJAX Requests */}
+          {showAjaxRequests && ajaxSpiderData.ajax_requests && ajaxSpiderData.ajax_requests.length > 0 && (
+            <div className="bg-gray-50 p-4 rounded-lg mb-6">
+              <h3 className="font-medium text-gray-700 mb-2">AJAX Requests ({ajaxSpiderData.ajax_requests.length})</h3>
+              <div className="overflow-x-auto max-h-80 overflow-y-auto">
+                <table className="min-w-full border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="px-2 py-1 text-left font-medium text-gray-700 border border-gray-200">Method</th>
+                      <th className="px-2 py-1 text-left font-medium text-gray-700 border border-gray-200">URL</th>
+                      <th className="px-2 py-1 text-left font-medium text-gray-700 border border-gray-200">Type</th>
+                      <th className="px-2 py-1 text-left font-medium text-gray-700 border border-gray-200">Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ajaxSpiderData.ajax_requests.map((request, idx) => (
+                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="px-2 py-1 border border-gray-200 font-medium">
+                          <span className={`px-1.5 py-0.5 rounded ${
+                            request.method === 'GET' ? 'bg-green-100 text-green-700' : 
+                            request.method === 'POST' ? 'bg-orange-100 text-orange-700' : 
+                            'bg-blue-100 text-blue-700'
+                          }`}>
+                            {request.method}
+                          </span>
+                        </td>
+                        <td className="px-2 py-1 border border-gray-200 truncate max-w-xs">
+                          <a 
+                            href={request.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-blue-600 hover:underline"
+                            title={request.url}
+                          >
+                            {request.url.length > 50 ? request.url.substring(0, 50) + '...' : request.url}
+                          </a>
+                        </td>
+                        <td className="px-2 py-1 border border-gray-200">
+                          {request.resourceType || (request.isAjax ? 'XHR/Fetch' : 'Other')}
+                        </td>
+                        <td className="px-2 py-1 border border-gray-200">
+                          {new Date(request.timestamp).toLocaleTimeString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          
+          {/* JavaScript Objects (if any) */}
+          {ajaxSpiderData.javascript_objects && Object.keys(ajaxSpiderData.javascript_objects).length > 0 && (
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-medium text-gray-700 mb-2">JavaScript Objects</h3>
+              <div className="space-y-2">
+                {Object.entries(ajaxSpiderData.javascript_objects).map(([url, objects], idx) => (
+                  <div key={idx} className="bg-white p-3 rounded border border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-700 mb-1 truncate" title={url}>
+                      {url.length > 60 ? url.substring(0, 60) + '...' : url}
+                    </h4>
+                    <div className="text-xs">
+                      {objects && typeof objects === 'object' && Object.entries(objects).map(([key, value], itemIdx) => (
+                        <div key={itemIdx} className="mb-1">
+                          <span className="font-medium text-gray-700">{key}:</span>{" "}
+                          <span className="text-gray-600">{typeof value === 'object' ? JSON.stringify(value) : String(value)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

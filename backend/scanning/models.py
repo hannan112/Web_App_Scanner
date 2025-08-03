@@ -15,11 +15,12 @@ __all__ = [
     'CrawlResult',
     'ScanLog',
     'Vulnerability'
+    'AjaxSpiderResult'
 ]
 
 # Import the models after defining __all__ to avoid circular references
 from scanning.models.scan import (
     ScanConfiguration, Scan, PassiveReconResult,
-    CrawlResult, ScanLog
+    CrawlResult, ScanLog, AjaxSpiderResult
 )
 from scanning.models.vulnerability import Vulnerability

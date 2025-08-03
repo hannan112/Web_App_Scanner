@@ -10,15 +10,16 @@ import { getProjectById, updateProject } from "@/lib/api/projects";
 import { Project } from "@/types/project";
 
 interface EditProjectPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function EditProjectPage({ params }: EditProjectPageProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
+  const [projectId, setProjectId] = useState<string>("");
   const [formData, setFormData] = useState({
     name: "",
     target_url: "",
@@ -29,8 +30,15 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Resolve params first
   useEffect(() => {
-    if (status === "loading") return;
+    params.then(resolvedParams => {
+      setProjectId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (status === "loading" || !projectId) return;
     
     if (!session) {
       router.push("/login");
@@ -39,7 +47,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
 
     const fetchProject = async () => {
       try {
-        const data = await getProjectById(params.id);
+        const data = await getProjectById(projectId);
         setProject(data);
         setFormData({
           name: data.name,
@@ -54,7 +62,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
     };
 
     fetchProject();
-  }, [session, status, router, params.id]);
+  }, [session, status, router, projectId]);
 
   const validateForm = () => {
     const errors: {[key: string]: string} = {};
@@ -102,8 +110,8 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
     setError(null);
     
     try {
-      await updateProject(params.id, formData);
-      router.push(`/projects/${params.id}`);
+      await updateProject(projectId, formData);
+      router.push(`/projects/${projectId}`);
     } catch (err) {
       setError((err as Error).message);
       setSubmitting(false);
@@ -206,7 +214,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
 
           <div className="flex items-center justify-between">
             <Link 
-              href={`/projects/${params.id}`} 
+              href={`/projects/${projectId}`} 
               className="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
             >
               Cancel

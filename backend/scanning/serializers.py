@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from scanning.models.scan import (
-    ScanConfiguration, Scan, 
+    AjaxSpiderResult, ScanConfiguration, Scan, 
     PassiveReconResult, CrawlResult, ScanLog
 )
 from scanning.models.vulnerability import Vulnerability
@@ -8,13 +8,22 @@ from scanning.models.vulnerability import Vulnerability
 class ScanConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScanConfiguration
-        fields = ['id', 'project', 'scan_type', 'crawl_depth', 'respect_robots_txt', 'crawl_max_pages']
+        fields = ['id', 'project', 'scan_type', 'crawl_depth', 'respect_robots_txt', 'crawl_max_pages', 'reduce_false_positives',
+            'use_sslyze',
+            'use_zap',
+            'use_nuclei',
+            'use_wappalyzer',
+            'min_confidence',
+            'zap_config',
+            'sslyze_config',
+            'nuclei_config',
+            'wappalyzer_config'] 
         extra_kwargs = {
             'project': {'required': True},
             'scan_type': {'required': True},
             'crawl_depth': {'required': False, 'default': 2},
             'respect_robots_txt': {'required': False, 'default': True},
-            'crawl_max_pages': {'required': False, 'default': 50}
+            'crawl_max_pages': {'required': False, 'default': 50},
         }
 
     def validate_scan_type(self, value):
@@ -23,23 +32,25 @@ class ScanConfigurationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"scan_type must be one of: {', '.join(valid_types)}")
         return value
 
-class ScanSerializer(serializers.ModelSerializer):
-    """Serializer for basic scan information"""
-    project_id = serializers.PrimaryKeyRelatedField(source='project', read_only=True)
-    configuration_name = serializers.StringRelatedField(source='configuration', read_only=True)
-    
+class ScanConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Scan
+        model = ScanConfiguration
         fields = [
-            'id', 'uuid', 'project', 'project_id', 'configuration', 'configuration_name',
-            'status', 'progress', 'start_time', 'end_time', 
-            'error_message', 'created_at', 'updated_at'
-        ]
-        read_only_fields = [
-            'uuid', 'status', 'progress', 'start_time', 
-            'end_time', 'error_message', 'created_at', 'updated_at', 
-            'project_id', 'configuration_name'
-        ]
+            'id', 'project', 'scan_type', 'crawl_depth', 'respect_robots_txt', 
+            'crawl_max_pages', 'reduce_false_positives', 'min_confidence',
+            'use_sslyze', 'use_zap', 'use_nuclei', 'use_wappalyzer',
+            'zap_config', 'sslyze_config', 'nuclei_config', 'wappalyzer_config',
+            'tool_preferences','allow_analyzer_fallbacks' 
+        ] 
+        extra_kwargs = {
+            'project': {'required': True},
+            'scan_type': {'required': True},
+            'crawl_depth': {'required': False, 'default': 2},
+            'respect_robots_txt': {'required': False, 'default': True},
+            'crawl_max_pages': {'required': False, 'default': 50},
+            'min_confidence': {'required': False, 'default': 0.7},
+            'tool_preferences': {'required': False}
+        }
 
 class PassiveReconResultSerializer(serializers.ModelSerializer):
     class Meta:
@@ -123,6 +134,7 @@ class ScanResultsSerializer(serializers.ModelSerializer):
     passive_data = serializers.SerializerMethodField()
     crawl_data = serializers.SerializerMethodField()
     project_info = serializers.SerializerMethodField()
+    ajax_spider_data = serializers.SerializerMethodField()
     
     class Meta:
         model = Scan
@@ -131,7 +143,7 @@ class ScanResultsSerializer(serializers.ModelSerializer):
             'start_time', 'end_time', 'error_message',
             'created_at', 'updated_at', 'configuration',
             'vulnerabilities', 'passive_data', 'crawl_data',
-            'project_info'
+            'project_info', 'ajax_spider_data'
         ]
     
     def get_project_info(self, obj):
@@ -160,3 +172,35 @@ class ScanResultsSerializer(serializers.ModelSerializer):
             }
         except CrawlResult.DoesNotExist:
             return None
+        
+    def get_ajax_spider_data(self, obj):
+        try:
+            result = obj.ajax_spider_result
+            return AjaxSpiderResultSerializer(result).data
+        except AjaxSpiderResult.DoesNotExist:
+            return None
+        
+
+class AjaxSpiderResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AjaxSpiderResult
+        fields = [
+            'id', 'scan', 'urls_discovered', 'forms_discovered', 
+            'ajax_requests', 'javascript_objects', 'start_time', 
+            'end_time', 'duration', 'pages_crawled', 'created_at'
+        ]
+        read_only_fields = ['created_at']
+
+
+class ScanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scan
+        fields = [
+            'id', 'uuid', 'project', 'configuration', 'status', 
+            'progress', 'start_time', 'end_time', 'error_message', 
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = [
+            'uuid', 'status', 'progress', 'start_time', 
+            'end_time', 'error_message', 'created_at', 'updated_at'
+        ]

@@ -1,9 +1,15 @@
 # backend/scanning/views.py
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+import subprocess
+import shutil
+import os
 from django.shortcuts import get_object_or_404
 import logging
+from scanning.passive.unified_scanner import UnifiedPassiveScanner
 
 logger = logging.getLogger(__name__)
 
@@ -313,3 +319,153 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
             'recent': recent_serialized,
             'total': vulns.count()
         })
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_tools_status(request):
+    """Check if external scanning tools are installed and available"""
+    tools_status = {
+        'sslyze': _check_sslyze(),
+        'zap': _check_zap(),
+        'nuclei': _check_nuclei(),
+        'wappalyzer': _check_wappalyzer()
+    }
+    
+    return Response(tools_status)
+
+def _check_sslyze():
+    """Check if SSLyze is installed"""
+    try:
+        # Try to import SSLyze
+        import sslyze
+        return {
+            'installed': True,
+            'version': sslyze.__version__,
+            'status': 'available'
+        }
+    except ImportError:
+        return {
+            'installed': False,
+            'status': 'not_installed',
+            'message': 'SSLyze is not installed. Run: pip install sslyze'
+        }
+
+def _check_zap():
+    """Check if ZAP is available"""
+    try:
+        # Check if ZAP is configured in environment
+        zap_host = os.environ.get('ZAP_HOST', 'localhost')
+        zap_port = os.environ.get('ZAP_PORT', '8080')
+        
+        # Try to import ZAP
+        import zapv2
+        
+        # Try basic connection
+        import socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(3)
+        result = sock.connect_ex((zap_host, int(zap_port)))
+        sock.close()
+        
+        if result == 0:
+            return {
+                'installed': True,
+                'status': 'available',
+                'host': zap_host,
+                'port': zap_port
+            }
+        else:
+            return {
+                'installed': True,
+                'status': 'not_running',
+                'message': f'ZAP is not running at {zap_host}:{zap_port}'
+            }
+    except ImportError:
+        return {
+            'installed': False,
+            'status': 'not_installed',
+            'message': 'ZAP Python API is not installed. Run: pip install python-owasp-zap-v2.4'
+        }
+    except Exception as e:
+        return {
+            'installed': False,
+            'status': 'error',
+            'message': str(e)
+        }
+
+def _check_nuclei():
+    """Check if Nuclei is installed"""
+    try:
+        # Check if nuclei is in PATH
+        nuclei_path = shutil.which('nuclei')
+        if not nuclei_path:
+            return {
+                'installed': False,
+                'status': 'not_found',
+                'message': 'Nuclei not found in PATH'
+            }
+        
+        # Check version
+        result = subprocess.run(['nuclei', '-version'], 
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE,
+                               text=True)
+        
+        if result.returncode == 0:
+            version = result.stdout.strip()
+            
+            # Check templates
+            templates_result = subprocess.run(['nuclei', '-templates-version'], 
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE,
+                                             text=True)
+            
+            templates_info = templates_result.stdout.strip() if templates_result.returncode == 0 else 'No templates found'
+            
+            return {
+                'installed': True,
+                'version': version,
+                'templates': templates_info,
+                'status': 'available'
+            }
+        
+        return {
+            'installed': True,
+            'status': 'error',
+            'message': result.stderr or 'Unknown error running nuclei'
+        }
+        
+    except Exception as e:
+        return {
+            'installed': False,
+            'status': 'error',
+            'message': str(e)
+        }
+
+def _check_wappalyzer():
+    """Check if Wappalyzer is installed"""
+    try:
+        # Try to import Wappalyzer
+        from Wappalyzer import Wappalyzer
+        
+        # Get version (if available)
+        version = getattr(Wappalyzer, '__version__', 'Unknown')
+        
+        return {
+            'installed': True,
+            'version': version,
+            'status': 'available'
+        }
+    except ImportError:
+        return {
+            'installed': False,
+            'status': 'not_installed',
+            'message': 'Python Wappalyzer is not installed. Run: pip install python-Wappalyzer'
+        }
+    except Exception as e:
+        return {
+            'installed': False,
+            'status': 'error',
+            'message': str(e)
+        }

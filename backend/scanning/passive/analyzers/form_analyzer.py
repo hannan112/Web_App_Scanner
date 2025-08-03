@@ -183,6 +183,57 @@ def check_login_form_security(scan, forms):
     # Check for other login form issues
     check_brute_force_protection(scan, login_forms)
 
+def _analyze_forms(self):
+    """
+    Analyze discovered forms for security issues
+    """
+    logger.info(f"Analyzing forms for {self.target_url}")
+    
+    try:
+        # Check if we have forms from crawling
+        forms = self.results.get('forms_discovered', [])
+        
+        if not forms:
+            logger.info("No forms discovered to analyze")
+            self.update_progress(80, "Form analysis completed - no forms found")
+            return
+        
+        # Import and use form analyzer
+        from scanning.passive.analyzers.form_analyzer import analyze_forms, check_login_form_security
+        
+        # Analyze all forms
+        analyze_forms(self.scan, forms)
+        
+        # Specific analysis for login forms
+        check_login_form_security(self.scan, forms)
+        
+        # Try to use ZAP if available
+        if self.available_tools.get('zap', {}).get('available', False):
+            try:
+                from scanning.integrations.zap_adapter import ZAPAdapter
+                adapter = ZAPAdapter(config={
+                    'zap_host': self.available_tools['zap']['host'],
+                    'zap_port': self.available_tools['zap']['port'],
+                    'zap_api_key': self.config.zap_config.get('api_key', '') if hasattr(self.config, 'zap_config') else ''
+                })
+                
+                form_findings = adapter.check_forms(self.target_url)
+                if form_findings:
+                    logger.info(f"ZAP found {len(form_findings)} form-related issues")
+                    for finding in form_findings:
+                        finding['source'] = 'zap'
+                        self._add_finding(finding)
+            except Exception as zap_err:
+                logger.warning(f"Error using ZAP for form analysis: {str(zap_err)}")
+        
+        # Update progress
+        self.update_progress(80, "Form analysis completed")
+        
+    except Exception as e:
+        logger.error(f"Error in form analysis: {str(e)}")
+        self._add_error_finding("Form Analysis Error", str(e))
+        self.update_progress(80, "Form analysis failed")
+
 def check_brute_force_protection(scan, login_forms):
     """
     Check for potential lack of brute force protection in login forms

@@ -12,25 +12,40 @@ import { getProjectById } from "@/lib/api/projects";
 import { getScanConfigurations, createScan, createScanConfiguration } from "@/lib/api/scans";
 import PageTitle from "@/components/PageTitle";
 
-export default function NewProjectScanPage({ params }: { params: { id: string } }) {
+export default function NewProjectScanPage({ params }: { params: Promise<{ id: string }> }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   
+  const [projectId, setProjectId] = useState<string>("");
   const [projectName, setProjectName] = useState<string>("");
   const [configurations, setConfigurations] = useState<any[]>([]);
   const [selectedConfig, setSelectedConfig] = useState<string>("");
   const [customConfigs, setCustomConfigs] = useState({
-    scan_type: "full",
+    scan_type: "passive",  // Default to passive scanning
     crawl_depth: 2,
     respect_robots_txt: true,
     crawl_max_pages: 100,
     crawl_timeout: 30,
+    reduce_false_positives: true,  // Enable enhanced scanning by default
+    use_sslyze: true,
+    use_wappalyzer: true, 
+    use_zap: true,
+    use_nuclei: true,
+    allow_analyzer_fallbacks: true  // Allow fallback to built-in analyzers
   });
   
   const [useDefaultConfig, setUseDefaultConfig] = useState(true);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Resolve params first
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setProjectId(resolvedParams.id);
+    });
+  }, [params]);
   
   // Check if user is authenticated
   useEffect(() => {
@@ -42,17 +57,17 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
   // Fetch project and scan configurations
   useEffect(() => {
     const fetchData = async () => {
-      if (status !== "authenticated") return;
+      if (status !== "authenticated" || !projectId) return;
       
       try {
         // Get project details
-        const project = await getProjectById(params.id);
+        const project = await getProjectById(projectId);
         setProjectName(project.name);
         
         // Get scan configurations
         try {
-          console.log(`Fetching configurations for project ${params.id}`);
-          const configs = await getScanConfigurations(params.id);
+          console.log(`Fetching configurations for project ${projectId}`);
+          const configs = await getScanConfigurations(projectId);
           console.log('Configurations:', configs);
           
           const mappedConfigs = configs.map((config: any) => ({
@@ -81,7 +96,7 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
     };
     
     fetchData();
-  }, [params.id, status, router]);
+  }, [projectId, status, router]);
 
   // Handle config selection change
   const handleConfigChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -120,19 +135,33 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
         // Create a default configuration first
         try {
           console.log("Creating new configuration with:", {
-            project: params.id,
+            project: projectId,
             scan_type: customConfigs.scan_type,
             crawl_depth: customConfigs.crawl_depth,
             respect_robots_txt: customConfigs.respect_robots_txt,
-            crawl_max_pages: customConfigs.crawl_max_pages
+            crawl_max_pages: customConfigs.crawl_max_pages,
+            reduce_false_positives: customConfigs.reduce_false_positives,
+            use_sslyze: customConfigs.use_sslyze,
+            use_wappalyzer: customConfigs.use_wappalyzer,
+            use_zap: customConfigs.use_zap,
+            use_nuclei: customConfigs.use_nuclei,
+            allow_analyzer_fallbacks: customConfigs.allow_analyzer_fallbacks,
+            min_confidence: 0.7 // Default confidence level
           });
           
           const configData = {
-            project: params.id,
+            project: projectId,
             scan_type: customConfigs.scan_type,
             crawl_depth: customConfigs.crawl_depth,
             respect_robots_txt: customConfigs.respect_robots_txt,
-            crawl_max_pages: customConfigs.crawl_max_pages
+            crawl_max_pages: customConfigs.crawl_max_pages,
+            reduce_false_positives: customConfigs.reduce_false_positives,
+            use_sslyze: customConfigs.use_sslyze,
+            use_wappalyzer: customConfigs.use_wappalyzer,
+            use_zap: customConfigs.use_zap,
+            use_nuclei: customConfigs.use_nuclei,
+            allow_analyzer_fallbacks: customConfigs.allow_analyzer_fallbacks,
+            min_confidence: 0.7
           };
           
           // Call an API function to create configuration
@@ -147,8 +176,8 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
       }
       
       // Now create the scan with the project ID and config ID
-      console.log(`Creating scan for project ${params.id} with config ${configId}`);
-      const scan = await createScan(params.id, configId);
+      console.log(`Creating scan for project ${projectId} with config ${configId}`);
+      const scan = await createScan(projectId, configId);
       console.log("Created scan:", scan);
       
       // Redirect to scan status page
@@ -237,14 +266,10 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
                     <option value="active">Active (Basic Vulnerability Scanning)</option>
                     <option value="full">Full (Comprehensive Security Analysis)</option>
                   </select>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Passive: No active testing, only information gathering.<br />
-                    Active: Limited testing with minimal impact.<br />
-                    Full: Complete testing, may impact application performance.
-                  </p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Highlight crawl depth as a key configuration */}
                   <div>
                     <label htmlFor="crawl_depth" className="block text-sm font-medium text-gray-700 mb-1">
                       Crawl Depth
@@ -278,12 +303,10 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
                       onChange={handleCustomConfigChange}
                       className="w-full p-2 border border-gray-300 rounded-md"
                     />
-                    <p className="mt-1 text-xs text-gray-500">
-                      Maximum number of pages to scan (10-1000).
-                    </p>
                   </div>
                 </div>
                 
+                {/* Highlight robots.txt as a key configuration */}
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -296,6 +319,122 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
                   <label htmlFor="respect_robots_txt" className="ml-2 block text-sm text-gray-700">
                     Respect robots.txt (recommended)
                   </label>
+                </div>
+              </div>
+            )}
+            
+            {/* Add an advanced section toggle */}
+            <div className="mt-4">
+              <button 
+                type="button"
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                className="text-sm text-blue-600 hover:underline flex items-center"
+              >
+                {showAdvanced ? 'Hide' : 'Show'} Advanced Options
+                <svg 
+                  className={`ml-1 w-4 h-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Advanced options section */}
+            {showAdvanced && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Advanced Configuration</h3>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="reduce_false_positives"
+                      name="reduce_false_positives"
+                      checked={customConfigs.reduce_false_positives}
+                      onChange={handleCustomConfigChange}
+                      className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                    />
+                    <label htmlFor="reduce_false_positives" className="ml-2 block text-sm text-gray-700">
+                      Enhanced Scanning (reduce false positives)
+                    </label>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="allow_analyzer_fallbacks"
+                      name="allow_analyzer_fallbacks"
+                      checked={customConfigs.allow_analyzer_fallbacks}
+                      onChange={handleCustomConfigChange}
+                      className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                    />
+                    <label htmlFor="allow_analyzer_fallbacks" className="ml-2 block text-sm text-gray-700">
+                      Use built-in analyzers when tools are unavailable
+                    </label>
+                  </div>
+                  
+                  <h4 className="text-xs font-semibold text-gray-600 mt-3 mb-2">External Tools</h4>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="use_sslyze"
+                        name="use_sslyze"
+                        checked={customConfigs.use_sslyze}
+                        onChange={handleCustomConfigChange}
+                        className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                      />
+                      <label htmlFor="use_sslyze" className="ml-2 block text-sm text-gray-700">
+                        Use SSLyze
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="use_wappalyzer"
+                        name="use_wappalyzer"
+                        checked={customConfigs.use_wappalyzer}
+                        onChange={handleCustomConfigChange}
+                        className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                      />
+                      <label htmlFor="use_wappalyzer" className="ml-2 block text-sm text-gray-700">
+                        Use Wappalyzer
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="use_zap"
+                        name="use_zap"
+                        checked={customConfigs.use_zap}
+                        onChange={handleCustomConfigChange}
+                        className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                      />
+                      <label htmlFor="use_zap" className="ml-2 block text-sm text-gray-700">
+                        Use OWASP ZAP
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="use_nuclei"
+                        name="use_nuclei"
+                        checked={customConfigs.use_nuclei}
+                        onChange={handleCustomConfigChange}
+                        className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                      />
+                      <label htmlFor="use_nuclei" className="ml-2 block text-sm text-gray-700">
+                        Use Nuclei
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -359,7 +498,7 @@ export default function NewProjectScanPage({ params }: { params: { id: string } 
           {/* Action Buttons */}
           <div className="flex items-center justify-between pt-4">
             <Link 
-              href={`/projects/${params.id}`}
+              href={`/projects/${projectId}`}
               className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
             >
               Cancel

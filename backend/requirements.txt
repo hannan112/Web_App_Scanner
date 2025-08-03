@@ -1,0 +1,29 @@
+# Core Django dependencies
+Django>=5.2,<6.0
+djangorestframework>=3.14.0
+djangorestframework-simplejwt>=5.2.2
+django-cors-headers>=4.0.0
+django-allauth>=0.54.0
+dj-rest-auth>=4.0.1
+psycopg2-binary>=2.9.5
+
+# Security-related dependencies
+python-owasp-zap-v2.4>=0.0.20
+sslyze>=5.1.0
+python-Wappalyzer  # For technology detection
+dnspython>=2.3.0
+python-dotenv>=1.0.0
+
+# Utilities
+requests>=2.28.2
+beautifulsoup4>=4.11.2
+pyjwt>=2.6.0
+tqdm  # If you use context_for_LLMs.py
+python-magic  # If you use context_for_LLMs.py
+
+# Additional dependencies
+Pillow>=10.0.0  # For image processing
+gunicorn>=21.2.0  # For production deployment
+whitenoise>=6.5.0  # For static files serving
+django-filter>=23.5  # For filtering in DRF
+django-storages>=1.14.2  # For file storage

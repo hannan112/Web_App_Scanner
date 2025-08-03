@@ -10,21 +10,28 @@ import { getProjectStats } from "@/lib/api/projects";
 import { ProjectStats } from "@/types/project";
 
 interface ProjectDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
-
 
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [projectId, setProjectId] = useState<string>("");
   const [projectStats, setProjectStats] = useState<ProjectStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Resolve params first
   useEffect(() => {
-    if (status === "loading") return;
+    params.then(resolvedParams => {
+      setProjectId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (status === "loading" || !projectId) return;
     
     if (!session) {
       router.push("/login");
@@ -33,7 +40,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
     const fetchProjectStats = async () => {
       try {
-        const data = await getProjectStats(params.id);
+        const data = await getProjectStats(projectId);
         setProjectStats(data);
       } catch (err) {
         setError((err as Error).message);
@@ -43,7 +50,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
     };
 
     fetchProjectStats();
-  }, [session, status, router, params.id]);
+  }, [session, status, router, projectId]);
 
   if (loading) {
     return (

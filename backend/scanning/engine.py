@@ -7,11 +7,8 @@ from urllib.parse import urlparse
 from django.utils import timezone
 
 from scanning.models.scan import Scan, ScanLog
-# Import the passive scanner class
-# Using a function to delay import and avoid circular dependencies
-def get_passive_scanner():
-    from scanning.passive.passive_engine import PassiveScanner
-    return PassiveScanner
+from scanning.passive.unified_scanner import UnifiedPassiveScanner
+
 # Import active and ML engines later as they're implemented
 
 logger = logging.getLogger(__name__)
@@ -34,6 +31,7 @@ class ScanningEngine:
         self.target_url = None
         self.domain = None
         self._stop_requested = False
+        self._progress_lock = threading.Lock()
 
     def start(self):
         """
@@ -122,31 +120,47 @@ class ScanningEngine:
 
     def _run_passive_scan(self):
         """
-        Run a passive scan (information gathering only).
+        Run a passive scan using the unified scanner.
+
+        This method coordinates passive scanning of the target URL using the
+        UnifiedPassiveScanner, which intelligently combines built-in analyzers
+        and mature security tools.
         """
         try:
             self._log_info("Starting passive reconnaissance")
-            
+
             # Check if scan should be stopped
             if self._stop_requested:
                 return
-            
-            # Create the passive scanner using the delayed import
-            PassiveScanner = get_passive_scanner()
-            passive_scanner = PassiveScanner(
+
+            self._log_info("Using Unified Passive Scanner")
+
+            # Create the scanner instance
+            scanner = UnifiedPassiveScanner(
                 self.scan_id,
                 self.scan,
                 self.target_url,
                 self.configuration
             )
-            
-            # Run the passive scan
-            passive_scanner.run_scan()
+
+            # Check which tools are available
+            tool_status = []
+            for tool, status in scanner.available_tools.items():
+                tool_status.append(f"{tool}: {'Available' if status.get('available') else 'Not available'}")
+            self._log_info(f"Tool availability: {', '.join(tool_status)}")
+
+            # Run the scan
+            try:
+                scanner.run_scan()
+                self._log_info("Passive scan completed successfully")
+            except Exception as scan_error:
+                self._log_error(f"Error during passive scan: {str(scan_error)}")
+                raise
             
             # Complete the scan if not stopped
             if not self._stop_requested:
                 self._complete_scan()
-                
+
         except Exception as e:
             logger.exception(f"Error in passive scan: {str(e)}")
             self._fail_scan(str(e))
@@ -176,12 +190,11 @@ class ScanningEngine:
             # Check if scan should be stopped
             if self._stop_requested:
                 return
-                
+                    
             self._log_info("Starting active scan")
             
-            # Run passive scan first using the delayed import
-            PassiveScanner = get_passive_scanner()
-            passive_scanner = PassiveScanner(
+            # Run passive scan first using the unified scanner
+            passive_scanner = UnifiedPassiveScanner(
                 self.scan_id,
                 self.scan,
                 self.target_url,
@@ -195,8 +208,22 @@ class ScanningEngine:
             if self._stop_requested:
                 return
             
-            # Run active scan (to be implemented)
-            self._log_info("Active scanning not yet implemented")
+            # Active scanning implementation 
+            self._log_info("Starting active vulnerability testing")
+            
+            # TODO: Implement active scanning components
+            # For now, provide a clearer placeholder implementation
+            from scanning.models import Vulnerability
+            
+            # Record that active scanning is not yet implemented
+            Vulnerability.objects.create(
+                scan=self.scan,
+                name="Active Scanning Not Implemented",
+                description="Active scanning functionality is still under development. Only passive findings are reported.",
+                severity="info",
+                confidence=1.0,
+                remediation="Check for updates to enable active scanning features."
+            )
             
             # Complete the scan if not stopped
             if not self._stop_requested:
@@ -264,6 +291,23 @@ class ScanningEngine:
             level="ERROR",
             message=message
         )
+
+    def update_progress(self, progress, message=None):
+        """Update scan progress with thread safety"""
+        with self._progress_lock:
+            self.progress = progress
+            self.scan.progress = progress
+            self.scan.save()
+
+        if message:
+            logger.info(f"Scan {self.scan_id}: {message} - {progress}%")
+            
+            # Log to database (this might also need locking if sharing the scan object)
+            ScanLog.objects.create(
+                scan=self.scan,
+                level="INFO",
+                message=f"{message} - {progress}%"
+            )
 
 # Helper functions for backward compatibility
 def start_scan(scan_id):

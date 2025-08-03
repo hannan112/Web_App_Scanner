@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Metadata } from 'next';
 import PasswordResetConfirmForm from "@/components/auth/PasswordResetConfirmForm";
 import { notFound } from 'next/navigation';
@@ -9,27 +8,29 @@ export const metadata: Metadata = {
 };
 
 interface PasswordResetConfirmPageProps {
-  params: {
+  params: Promise<{
     token: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function PasswordResetConfirmPage({ 
+export default async function PasswordResetConfirmPage({ 
   params,
   searchParams 
 }: PasswordResetConfirmPageProps) {
-  const uid = searchParams?.uid;
+  const { token } = await params;
+  const resolvedSearchParams = await searchParams;
+  const uid = resolvedSearchParams?.uid;
   
   // Validate required parameters
-  if (!params.token || !uid) {
+  if (!token || !uid) {
     notFound();
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <PasswordResetConfirmForm 
-        token={params.token} 
+        token={token} 
         uid={uid.toString()} 
       />
     </div>

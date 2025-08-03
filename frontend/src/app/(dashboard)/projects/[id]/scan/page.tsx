@@ -1,15 +1,17 @@
-// src/app/(dashboard)/projects/[id]/scan/new/page.tsx
+// src/app/(dashboard)/projects/[id]/scan/page.tsx
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function OldScanPageRedirect({ params }: { params: { id: string } }) {
+export default function OldScanPageRedirect({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`/projects/${params.id}/scans/new`);
-  }, [params.id, router]);
+    params.then(resolvedParams => {
+      router.replace(`/projects/${resolvedParams.id}/scans/new`);
+    });
+  }, [params, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

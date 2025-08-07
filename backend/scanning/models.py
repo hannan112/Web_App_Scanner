@@ -9,18 +9,17 @@ It's structured to avoid circular imports.
 # Define __all__ to control what's exported
 
 __all__ = [
-    'ScanConfiguration',
-    'Scan',
-    'PassiveReconResult',
-    'CrawlResult',
-    'ScanLog',
-    'Vulnerability'
-    'AjaxSpiderResult'
+    "ScanConfiguration",
+    "Scan",
+    "PassiveReconResult",
+    "CrawlResult",
+    "ScanLog",
+    "Vulnerability",
+    "AjaxSpiderResult",
 ]
 
 # Import the models after defining __all__ to avoid circular references
-from scanning.models.scan import (
-    ScanConfiguration, Scan, PassiveReconResult,
-    CrawlResult, ScanLog, AjaxSpiderResult
-)
+from scanning.models.scan import (AjaxSpiderResult, CrawlResult,
+                                  PassiveReconResult, Scan, ScanConfiguration,
+                                  ScanLog)
 from scanning.models.vulnerability import Vulnerability

@@ -2,4 +2,4 @@
 
 from .core import AjaxSpider
 
-__all__ = ['AjaxSpider']
+__all__ = ["AjaxSpider"]

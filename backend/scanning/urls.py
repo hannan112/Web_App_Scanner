@@ -1,10 +1,13 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from authentication import views
-
-from .views import (ScanConfigurationViewSet, ScanViewSet,
-                    VulnerabilityViewSet, check_tools_status)
+from .views import (
+    ScanConfigurationViewSet,
+    ScanViewSet,
+    VulnerabilityViewSet,
+    check_tools_status,
+    check_zap_status,
+)
 
 router = DefaultRouter()
 router.register(
@@ -17,4 +20,5 @@ urlpatterns = [
     path("", include(router.urls)),
     # scanning/urls.py - Add to existing urlpatterns
     path("tools-status/", check_tools_status, name="tools-status"),
+    path("zap/status/", check_zap_status, name="zap-status"),
 ]

@@ -1,7 +1,7 @@
 // src/components/auth/ProtectedRoute.tsx
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,18 +10,18 @@ export default function ProtectedRoute({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, status } = useSession();
+  const { user, loading, isAuthenticated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (loading) return;
     
-    if (!session) {
+    if (!isAuthenticated) {
       router.push("/login");
     }
-  }, [session, status, router]);
+  }, [user, loading, isAuthenticated, router]);
 
-  if (status === "loading") {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-6 h-6 border-4 border-t-blue-600 rounded-full animate-spin"></div>
@@ -29,7 +29,7 @@ export default function ProtectedRoute({
     );
   }
 
-  if (!session) {
+  if (!isAuthenticated) {
     return null;
   }
 

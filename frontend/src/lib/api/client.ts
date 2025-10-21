@@ -1,6 +1,6 @@
+
 // src/lib/api/client.ts
 import axios from 'axios';
-import { getSession } from 'next-auth/react';
 
 // Base API URL
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -10,29 +10,18 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Include session cookies
 });
 
-// Add request interceptor with async token retrieval
+// Add request interceptor with Django JWT token retrieval
 apiClient.interceptors.request.use(
   async (config) => {
-    // Try to get token from nextauth session first (more reliable)
-    try {
-      const session = await getSession();
-      const token = session?.accessToken;
-      
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-        return config;
-      }
-    } catch (e) {
-      console.error("Error getting session:", e);
-    }
-    
-    // Fallback to localStorage
+    // Use only Django JWT tokens from localStorage
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('accessToken');
       
       if (token) {
+        console.log('🔐 Using Django JWT token:', token.substring(0, 20) + '...');
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
@@ -53,17 +42,26 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
+      console.log('🔄 Got 401, attempting token refresh...');
+      
       try {
         // Get refresh token
         const refreshToken = localStorage.getItem('refreshToken');
         
+        console.log('🔄 Refresh token exists:', !!refreshToken);
+        
         if (refreshToken) {
           // Try to refresh the token
+          console.log('🔄 Attempting refresh with endpoint:', `${API_URL}/api/auth/token/refresh/`);
+          
           const response = await axios.post(`${API_URL}/api/auth/token/refresh/`, {
             refresh: refreshToken
           });
           
+          console.log('🔄 Refresh response:', response.status, response.data);
+          
           if (response.data.access) {
+            console.log('✅ Token refresh successful, updating tokens...');
             // Update tokens in localStorage
             localStorage.setItem('accessToken', response.data.access);
             
@@ -71,7 +69,10 @@ apiClient.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
             
             // Retry the original request
+            console.log('🔄 Retrying original request...');
             return axios(originalRequest);
+          } else {
+            console.log('❌ No access token in refresh response');
           }
         }
       } catch (refreshError) {

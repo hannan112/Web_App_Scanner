@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
 import { getProjectById, updateProject } from "@/lib/api/projects";
 import { Project } from "@/types/project";
@@ -16,7 +16,7 @@ interface EditProjectPageProps {
 }
 
 export default function EditProjectPage({ params }: EditProjectPageProps) {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
   const [projectId, setProjectId] = useState<string>("");
@@ -38,9 +38,9 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   }, [params]);
 
   useEffect(() => {
-    if (status === "loading" || !projectId) return;
+    if (authLoading || !projectId) return;
     
-    if (!session) {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -62,7 +62,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
     };
 
     fetchProject();
-  }, [session, status, router, projectId]);
+  }, [authLoading, isAuthenticated, router, projectId]);
 
   const validateForm = () => {
     const errors: {[key: string]: string} = {};

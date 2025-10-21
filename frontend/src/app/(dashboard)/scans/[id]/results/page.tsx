@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/app/(dashboard)/scans/[id]/results/page.tsx
 "use client";
 
 import { useState, useEffect, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
 import { getScanById, getScanResults, generateScanReport } from "@/lib/api/scans";
 import { getProjectById } from "@/lib/api/projects";
 import ScanResults from "@/components/scanning/ScanResults";
 import PageTitle from "@/components/PageTitle";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function ScanResultsPage({ params }: { params: Promise<{ id: string }> }) {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
-  
+
   const [scanId, setScanId] = useState<string>("");
   const [scanData, setScanData] = useState<any>(null);
   const [projectData, setProjectData] = useState<any>(null);
@@ -23,34 +23,34 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
-  
+
   // Resolve params first
   useEffect(() => {
     params.then(resolvedParams => {
       setScanId(resolvedParams.id);
     });
   }, [params]);
-  
+
   // Fetch scan and project data
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
-    
+
     const fetchData = async () => {
       if (!scanId) return;
       try {
         // Get scan data
         const scan = await getScanById(scanId);
         setScanData(scan);
-        
+
         // Only allow viewing completed scans
         if (scan.status !== 'completed') {
           router.push(`/scans/${scanId}/status`);
           return;
         }
-        
+
         // Get scan results
         const results = await getScanResults(scanId);
         setResultData(results);
@@ -71,23 +71,23 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
         setLoading(false);
       }
     };
-    
-    if (status === "authenticated") {
+
+    if (isAuthenticated) {
       fetchData();
     }
-  }, [scanId, status, router]);
-  
+  }, [scanId, isAuthenticated, router]);
+
   // Handle report generation
   const handleGenerateReport = async () => {
     setIsGeneratingReport(true);
-    
+
     try {
       const reportBlob = await generateScanReport(scanId);
-      
+
       if (!reportBlob) {
         throw new Error('Failed to generate report');
       }
-      
+
       // Create download link
       const url = window.URL.createObjectURL(reportBlob);
       const a = document.createElement('a');
@@ -95,7 +95,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
       a.download = `security-scan-report-${scanId}.pdf`;
       document.body.appendChild(a);
       a.click();
-      
+
       // Clean up
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
@@ -105,7 +105,46 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
       setIsGeneratingReport(false);
     }
   };
-  
+
+  // Handle raw data download
+  const handleDownload = async (type: string) => {
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/api/scanning/scans/${scanId}/download_raw_data/?type=${type}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download data');
+      }
+
+      // Get filename from Content-Disposition header
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition
+        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
+        : `scan_${scanId}_${type}.json`;
+
+      // Create download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+    } catch (error) {
+      console.error('Error downloading data:', error);
+      setError(`Failed to download ${type} data`);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -113,7 +152,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="p-6 max-w-4xl mx-auto">
@@ -134,24 +173,66 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
       </div>
     );
   }
-  
-  const projectName = projectData ? projectData.name : "Unknown Project";
-  const projectLink = projectData ? (
-    <Link href={`/projects/${projectData.id}`} className="hover:underline">
-      {projectName}
-    </Link>
-  ) : (
-    <span>{projectName}</span>
-  );
+
+  // Determine project name for display
+  const projectName = projectData?.name || scanData?.project_info?.name || scanData?.project?.name || "Unknown Project";
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header with summary and action buttons */}
-      <PageTitle 
-        title="Scan Results" 
-        subtitle={<span>Project: {projectLink}</span>}
+      <PageTitle
+        title="Scan Results"
+        subtitle={`Project: ${projectName}`}
       />
-      
+
+      {/* Data Export Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-6">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">Export Scan Summary</h2>
+            <p className="text-sm text-gray-600">
+              Download optimized scan results and key security findings.
+              Raw data storage has been optimized to save disk space.
+            </p>
+          </div>
+          <svg className="w-8 h-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => handleDownload('vulnerabilities')}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            Vulnerabilities ({resultData?.summary?.total_vulnerabilities || 0})
+          </button>
+
+          <button
+            onClick={() => handleDownload('attack_surface')}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9m0 9c-5 0-9-4-9-9s4-9 9-9" />
+            </svg>
+            Attack Surface (&lt;1MB)
+          </button>
+
+          <button
+            onClick={() => handleDownload('raw_findings')}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Raw Findings
+          </button>
+        </div>
+      </div>
+
       <div className="flex justify-end space-x-3 mb-6">
         <button
           onClick={handleGenerateReport}
@@ -175,10 +256,10 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
             </>
           )}
         </button>
-        
+
         {projectData && (
-          <Link 
-            href={`/projects/${projectData.id}/scan/new`} 
+          <Link
+            href={`/projects/${projectData.id}/scans/new`}
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center"
           >
             <svg className="w-4 h-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -187,25 +268,31 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
             New Scan
           </Link>
         )}
-        
+
         <Link href="/scans" className="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">
           Back to Scans
         </Link>
       </div>
-      
+
       {/* Scan Results Component */}
-      <ScanResults 
-        scanId={scanId} 
-        projectId={scanData?.project_id} 
-        vulnerabilities={resultData?.vulnerabilities || []}
-        passiveReconData={resultData?.passive_data}
-        crawlData={resultData?.crawl_data ? {
-          pages_crawled: resultData.crawl_data.pages_crawled || 0,
-          urls_count: resultData.crawl_data.urls_count || 0,
-          forms_count: resultData.crawl_data.forms_count || 0
-        } : undefined}
-        onError={(errMsg: SetStateAction<string | null>) => setError(errMsg)} 
-      />
-      </div>
+      <ErrorBoundary>
+        <ScanResults
+          scanId={scanId}
+          projectId={scanData?.project_id}
+          vulnerabilities={Array.isArray(resultData?.vulnerabilities) ? resultData.vulnerabilities : []}
+          passiveReconData={resultData?.passive_reconnaissance || resultData?.passive_data}
+          activeReconData={resultData?.active_data}
+          crawlData={resultData?.crawl_data ? {
+            pages_crawled: resultData.crawl_data.pages_crawled || 0,
+            urls_count: resultData.crawl_data.urls_count || 0,
+            forms_count: resultData.crawl_data.forms_count || 0
+          } : undefined}
+          scanType={scanData?.configuration?.scan_type}
+          targetUrl={scanData?.target_url || scanData?.url || scanData?.scan_url || resultData?.target_url || resultData?.url || resultData?.project_info?.target_url}
+          vulnerabilitySummary={resultData?.vulnerability_summary}
+          onError={(errMsg: SetStateAction<string | null>) => setError(errMsg)}
+        />
+      </ErrorBoundary>
+    </div>
   );
 }

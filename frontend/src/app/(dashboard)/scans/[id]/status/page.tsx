@@ -5,14 +5,14 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
-import { getScanById, checkScanStatus, stopScan } from "@/lib/api/scans";
+import { getScanById, checkScanStatus, getScanProgress, stopScan, getZAPStatus, getActiveScanStatistics } from "@/lib/api/scans";
 import { getProjectById } from "@/lib/api/projects";
 import PageTitle from "@/components/PageTitle";
 
 export default function ScanStatusPage({ params }: { params: Promise<{ id: string }> }) {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   
   const [scanId, setScanId] = useState<string>("");
@@ -25,6 +25,9 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
   const [isStopping, setIsStopping] = useState<boolean>(false);
   const [pollCount, setPollCount] = useState<number>(0);
   const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
+  const [zapStatus, setZapStatus] = useState<any>(null);
+  const [activeScanStats, setActiveScanStats] = useState<any>(null);
+  const [currentPhase, setCurrentPhase] = useState<string>("");
   
   // Keep a ref to the polling interval to properly clean it up
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -36,18 +39,49 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
     });
   }, [params]);
 
-  // Helper function to get more detailed progress stage information
-  const getProgressStage = (progress: number): string => {
-    if (progress < 10) return "Initializing...";
-    if (progress < 20) return "Analyzing DNS...";
-    if (progress < 30) return "Checking SSL/TLS...";
-    if (progress < 40) return "Analyzing server information...";
-    if (progress < 50) return "Checking content security...";
-    if (progress < 60) return "Analyzing CORS policies...";
-    if (progress < 70) return "Detecting technologies...";
-    if (progress < 80) return "Analyzing cookies...";
-    if (progress < 90) return "Finalizing passive scan...";
-    return "Completing scan...";
+  // Helper function to get more detailed progress stage information based on scan type
+  const getProgressStage = (progress: number, scanType?: string): string => {
+    const isActive = scanType === 'active' || scanType === 'comprehensive';
+    const isComprehensive = scanType === 'comprehensive';
+    
+    if (isComprehensive) {
+      // Comprehensive scan phases
+      if (progress < 5) return "Initializing comprehensive scan...";
+      if (progress < 15) return "Phase 1: Passive reconnaissance...";
+      if (progress < 25) return "Analyzing DNS and SSL/TLS...";
+      if (progress < 35) return "Detecting technologies and server info...";
+      if (progress < 45) return "Phase 2: Active discovery starting...";
+      if (progress < 55) return "Running ZAP spider...";
+      if (progress < 65) return "Running AJAX spider...";
+      if (progress < 75) return "Phase 3: Active vulnerability testing...";
+      if (progress < 85) return "Testing for security vulnerabilities...";
+      if (progress < 95) return "Finalizing comprehensive scan...";
+      return "Processing final results...";
+    } else if (isActive) {
+      // Active scan phases
+      if (progress < 10) return "Initializing active scan...";
+      if (progress < 20) return "Starting ZAP proxy...";
+      if (progress < 30) return "Running spider discovery...";
+      if (progress < 40) return "Running AJAX spider...";
+      if (progress < 50) return "Analyzing discovered URLs...";
+      if (progress < 60) return "Testing for SQL injection...";
+      if (progress < 70) return "Testing for XSS vulnerabilities...";
+      if (progress < 80) return "Testing authentication flaws...";
+      if (progress < 90) return "Running additional security tests...";
+      return "Finalizing active scan...";
+    } else {
+      // Passive scan phases (original)
+      if (progress < 10) return "Initializing...";
+      if (progress < 20) return "Analyzing DNS...";
+      if (progress < 30) return "Checking SSL/TLS...";
+      if (progress < 40) return "Analyzing server information...";
+      if (progress < 50) return "Checking content security...";
+      if (progress < 60) return "Analyzing CORS policies...";
+      if (progress < 70) return "Detecting technologies...";
+      if (progress < 80) return "Analyzing cookies...";
+      if (progress < 90) return "Finalizing passive scan...";
+      return "Completing scan...";
+    }
   };
 
   // Helper function to get description based on scan type
@@ -57,16 +91,40 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         return "Passive scanning collects information without sending potentially harmful requests.";
       case 'active':
         return "Active scanning tests for vulnerabilities by sending specialized requests to the target.";
-      case 'full':
-        return "Full scanning combines passive reconnaissance with comprehensive vulnerability testing.";
+      case 'comprehensive':
+        return "Comprehensive scanning combines passive reconnaissance with active vulnerability testing for complete coverage.";
       default:
         return "Scan in progress...";
     }
   };
   
+  // Fetch ZAP status for active scans
+  const fetchZAPStatus = useCallback(async () => {
+    if (scanData?.configuration?.scan_type === 'active' || scanData?.configuration?.scan_type === 'comprehensive') {
+      try {
+        const status = await getZAPStatus();
+        setZapStatus(status);
+      } catch (err) {
+        console.warn('Failed to fetch ZAP status:', err);
+      }
+    }
+  }, [scanData]);
+  
+  // Fetch active scan statistics
+  const fetchActiveScanStats = useCallback(async () => {
+    if (scanId && (scanData?.configuration?.scan_type === 'active' || scanData?.configuration?.scan_type === 'comprehensive')) {
+      try {
+        const stats = await getActiveScanStatistics(scanId);
+        setActiveScanStats(stats);
+      } catch (err) {
+        console.warn('Failed to fetch active scan statistics:', err);
+      }
+    }
+  }, [scanId, scanData]);
+  
   // Fetch initial scan data
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -74,13 +132,17 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
     const fetchScanData = async () => {
       if (!scanId) return;
       try {
-        const scan = await getScanById(scanId);
+        // Use checkScanStatus to get scan data with project_info
+        const scan = await checkScanStatus(scanId);
         setScanData(scan);
         setScanStatus(scan.status);
         setProgress(scan.progress || 0);
         
-        // Fetch project information
-        if (scan.project_id) {
+        // Set project name from project_info if available
+        if (scan.project_info?.name) {
+          setProjectName(scan.project_info.name);
+        } else if (scan.project_id) {
+          // Fallback: fetch project information separately if project_info not available
           try {
             const project = await getProjectById(scan.project_id.toString());
             setProjectName(project.name);
@@ -96,10 +158,18 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
       }
     };
     
-    if (status === "authenticated") {
+    if (isAuthenticated) {
       fetchScanData();
     }
-  }, [scanId, status, router]);
+  }, [scanId, isAuthenticated, router]);
+  
+  // Fetch ZAP status and active scan stats when scan data is loaded
+  useEffect(() => {
+    if (scanData) {
+      fetchZAPStatus();
+      fetchActiveScanStats();
+    }
+  }, [scanData, fetchZAPStatus, fetchActiveScanStats]);
   
   // Poll for status updates
   const pollStatus = useCallback(async () => {
@@ -107,14 +177,39 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
     
     try {
       setPollCount(prev => prev + 1);
-      const statusData = await checkScanStatus(scanId);
+      const progressData = await getScanProgress(scanId);
       
-      // Update UI with new status
-      setScanStatus(statusData.status);
-      setProgress(statusData.progress || 0);
+      // Debug logging
+      console.log('Poll progress update:', {
+        scanId,
+        status: progressData.status,
+        progress: progressData.progress,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Update UI with new status and progress
+      setScanStatus(progressData.status);
+      setProgress(progressData.progress || 0);
+      
+      // Update current phase if available
+      if (progressData.current_phase) {
+        setCurrentPhase(progressData.current_phase);
+      }
+      
+      // Update project name if available in progress response
+      if (progressData.project_info?.name && !projectName) {
+        setProjectName(progressData.project_info.name);
+      }
+      
+      // Fetch additional data for active scans
+      if (progressData.status === 'running') {
+        fetchZAPStatus();
+        fetchActiveScanStats();
+      }
       
       // If scan is completed or failed, prepare for redirect
-      if (statusData.status === 'completed') {
+      if (progressData.status === 'completed') {
+        console.log('Scan completed, preparing for redirect');
         // Clear the polling interval
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
@@ -125,11 +220,11 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         setRedirectCountdown(3);
       }
     } catch (err) {
-      console.warn("Error polling scan status:", err);
+      console.warn("Error polling scan progress:", err);
       
       // If we've failed to poll multiple times, show an error
       if (pollCount > 5) {
-        setError("Unable to update scan status. Please refresh the page.");
+        setError("Unable to update scan progress. Please refresh the page.");
         // Clear the polling interval
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
@@ -137,18 +232,18 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         }
       }
     }
-  }, [scanId, pollCount]);
+  }, [scanId, pollCount, projectName, fetchZAPStatus, fetchActiveScanStats]);
   
   // Set up polling interval
   useEffect(() => {
-    if (scanStatus === 'in_progress' || scanStatus === 'pending') {
+    if (scanStatus === 'running' || scanStatus === 'in_progress' || scanStatus === 'pending') {
       // Clear any existing interval
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
       }
       
-      // Set new interval
-      pollingIntervalRef.current = setInterval(pollStatus, 3000);
+      // Set new interval - poll more frequently for better real-time updates
+      pollingIntervalRef.current = setInterval(pollStatus, 1000); // Poll every 1 second for real-time updates
       
       // Clean up on unmount
       return () => {
@@ -198,7 +293,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
     switch (scanStatus) {
       case 'pending':
         return { text: 'Pending', className: 'bg-yellow-100 text-yellow-800' };
-      case 'in_progress':
+      case 'running':
         return { text: 'In Progress', className: 'bg-blue-100 text-blue-800' };
       case 'completed':
         return { text: 'Completed', className: 'bg-green-100 text-green-800' };
@@ -210,6 +305,9 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         return { text: 'Unknown', className: 'bg-gray-100 text-gray-800' };
     }
   };
+  
+  // Determine project name for display
+  const displayProjectName = scanData?.project_info?.name || projectName || "Unknown Project";
   
   if (loading) {
     return (
@@ -246,7 +344,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
     <div className="p-6 max-w-4xl mx-auto">
       <PageTitle 
         title="Scan Status" 
-        subtitle={`Monitoring scan progress for ${projectName}`} 
+        subtitle={`Project: ${displayProjectName}`} 
       />
       
       <div className="bg-white rounded-lg shadow overflow-hidden mb-6">
@@ -255,11 +353,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
             <div>
               <h2 className="text-lg font-medium text-gray-900">
-                Scan for {projectName}
+                Scan for {displayProjectName}
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
-                Scan ID: {scanId}
-              </p>
             </div>
             <div className="mt-2 sm:mt-0">
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusInfo.className}`}>
@@ -285,34 +380,89 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                     {Math.round(progress)}% Complete
                   </span>
                 </div>
-                {scanStatus === 'in_progress' && (
+                {scanStatus === 'running' && (
                   <div className="text-right">
                     <span className="text-xs font-semibold inline-block text-blue-600">
-                      {getProgressStage(progress)}
+                      {currentPhase || getProgressStage(progress, scanData?.configuration?.scan_type)}
                     </span>
                   </div>
                 )}
               </div>
-              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-100">
+              <div className="overflow-hidden h-4 mb-4 text-xs flex rounded bg-blue-100 border-2 border-blue-200 shadow-inner">
                 <div 
                   style={{ width: `${progress}%` }}
-                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600 transition-all duration-500"
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out"
                 ></div>
               </div>
+              {scanStatus === 'running' && (
+                <div className="text-center">
+                  <div className="inline-flex items-center text-xs text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse"></div>
+                    Live updates every second
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           
-          {scanStatus === 'in_progress' && (
+          {(scanStatus === 'running' || scanStatus === 'in_progress') && (
             <div className="text-center mb-6">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-6 h-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mr-3"></div>
+                <span className="text-lg font-medium text-blue-600">Scan in Progress</span>
+              </div>
               <p className="text-gray-600">
                 Your scan is running. This page will automatically update as the scan progresses.
               </p>
               <p className="text-gray-500 text-sm mt-2">
                 {getScanTypeDescription(scanData?.configuration?.scan_type)}
               </p>
+              {currentPhase && (
+                <p className="text-blue-600 text-sm mt-2 font-medium">
+                  Current Phase: {currentPhase}
+                </p>
+              )}
               <p className="text-gray-500 text-sm mt-2">
                 You'll be redirected to the results page when the scan completes.
               </p>
+              
+              {/* ZAP Status for Active Scans */}
+              {(scanData?.configuration?.scan_type === 'active' || scanData?.configuration?.scan_type === 'comprehensive') && zapStatus && (
+                <div className="mt-4 p-3 bg-blue-50 rounded-md">
+                  <div className="flex items-center justify-center mb-2">
+                    <div className={`w-2 h-2 rounded-full mr-2 ${
+                      zapStatus.status === 'connected' ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-sm font-medium text-blue-700">
+                      ZAP Status: {zapStatus.status === 'connected' ? 'Connected' : 'Disconnected'}
+                    </span>
+                  </div>
+                  {zapStatus.version && (
+                    <p className="text-xs text-blue-600">Version: {zapStatus.version}</p>
+                  )}
+                </div>
+              )}
+              
+              {/* Active Scan Statistics */}
+              {activeScanStats && (
+                <div className="mt-4 p-3 bg-green-50 rounded-md">
+                  <h4 className="text-sm font-medium text-green-700 mb-2">Live Statistics</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-green-600">
+                    {activeScanStats.spider_urls_found !== undefined && (
+                      <div>URLs Found: {activeScanStats.spider_urls_found}</div>
+                    )}
+                    {activeScanStats.total_vulnerabilities !== undefined && (
+                      <div>Vulnerabilities: {activeScanStats.total_vulnerabilities}</div>
+                    )}
+                    {activeScanStats.ajax_spider_urls_found !== undefined && (
+                      <div>AJAX URLs: {activeScanStats.ajax_spider_urls_found}</div>
+                    )}
+                    {activeScanStats.scan_duration && (
+                      <div>Duration: {activeScanStats.scan_duration}</div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
           
@@ -358,7 +508,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           )}
           
           <div className="flex justify-center space-x-4">
-            {scanStatus === 'in_progress' && (
+            {(scanStatus === 'running' || scanStatus === 'in_progress') && (
               <button
                 onClick={handleStopScan}
                 disabled={isStopping}
@@ -389,7 +539,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
             
             {(scanStatus === 'failed' || scanStatus === 'stopped') && scanData?.project_id && (
               <Link
-                href={`/projects/${scanData.project_id}/scan/new`}
+                href={`/projects/${scanData.project_id}/scans/new`}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 Start New Scan
@@ -418,18 +568,11 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                 <dd className="mt-1 text-sm text-gray-900">
                   {scanData.project_id ? (
                     <Link href={`/projects/${scanData.project_id}`} className="text-blue-600 hover:underline">
-                      {projectName}
+                      {displayProjectName}
                     </Link>
                   ) : (
                     "Unknown Project"
                   )}
-                </dd>
-              </div>
-              
-              <div className="col-span-1">
-                <dt className="text-sm font-medium text-gray-500">Configuration</dt>
-                <dd className="mt-1 text-sm text-gray-900 capitalize">
-                  {scanData.configuration_name || (scanData.configuration?.scan_type ? `${scanData.configuration.scan_type} Scan` : 'Standard')}
                 </dd>
               </div>
               
@@ -441,6 +584,15 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                     : scanData.created_at 
                       ? new Date(scanData.created_at).toLocaleString()
                       : "Not started yet"}
+                </dd>
+              </div>
+              
+              <div className="col-span-1">
+                <dt className="text-sm font-medium text-gray-500">Configuration</dt>
+                <dd className="mt-1 text-sm text-gray-900 capitalize">
+                  {scanData.configuration_name 
+                    ? `${scanData.configuration_name} Scan` 
+                    : "Standard Scan"}
                 </dd>
               </div>
               
@@ -458,34 +610,6 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                   <dt className="text-sm font-medium text-gray-500">Completed</dt>
                   <dd className="mt-1 text-sm text-gray-900">
                     {new Date(scanData.completed_at).toLocaleString()}
-                  </dd>
-                </div>
-              )}
-              
-              {scanData.configuration && (
-                <div className="col-span-2 mt-2">
-                  <dt className="text-sm font-medium text-gray-500">Scan Configuration</dt>
-                  <dd className="mt-1 bg-gray-50 rounded-md p-3">
-                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                      <div className="col-span-1">
-                        <dt className="text-xs text-gray-500">Type</dt>
-                        <dd className="font-medium text-gray-900 capitalize">{scanData.configuration.scan_type || "Standard"}</dd>
-                      </div>
-                      <div className="col-span-1">
-                        <dt className="text-xs text-gray-500">Crawl Depth</dt>
-                        <dd className="font-medium text-gray-900">{scanData.configuration.crawl_depth || 2}</dd>
-                      </div>
-                      <div className="col-span-1">
-                        <dt className="text-xs text-gray-500">Max Pages</dt>
-                        <dd className="font-medium text-gray-900">{scanData.configuration.crawl_max_pages || 100}</dd>
-                      </div>
-                      <div className="col-span-1">
-                        <dt className="text-xs text-gray-500">Respect robots.txt</dt>
-                        <dd className="font-medium text-gray-900">
-                          {scanData.configuration.respect_robots_txt === false ? 'No' : 'Yes'}
-                        </dd>
-                      </div>
-                    </dl>
                   </dd>
                 </div>
               )}

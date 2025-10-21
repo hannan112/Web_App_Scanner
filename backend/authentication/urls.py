@@ -8,6 +8,7 @@ from .views import (
     PasswordResetConfirmView,
     PasswordResetRequestView,
     UserLoginView,
+    UserProfileView,
     UserRegistrationView,
 )
 
@@ -33,4 +34,5 @@ urlpatterns = [
     ),
     path("google/", GoogleLoginView.as_view(), name="google_login"),
     path("google/callback/", GoogleAuthCallbackView.as_view(), name="google_callback"),
+    path("user/", UserProfileView.as_view(), name="user_profile"),
 ]

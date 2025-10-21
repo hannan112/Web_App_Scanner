@@ -68,9 +68,12 @@ class NucleiAdapter:
                 # Add templates path if specified
                 if self.templates_path:
                     passive_templates = os.path.join(
-                        self.templates_path, "ssl,technologies,misconfiguration"
+                        self.templates_path, "ssl,technologies,misconfiguration,sql-injection"
                     )
                     cmd.extend(["-t", passive_templates])
+                else:
+                    # Add SQL injection templates if available
+                    cmd.extend(["-tags", "sqli,sql-injection"])
 
                 # Run Nuclei
                 logger.info(f"Running Nuclei: {' '.join(cmd)}")

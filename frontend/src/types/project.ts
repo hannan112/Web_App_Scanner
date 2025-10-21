@@ -72,15 +72,58 @@ export interface DashboardData {
 export interface ScanConfig {
     id: Key | null | undefined;
     name: ReactNode;
-    scan_type: ReactNode;
-    crawl_depth: ReactNode;
-    max_pages: ReactNode;
-    scan_depth: number;
-    respect_robots_txt: boolean;
-    scan_intensity: number;
+    scan_type: 'passive' | 'active' | 'comprehensive';
+    min_confidence: number;
     user_agent?: string;
-    request_delay: number;
-    custom_headers?: Record<string, string>;
+    request_timeout: number;
+    
+    // Passive scan tools
+    use_sslyze: boolean;
+    use_nuclei: boolean;
+    use_wappalyzer: boolean;
+    use_zap_passive: boolean;
+    
+    // Active scan settings
+    use_zap_active: boolean;
+    enable_spider: boolean;
+    enable_ajax_spider: boolean;
+    max_spider_depth: number;
+    max_spider_duration: number;
+    
+    // ZAP Active Scan Configuration
+    zap_attack_strength: 'LOW' | 'MEDIUM' | 'HIGH' | 'INSANE';
+    zap_active_scan_policy: string;
+    
+    // Vulnerability testing categories
+    test_sql_injection: boolean;
+    test_xss: boolean;
+    test_csrf: boolean;
+    test_authentication: boolean;
+    test_authorization: boolean;
+    test_session_management: boolean;
+    test_file_inclusion: boolean;
+    test_path_traversal: boolean;
+    test_command_injection: boolean;
+    test_xxe: boolean;
+    
+    // SQL Injection testing tools
+    use_sqlmap: boolean;
+    use_nosqlmap: boolean;
+    sqlmap_risk_level: number;
+    sqlmap_level: number;
+    sqlmap_timeout: number;
+    
+    // Rate limiting and safety
+    max_concurrent_requests: number;
+    request_delay_ms: number;
+    scan_timeout_minutes: number;
+    
+    // Enhanced discovery settings
+    use_enhanced_discovery: boolean;
+    discovery_timeout: number;
+    max_subdomains: number;
+    max_wayback_urls: number;
+    max_directories: number;
 }
 
 // Scan result interface
@@ -164,10 +207,41 @@ export interface PassiveReconResult {
     sitemap_xml?: string | any[];
     technologies?: Record<string, any>;
     response_headers?: Record<string, any>;
+    enhanced_discovery?: Record<string, any>;
     urls_discovered?: string[];
     forms_discovered?: Record<string, any>[];
     cookies?: Record<string, string>;
     created_at: string;
+}
+
+// Active Scan Result interface
+export interface ActiveScanResult {
+    id: number;
+    scan: number;
+    spider_results?: Record<string, any>;
+    ajax_spider_results?: Record<string, any>;
+    urls_discovered?: string[];
+    forms_discovered?: Record<string, any>[];
+    attack_surface?: Record<string, any>;
+    raw_findings?: Record<string, any>;
+    authentication_tests?: Record<string, any>;
+    session_analysis?: Record<string, any>;
+    zap_scan_id?: string;
+    zap_spider_id?: string;
+    zap_ajax_spider_id?: string;
+    zap_active_scan_id?: string;
+    total_requests_made: number;
+    total_responses_received: number;
+    scan_duration_seconds: number;
+    created_at: string;
+    
+    // Enhanced discovery fields
+    api_endpoints?: string[];
+    js_endpoints?: string[];
+    discovery_tools_used?: string[];
+    discovery_stats?: Record<string, any>;
+    total_urls?: number;
+    total_forms?: number;
 }
 
 // Crawl data interface
@@ -191,6 +265,7 @@ export interface ScanResultData {
     configuration: ScanConfig;
     vulnerabilities: ScanResult[];
     passive_data?: PassiveReconResult;
+    active_data?: ActiveScanResult;
     crawl_data?: CrawlData;
     ajax_spider_data?: AjaxSpiderResult;
     project_info?: {
@@ -198,4 +273,28 @@ export interface ScanResultData {
         name: string;
         target_url: string;
     };
+}
+
+// ZAP Connection Status interface
+export interface ZAPStatus {
+    status: 'connected' | 'disconnected' | 'error';
+    version?: string;
+    url?: string;
+    error?: string;
+}
+
+// Scan Statistics interface
+export interface ScanStatistics {
+    spider_urls_found: number;
+    ajax_spider_urls_found: number;
+    total_vulnerabilities: number;
+    vulnerability_severity_breakdown: {
+        critical: number;
+        high: number;
+        medium: number;
+        low: number;
+        info: number;
+    };
+    scan_duration: string;
+    zap_version: string;
 }

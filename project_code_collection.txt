@@ -1,7 +1,0 @@
-# PROJECT CODE COLLECTION
-
-## DIRECTORY STRUCTURE
-
-```
-.
-├── backend/

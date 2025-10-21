@@ -1,23 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Session } from "next-auth";
-
-interface CustomUser {
-  name?: string | null;
-  email?: string | null;
-  id: string;
-}
-
-type CustomSession = Session & {
-  user: CustomUser;
-};
 
 export default function ProfileDropdown() {
-  const { data: session } = useSession() as { data: CustomSession | null };
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -37,12 +26,11 @@ export default function ProfileDropdown() {
   }, []);
 
   // Handle logout
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/login");
+  const handleLogout = () => {
+    logout();
   };
 
-  if (!session) {
+  if (!user) {
     return null;
   }
 
@@ -56,10 +44,10 @@ export default function ProfileDropdown() {
         aria-haspopup="true"
       >
         <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-          {session?.user?.name?.[0]?.toUpperCase() ?? "U"}
+          {user?.username?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? "U"}
         </div>
         <span className="hidden md:inline text-sm font-medium text-gray-700 hover:text-gray-800 transition-colors">
-          {session?.user?.name ?? session?.user?.email ?? "User"}
+          {user?.username ?? user?.email ?? "User"}
         </span>
         {/* Dropdown arrow */}
         <svg
@@ -80,8 +68,8 @@ export default function ProfileDropdown() {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
           <div className="px-4 py-2 border-b border-gray-100">
-            <p className="text-sm font-medium text-gray-700">{session?.user?.name ?? "User"}</p>
-            <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
+            <p className="text-sm font-medium text-gray-700">{user?.username ?? "User"}</p>
+            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
           </div>
           
           <Link

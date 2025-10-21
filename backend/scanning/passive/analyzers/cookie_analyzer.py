@@ -121,27 +121,33 @@ def create_cookie_vulnerability_reports(
     """
     # Report cookies without Secure flag
     if insecure_cookies:
-        Vulnerability.objects.create(
+        Vulnerability.objects.get_or_create(
             scan=scan,
             name="Cookies Without Secure Flag",
-            description=f"Found {len(insecure_cookies)} cookies that don't have the Secure flag set. These cookies may be transmitted over unencrypted connections, allowing attackers to intercept sensitive data.",
-            severity="medium",
-            evidence=f"Affected cookies: {', '.join(insecure_cookies[:5])}",
-            remediation="Set the Secure flag on all cookies containing sensitive information to ensure they are only transmitted over HTTPS.",
-            confidence=0.8,
+            url=scan.target_url,
+            defaults={
+                'description': f"Found {len(insecure_cookies)} cookies that don't have the Secure flag set. These cookies may be transmitted over unencrypted connections, allowing attackers to intercept sensitive data.",
+                'severity': "medium",
+                'evidence': f"Affected cookies: {', '.join(insecure_cookies[:5])}",
+                'remediation': "Set the Secure flag on all cookies containing sensitive information to ensure they are only transmitted over HTTPS.",
+                'confidence': 0.8,
+            }
         )
         logger.info(f"Found {len(insecure_cookies)} cookies without Secure flag")
 
     # Report cookies without HttpOnly flag
     if httponly_missing:
-        Vulnerability.objects.create(
+        Vulnerability.objects.get_or_create(
             scan=scan,
             name="Cookies Without HttpOnly Flag",
-            description=f"Found {len(httponly_missing)} cookies that don't have the HttpOnly flag set. These cookies can be accessed by client-side scripts, making them vulnerable to cross-site scripting (XSS) attacks.",
-            severity="medium",
-            evidence=f"Affected cookies: {', '.join(httponly_missing[:5])}",
-            remediation="Set the HttpOnly flag on all cookies containing sensitive information to prevent access from client-side scripts.",
-            confidence=0.8,
+            url=scan.target_url,
+            defaults={
+                'description': f"Found {len(httponly_missing)} cookies that don't have the HttpOnly flag set. These cookies can be accessed by client-side scripts, making them vulnerable to cross-site scripting (XSS) attacks.",
+                'severity': "medium",
+                'evidence': f"Affected cookies: {', '.join(httponly_missing[:5])}",
+                'remediation': "Set the HttpOnly flag on all cookies containing sensitive information to prevent access from client-side scripts.",
+                'confidence': 0.8,
+            }
         )
         logger.info(f"Found {len(httponly_missing)} cookies without HttpOnly flag")
 

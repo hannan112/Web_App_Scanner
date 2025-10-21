@@ -1,32 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import PageTitle from "@/components/PageTitle";
-import type { Session } from "next-auth";
 
 interface FormData {
   username: string;
   email: string;
 }
 
-interface CustomUser {
-  name?: string | null;
-  email?: string | null;
-  id: string;
-}
-
-type CustomSession = Session & {
-  user: CustomUser;
-};
-
 export default function ProfilePage() {
-  const { data: session } = useSession() as { data: CustomSession | null };
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
-    username: session?.user?.name ?? "",
-    email: session?.user?.email ?? "",
+    username: user?.username ?? "",
+    email: user?.email ?? "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -22,6 +22,12 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Ensure user-level binaries are discoverable by subprocess calls
+# This makes tools installed in ~/.local/bin available to the Django process
+_USER_LOCAL_BIN = os.path.expanduser("~/.local/bin")
+if _USER_LOCAL_BIN and _USER_LOCAL_BIN not in os.environ.get("PATH", ""):
+    os.environ["PATH"] = f"{_USER_LOCAL_BIN}:{os.environ.get('PATH', '')}"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -69,11 +75,17 @@ INSTALLED_APPS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Next.js frontend
     "http://127.0.0.1:3000",
+    "http://localhost:3001",  # Next.js frontend on port 3001
+    "http://127.0.0.1:3001",
 ]
 
-# Only allow all origins in development
+# Allow credentials (cookies, authorization headers)
+CORS_ALLOW_CREDENTIALS = True
+
+# Only allow all origins in development, but not with credentials
 if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
+    # Cannot use CORS_ALLOW_ALL_ORIGINS with credentials
+    CORS_ALLOW_ALL_ORIGINS = False
 else:
     CORS_ALLOW_ALL_ORIGINS = False
 
@@ -177,6 +189,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = "/app/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

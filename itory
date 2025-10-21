@@ -1,8 +1,0 @@
-user.email=hannanhaxor686@gmail.com
-user.name=hannan112
-core.repositoryformatversion=0
-core.filemode=true
-core.bare=false
-core.logallrefupdates=true
-remote.origin.url=https://github.com/hannan112/Web_App_Scanner
-remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*

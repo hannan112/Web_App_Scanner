@@ -1,4 +1,4 @@
-#!/home/hannan/FYP/Dev/prototype-1/venv/bin/python
+#!/home/hannan/prototype-2/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

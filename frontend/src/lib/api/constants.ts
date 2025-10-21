@@ -26,12 +26,15 @@ export const PROJECT_ENDPOINTS = {
 };
 
 export const SCAN_ENDPOINTS = {
-  LIST: `${API_URL}/scanning/scans/`,
-  DETAIL: (id: string | number) => `${API_URL}/scanning/scans/${id}/`,
-  STATUS: (id: string | number) => `${API_URL}/scanning/scans/${id}/status/`,
-  RESULTS: (id: string | number) => `${API_URL}/scanning/scans/${id}/results/`,
-  STOP: (id: string | number) => `${API_URL}/scanning/scans/${id}/stop/`,
-  REPORT: (id: string | number) => `${API_URL}/scanning/scans/${id}/report/`,
-  CONFIGURATIONS: `${API_URL}/scanning/configurations/`,
-  ROOT: `${API_URL}/scanning/scans`
+  LIST: `${API_URL}/api/scanning/scans/`,
+  DETAIL: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/`,
+  STATUS: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/status/`,
+  PROGRESS: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/progress/`,
+  RESULTS: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/results/`,
+  STOP: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/stop/`,
+  REPORT: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/report/`,
+  STATISTICS: (id: string | number) => `${API_URL}/api/scanning/scans/${id}/statistics/`,
+  CONFIGURATIONS: `${API_URL}/api/scanning/configurations/`,
+  ZAP_STATUS: `${API_URL}/api/scanning/zap/status/`,
+  ROOT: `${API_URL}/api/scanning`
 };

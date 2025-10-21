@@ -100,26 +100,32 @@ def analyze_forms(scan, forms):
 
     # Create vulnerability records
     if csrf_missing:
-        Vulnerability.objects.create(
+        Vulnerability.objects.get_or_create(
             scan=scan,
             name="Missing CSRF Protection",
-            description=f"Found {len(csrf_missing)} forms without CSRF protection. These forms may be vulnerable to cross-site request forgery (CSRF) attacks, where attackers can make unauthorized requests on behalf of authenticated users.",
-            severity="medium",
-            evidence=f"Forms found at: {', '.join(csrf_missing[:5])}",
-            remediation="Implement CSRF protection for all forms by including a CSRF token that is validated server-side.",
-            confidence=0.8,
+            url=scan.target_url,
+            defaults={
+                'description': f"Found {len(csrf_missing)} forms without CSRF protection. These forms may be vulnerable to cross-site request forgery (CSRF) attacks, where attackers can make unauthorized requests on behalf of authenticated users.",
+                'severity': "medium",
+                'evidence': f"Forms found at: {', '.join(csrf_missing[:5])}",
+                'remediation': "Implement CSRF protection for all forms by including a CSRF token that is validated server-side.",
+                'confidence': 0.8,
+            }
         )
         logger.info(f"Found {len(csrf_missing)} forms without CSRF protection")
 
     if autocomplete_enabled:
-        Vulnerability.objects.create(
+        Vulnerability.objects.get_or_create(
             scan=scan,
             name="Autocomplete Enabled on Sensitive Fields",
-            description=f"Found {len(autocomplete_enabled)} forms with autocomplete enabled on sensitive fields. This may allow browsers to store sensitive information, potentially exposing it to anyone with access to the user's device.",
-            severity="low",
-            evidence=f"Forms found at: {', '.join(autocomplete_enabled[:5])}",
-            remediation="Disable autocomplete for sensitive fields by adding autocomplete='off' to the input fields or form element.",
-            confidence=0.7,
+            url=scan.target_url,
+            defaults={
+                'description': f"Found {len(autocomplete_enabled)} forms with autocomplete enabled on sensitive fields. This may allow browsers to store sensitive information, potentially exposing it to anyone with access to the user's device.",
+                'severity': "low",
+                'evidence': f"Forms found at: {', '.join(autocomplete_enabled[:5])}",
+                'remediation': "Disable autocomplete for sensitive fields by adding autocomplete='off' to the input fields or form element.",
+                'confidence': 0.7,
+            }
         )
         logger.info(
             f"Found {len(autocomplete_enabled)} forms with autocomplete enabled on sensitive fields"

@@ -3,23 +3,23 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { getProjectDashboard } from "@/lib/api/projects";
 import { DashboardData } from "@/types/project";
 
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (authLoading) return;
     
-    if (!session) {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -36,7 +36,7 @@ export default function DashboardPage() {
     };
 
     fetchDashboardData();
-  }, [session, status, router]);
+  }, [authLoading, isAuthenticated, router]);
 
   if (loading) {
     return (
@@ -98,28 +98,28 @@ export default function DashboardPage() {
         
         {dashboardData?.recent_projects && dashboardData.recent_projects.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white">
+            <table className="min-w-full bg-white" style={{ borderCollapse: 'collapse' }}>
               <thead>
-                <tr>
-                  <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Name</th>
-                  <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Target URL</th>
-                  <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Created</th>
-                  <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Actions</th>
+                <tr className="border-b border-gray-200">
+                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Name</th>
+                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Target URL</th>
+                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Created</th>
+                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {dashboardData.recent_projects.map((project) => (
-                  <tr key={project.id}>
-                    <td className="py-2 px-4 border-b text-gray-800">{project.name}</td>
-                    <td className="py-2 px-4 border-b">
+                  <tr key={project.id} className="border-b border-gray-200 hover:bg-gray-50">
+                    <td className="py-2 px-4 text-gray-800">{project.name}</td>
+                    <td className="py-2 px-4">
                       <a href={project.target_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                         {project.target_url}
                       </a>
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-4 text-gray-800">
                       {new Date(project.created_at).toLocaleDateString()}
                     </td>
-                    <td className="py-2 px-4 border-b">
+                    <td className="py-2 px-4">
                       <Link href={`/projects/${project.id}`} className="text-blue-600 hover:underline mr-4">
                         View
                       </Link>

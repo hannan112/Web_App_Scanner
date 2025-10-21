@@ -2,6 +2,7 @@
 import json
 import logging
 import subprocess
+import re
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
@@ -42,6 +43,8 @@ class WappalyzerAdapter:
             # Use Python Wappalyzer
             import requests
             from Wappalyzer import Wappalyzer, WebPage
+            from bs4 import BeautifulSoup
+            import re
 
             # Create webpage object - add headers and timeout
             custom_headers = self.config.get("headers", {})
@@ -77,6 +80,9 @@ class WappalyzerAdapter:
             ):
                 technologies["cdn"] = "Fastly"
 
+            # Enhanced JavaScript analysis for bundled frameworks
+            self._analyze_javascript_files(response.text, url, technologies)
+
             # Now continue with Wappalyzer analysis to enhance our basic header detection
             webpage = WebPage.new_from_response(response)
 
@@ -110,6 +116,156 @@ class WappalyzerAdapter:
             # Still return the technologies we detected from headers
 
         return technologies
+
+    def _analyze_javascript_files(self, html: str, base_url: str, technologies: Dict[str, Any]):
+        """Analyze JavaScript files for bundled frameworks"""
+        try:
+            from bs4 import BeautifulSoup
+            import requests
+            from urllib.parse import urljoin
+            import re
+
+            soup = BeautifulSoup(html, 'html.parser')
+            script_tags = soup.find_all('script', src=True)
+            
+            logger.info(f"Analyzing {len(script_tags)} JavaScript files for frameworks")
+            
+            for script in script_tags:
+                src = script.get('src')
+                if not src:
+                    continue
+                
+                # Convert relative URLs to absolute
+                if src.startswith('/'):
+                    js_url = urljoin(base_url, src)
+                else:
+                    js_url = src
+                
+                try:
+                    # Fetch JavaScript file
+                    js_response = requests.get(js_url, timeout=10)
+                    js_content = js_response.text
+                    
+                    # Check for React
+                    if self._detect_react_in_js(js_content):
+                        if 'React' not in technologies['frameworks']:
+                            technologies['frameworks'].append('React')
+                        logger.info(f"Detected React in {src}")
+                    
+                    # Check for Vue.js
+                    if self._detect_vue_in_js(js_content):
+                        if 'Vue.js' not in technologies['frameworks']:
+                            technologies['frameworks'].append('Vue.js')
+                        logger.info(f"Detected Vue.js in {src}")
+                    
+                    # Check for Angular
+                    if self._detect_angular_in_js(js_content):
+                        if 'Angular' not in technologies['frameworks']:
+                            technologies['frameworks'].append('Angular')
+                        logger.info(f"Detected Angular in {src}")
+                    
+                    # Check for Next.js
+                    if self._detect_nextjs_in_js(js_content):
+                        if 'Next.js' not in technologies['frameworks']:
+                            technologies['frameworks'].append('Next.js')
+                        logger.info(f"Detected Next.js in {src}")
+                    
+                    # Check for other frameworks
+                    self._detect_other_frameworks(js_content, technologies)
+                    
+                except Exception as e:
+                    logger.debug(f"Could not analyze JS file {src}: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error analyzing JavaScript files: {e}")
+
+    def _detect_react_in_js(self, js_content: str) -> bool:
+        """Detect React in JavaScript content"""
+        react_patterns = [
+            r'React\.createElement',
+            r'ReactDOM\.render',
+            r'__REACT_DEVTOOLS_GLOBAL_HOOK__',
+            r'react-dom',
+            r'react\/',
+            r'React\.Component',
+            r'useState',
+            r'useEffect',
+            r'useContext'
+        ]
+        
+        for pattern in react_patterns:
+            if re.search(pattern, js_content, re.IGNORECASE):
+                return True
+        return False
+
+    def _detect_vue_in_js(self, js_content: str) -> bool:
+        """Detect Vue.js in JavaScript content"""
+        vue_patterns = [
+            r'Vue\.createApp',
+            r'new Vue\(',
+            r'vue\.js',
+            r'@vue\/',
+            r'vue-router',
+            r'vuex'
+        ]
+        
+        for pattern in vue_patterns:
+            if re.search(pattern, js_content, re.IGNORECASE):
+                return True
+        return False
+
+    def _detect_angular_in_js(self, js_content: str) -> bool:
+        """Detect Angular in JavaScript content"""
+        angular_patterns = [
+            r'@angular\/',
+            r'angular\.js',
+            r'ng-app',
+            r'ng-controller',
+            r'Angular\.bootstrap'
+        ]
+        
+        for pattern in angular_patterns:
+            if re.search(pattern, js_content, re.IGNORECASE):
+                return True
+        return False
+
+    def _detect_nextjs_in_js(self, js_content: str) -> bool:
+        """Detect Next.js in JavaScript content"""
+        nextjs_patterns = [
+            r'__NEXT_DATA__',
+            r'next\/',
+            r'next\.js',
+            r'getServerSideProps',
+            r'getStaticProps'
+        ]
+        
+        for pattern in nextjs_patterns:
+            if re.search(pattern, js_content, re.IGNORECASE):
+                return True
+        return False
+
+    def _detect_other_frameworks(self, js_content: str, technologies: Dict[str, Any]):
+        """Detect other frameworks and libraries"""
+        # Svelte
+        if re.search(r'svelte', js_content, re.IGNORECASE):
+            if 'Svelte' not in technologies['frameworks']:
+                technologies['frameworks'].append('Svelte')
+        
+        # jQuery
+        if re.search(r'jquery', js_content, re.IGNORECASE):
+            if 'jQuery' not in technologies['javascript_libraries']:
+                technologies['javascript_libraries'].append('jQuery')
+        
+        # Lodash
+        if re.search(r'lodash', js_content, re.IGNORECASE):
+            if 'Lodash' not in technologies['javascript_libraries']:
+                technologies['javascript_libraries'].append('Lodash')
+        
+        # D3.js
+        if re.search(r'd3', js_content, re.IGNORECASE):
+            if 'D3.js' not in technologies['javascript_libraries']:
+                technologies['javascript_libraries'].append('D3.js')
 
     def _add_technology(self, tech_name: str, technologies: Dict[str, Any]):
         """Add a detected technology to the results"""

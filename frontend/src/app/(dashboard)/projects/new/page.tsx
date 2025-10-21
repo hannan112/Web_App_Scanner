@@ -4,12 +4,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
 import { createProject } from "@/lib/api/projects";
 
 export default function CreateProjectPage() {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -21,7 +21,7 @@ export default function CreateProjectPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Check authentication
-  if (status === "loading") {
+  if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-6 h-6 border-4 border-t-blue-600 rounded-full animate-spin"></div>
@@ -29,7 +29,7 @@ export default function CreateProjectPage() {
     );
   }
 
-  if (status === "unauthenticated") {
+  if (!isAuthenticated) {
     router.push("/login");
     return null;
   }

@@ -4,10 +4,33 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
 import { getProjectStats } from "@/lib/api/projects";
+import { getScanResults } from "@/lib/api/scans";
 import { ProjectStats } from "@/types/project";
+import { formatDuration } from "@/lib/utils";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
+import { Bar, Doughnut } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 interface ProjectDetailPageProps {
   params: Promise<{
@@ -16,10 +39,12 @@ interface ProjectDetailPageProps {
 }
 
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [projectId, setProjectId] = useState<string>("");
   const [projectStats, setProjectStats] = useState<ProjectStats | null>(null);
+  const [lastScanSummary, setLastScanSummary] = useState<any | null>(null);
+  const [lastScanMeta, setLastScanMeta] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,9 +56,9 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   }, [params]);
 
   useEffect(() => {
-    if (status === "loading" || !projectId) return;
+    if (authLoading || !projectId) return;
     
-    if (!session) {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -50,7 +75,32 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
     };
 
     fetchProjectStats();
-  }, [session, status, router, projectId]);
+  }, [authLoading, isAuthenticated, router, projectId]);
+
+  // When we have projectStats, fetch last scan summary if available
+  useEffect(() => {
+    const loadLastScanSummary = async () => {
+      if (!projectStats?.scan_stats?.recent_scans || projectStats.scan_stats.recent_scans.length === 0) {
+        setLastScanSummary(null);
+        setLastScanMeta(null);
+        return;
+      }
+
+      const last = projectStats.scan_stats.recent_scans[0];
+      setLastScanMeta(last);
+      try {
+        const data = await getScanResults(String(last.id));
+        // Prefer server-provided summary if present
+        const summary = data?.summary || null;
+        setLastScanSummary(summary);
+      } catch (e) {
+        // If results fetch fails, keep meta only
+        setLastScanSummary(null);
+      }
+    };
+
+    loadLastScanSummary();
+  }, [projectStats]);
 
   if (loading) {
     return (
@@ -122,7 +172,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
               Edit
             </Link>
             <Link 
-              href={`/projects/${project.id}/scan/new`}
+              href={`/projects/${project.id}/scans/new`}
               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               New Scan
@@ -132,49 +182,166 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       </div>
 
       {/* Scan Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Consolidated Scan Information */}
         <div className="bg-white text-gray-800 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-2">Total Scans</h2>
-          <p className="text-3xl font-bold text-blue-600">{scan_stats.total_scans}</p>
+          <h2 className="text-lg font-semibold mb-4">Scan Overview</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-blue-600">{scan_stats.total_scans}</p>
+              <p className="text-sm text-gray-600">Total Scans</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-green-600">{Object.keys(scan_stats.scan_counts_by_type).length}</p>
+              <p className="text-sm text-gray-600">Scan Types</p>
+            </div>
+          </div>
+          {Object.keys(scan_stats.scan_counts_by_type).length > 0 && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Scan Types Breakdown</h3>
+              <div className="space-y-2">
+                {Object.entries(scan_stats.scan_counts_by_type).map(([type, count]) => (
+                  <div key={type} className="flex justify-between items-center">
+                    <span className="capitalize text-sm">{type}</span>
+                    <div className="flex items-center">
+                      <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full" 
+                          style={{ width: `${(Number(count) / scan_stats.total_scans) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="font-semibold text-sm">{String(count)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-        
-        <div className="bg-white  text-gray-800 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-2">Scan Types</h2>
-          {Object.keys(scan_stats.scan_counts_by_type).length > 0 ? (
-            <div className="space-y-1">
-              {Object.entries(scan_stats.scan_counts_by_type).map(([type, count]) => (
-                <div key={type} className="flex justify-between">
-                  <span className="capitalize">{type}</span>
-                  <span className="font-semibold">{String(count)}</span>
+
+        {/* Enhanced Last Scan with Analytics */}
+        <div className="bg-white text-gray-800 p-6 rounded-lg shadow">
+          <h2 className="text-lg font-semibold mb-4">Last Scan Analytics</h2>
+          {lastScanMeta ? (
+            <div className="space-y-4">
+              {/* Scan Details */}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Type</span>
+                  <span className="font-semibold capitalize">{lastScanMeta.scan_type || lastScanMeta.configuration?.scan_type || 'Unknown'}</span>
                 </div>
-              ))}
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Status</span>
+                  <span className="font-semibold capitalize">{lastScanMeta.status || 'Unknown'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Started</span>
+                  <span className="font-semibold">{lastScanMeta.start_time ? new Date(lastScanMeta.start_time).toLocaleString() : '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Duration</span>
+                  <span className="font-semibold">{
+                    lastScanMeta.end_time && lastScanMeta.start_time
+                      ? formatDuration(new Date(lastScanMeta.end_time).getTime() - new Date(lastScanMeta.start_time).getTime())
+                      : (lastScanMeta.status === 'running' ? 'In progress' : '-')
+                  }</span>
+                </div>
+              </div>
+
+              {/* Vulnerability Analytics */}
+              {lastScanSummary ? (
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-gray-600">Total Vulnerabilities</span>
+                    <span className="font-semibold text-lg">{lastScanSummary.total_vulnerabilities}</span>
+                  </div>
+                  
+                  {/* Vulnerability Severity Chart */}
+                  <div className="h-48">
+                    <Doughnut
+                      data={{
+                        labels: ['Critical', 'High', 'Medium', 'Low', 'Info'],
+                        datasets: [{
+                          data: [
+                            lastScanSummary.critical_count || 0,
+                            lastScanSummary.high_count || 0,
+                            lastScanSummary.medium_count || 0,
+                            lastScanSummary.low_count || 0,
+                            lastScanSummary.info_count || 0
+                          ],
+                          backgroundColor: [
+                            '#DC2626', // Red for Critical
+                            '#EA580C', // Orange for High
+                            '#D97706', // Amber for Medium
+                            '#2563EB', // Blue for Low
+                            '#6B7280'  // Gray for Info
+                          ],
+                          borderWidth: 2,
+                          borderColor: '#ffffff'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            position: 'bottom',
+                            labels: {
+                              usePointStyle: true,
+                              padding: 20,
+                              font: {
+                                size: 12
+                              }
+                            }
+                          },
+                          tooltip: {
+                            callbacks: {
+                              label: function(context) {
+                                const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                                const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : '0';
+                                return `${context.label}: ${context.parsed} (${percentage}%)`;
+                              }
+                            }
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+
+                  {/* Vulnerability Counts */}
+                  <div className="grid grid-cols-2 gap-2 text-xs mt-3">
+                    <div className="flex justify-between text-red-600">
+                      <span>Critical</span>
+                      <span className="font-semibold">{lastScanSummary.critical_count}</span>
+                    </div>
+                    <div className="flex justify-between text-orange-600">
+                      <span>High</span>
+                      <span className="font-semibold">{lastScanSummary.high_count}</span>
+                    </div>
+                    <div className="flex justify-between text-yellow-600">
+                      <span>Medium</span>
+                      <span className="font-semibold">{lastScanSummary.medium_count}</span>
+                    </div>
+                    <div className="flex justify-between text-blue-600">
+                      <span>Low</span>
+                      <span className="font-semibold">{lastScanSummary.low_count}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600 col-span-2">
+                      <span>Info</span>
+                      <span className="font-semibold">{lastScanSummary.info_count}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-500 italic mt-2">Summary unavailable</p>
+              )}
+              
+              <div className="pt-2 border-t border-gray-100">
+                <Link href={`/projects/${project.id}/scans/${lastScanMeta.id}`} className="text-blue-600 hover:underline text-sm">View last scan</Link>
+              </div>
             </div>
           ) : (
             <p className="text-gray-500 italic">No scans yet</p>
-          )}
-        </div>
-        
-        <div className="bg-white  text-gray-800 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-2">Vulnerabilities</h2>
-          {Object.keys(scan_stats.vulnerability_counts).length > 0 ? (
-            <div className="space-y-1">
-              {Object.entries(scan_stats.vulnerability_counts).map(([severity, count]) => (
-                <div key={severity} className="flex justify-between">
-                  <span className={`capitalize ${
-                    severity === 'critical' ? 'text-red-600' :
-                    severity === 'high' ? 'text-orange-600' :
-                    severity === 'medium' ? 'text-yellow-600' :
-                    severity === 'low' ? 'text-blue-600' :
-                    'text-gray-600'
-                  }`}>
-                    {severity}
-                  </span>
-                  <span className="font-semibold">{String(count)}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic">No vulnerabilities detected</p>
           )}
         </div>
       </div>
@@ -198,7 +365,11 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
               <tbody>
                 {scan_stats.recent_scans.map((scan: any) => (
                   <tr key={scan.id} className="border-t">
-                    <td className="py-2 px-4 capitalize">{scan.scan_type}</td>
+                    <td className="py-2 px-4">
+                      <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 capitalize">
+                        {scan.scan_type || scan.configuration?.scan_type || 'Unknown'}
+                      </span>
+                    </td>
                     <td className="py-2 px-4">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
                         scan.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -232,7 +403,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
           <div className="bg-gray-50 p-6 text-center rounded">
             <p className="text-gray-600 mb-4">No scans have been performed yet.</p>
             <Link 
-              href={`/projects/${project.id}/scan/new`}
+              href={`/projects/${project.id}/scans/new`}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Start First Scan
@@ -249,7 +420,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
         
         <div className="flex space-x-2">
           <Link 
-            href={`/projects/${project.id}/scan/new`}
+            href={`/projects/${project.id}/scans/new`}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             New Scan
@@ -266,19 +437,3 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   );
 }
 
-// Helper function to format duration in milliseconds to human-readable format
-function formatDuration(ms: number): string {
-  if (ms < 0) return '-';
-  
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  
-  if (hours > 0) {
-    return `${hours}h ${minutes % 60}m`;
-  } else if (minutes > 0) {
-    return `${minutes}m ${seconds % 60}s`;
-  } else {
-    return `${seconds}s`;
-  }
-}

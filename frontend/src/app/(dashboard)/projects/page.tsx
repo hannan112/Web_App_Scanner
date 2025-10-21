@@ -4,13 +4,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { getProjects, deleteProject } from "@/lib/api/projects";
 import { Project } from "@/types/project";
 
 export default function ProjectsPage() {
-  const { data: session, status } = useSession();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,9 +18,9 @@ export default function ProjectsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (authLoading) return;
     
-    if (!session) {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -37,7 +37,7 @@ export default function ProjectsPage() {
     };
 
     fetchProjects();
-  }, [session, status, router]);
+  }, [authLoading, isAuthenticated, router]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -83,72 +83,66 @@ export default function ProjectsPage() {
       </div>
 
       {projects.length > 0 ? (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full bg-white">
+        <div className="bg-white rounded-lg shadow overflow-visible">
+          <table className="min-w-full bg-white" style={{ borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Name</th>
-                <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Target URL</th>
-                <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Created</th>
-                <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Scans</th>
-                <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Last Scan</th>
-                <th className="py-2 px-4 border-b text-left text-gray-800 font-semibold">Actions</th>
+              <tr className="border-b border-gray-200">
+                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Name</th>
+                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Target URL</th>
+                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Created</th>
+                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Scans</th>
+                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Last Scan</th>
+                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {projects.map((project) => (
-                <tr key={project.id}>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                <tr key={project.id} className="border-b border-gray-200 hover:bg-gray-50">
+                  <td className="py-2 px-4 text-gray-800">
                     <Link href={`/projects/${project.id}`} className="text-blue-600 hover:underline font-medium">
                       {project.name}
                     </Link>
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4">
                     <a href={project.target_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                       {project.target_url}
                     </a>
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-4 text-gray-800">
                     {new Date(project.created_at).toLocaleDateString()}
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-4 text-gray-800">
                     {project.scan_count || 0}
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-4 text-gray-800">
                     {project.last_scan_date 
                       ? new Date(project.last_scan_date).toLocaleDateString() 
                       : 'Never'}
                   </td>
-                  <td className="py-2 px-4 border-b">
-                    <div className="flex space-x-2">
-                      <Link href={`/projects/${project.id}`} className="text-blue-600 hover:underline">
-                        View
-                      </Link>
-                      <Link href={`/projects/${project.id}/edit`} className="text-green-600 hover:underline">
-                        Edit
-                      </Link>
-                      {deleteConfirm === project.id ? (
-                        <div className="flex space-x-2">
-                          <button 
-                            onClick={() => handleDelete(project.id)}
-                            className="text-red-600 hover:underline font-bold"
-                          >
-                            Confirm
-                          </button>
-                          <button 
-                            onClick={() => setDeleteConfirm(null)}
-                            className="text-gray-600 hover:underline"
-                          >
-                            Cancel
-                          </button>
+                  <td className="py-2 px-4">
+                    <div className="relative inline-block text-left">
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id={`menu-button-${project.id}`}
+                        aria-expanded="true"
+                        aria-haspopup="true"
+                        onClick={() => setDeleteConfirm(deleteConfirm === project.id ? null : project.id)}
+                      >
+                        <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <circle cx="12" cy="6" r="1.5" />
+                          <circle cx="12" cy="12" r="1.5" />
+                          <circle cx="12" cy="18" r="1.5" />
+                        </svg>
+                      </button>
+                      {deleteConfirm === project.id && (
+                        <div className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+                          <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby={`menu-button-${project.id}`}> 
+                            <Link href={`/projects/${project.id}`} className="block px-4 py-2 text-sm text-blue-700 hover:bg-gray-100" role="menuitem">View</Link>
+                            <Link href={`/projects/${project.id}/edit`} className="block px-4 py-2 text-sm text-green-700 hover:bg-gray-100" role="menuitem">Edit</Link>
+                            <button onClick={() => handleDelete(project.id)} className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100" role="menuitem">Delete</button>
+                          </div>
                         </div>
-                      ) : (
-                        <button 
-                          onClick={() => setDeleteConfirm(project.id)}
-                          className="text-red-600 hover:underline"
-                        >
-                          Delete
-                        </button>
                       )}
                     </div>
                   </td>

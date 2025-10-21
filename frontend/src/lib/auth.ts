@@ -99,8 +99,8 @@ export const authOptions: NextAuthOptions = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                access_token: account.access_token,
-                id_token: account.id_token
+                // Send only access_token to avoid backend id_token audience validation issues
+                access_token: account.access_token
               }),
             });
             

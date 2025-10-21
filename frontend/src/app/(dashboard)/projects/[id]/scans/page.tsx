@@ -1,28 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/app/(dashboard)/projects/[id]/scans/page.tsx
 
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { getProjectById } from "@/lib/api/projects";
-import { getAllScans } from "@/lib/api/scans";
-import { Scan } from "@/types/project";
+import { useProjectData } from "@/lib/hooks/useProjectData";
+import { useScansData } from "@/lib/hooks/useScansData";
 import PageTitle from "@/components/PageTitle";
+import ScanTable from "@/components/scanning/ScanTable";
 
 export default function ProjectScansPage({ params }: { params: Promise<{ id: string }> }) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  
   const [projectId, setProjectId] = useState<string>("");
-  const [project, setProject] = useState<any>(null);
-  const [scans, setScans] = useState<Scan[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  
   // Resolve params first
   useEffect(() => {
     params.then(resolvedParams => {
@@ -30,59 +19,12 @@ export default function ProjectScansPage({ params }: { params: Promise<{ id: str
     });
   }, [params]);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-      return;
-    }
-    
-    const fetchData = async () => {
-      if (!projectId) return;
-      
-      try {
-        // Fetch project details
-        const projectData = await getProjectById(projectId);
-        setProject(projectData);
-        
-        // Fetch all scans
-        const allScans = await getAllScans();
-        
-        // Filter scans for this project
-        const projectScans = allScans.filter(
-          (scan: { project_id: { toString: () => string; }; }) => scan.project_id?.toString() === projectId
-        );
-        
-        setScans(projectScans);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchData();
-  }, [projectId, status, router]);
+  // Use custom hooks for data fetching
+  const { project, loading: projectLoading, error: projectError } = useProjectData({ projectId });
+  const { scans, loading: scansLoading, error: scansError } = useScansData({ projectId, enabled: !!projectId });
 
-  // Function to format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
-
-  // Function to get status badge class
-  const getStatusBadgeClass = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'failed':
-        return 'bg-red-100 text-red-800';
-      case 'stopped':
-        return 'bg-orange-100 text-orange-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const loading = projectLoading || scansLoading;
+  const error = projectError || scansError;
 
   if (loading) {
     return (
@@ -118,7 +60,7 @@ export default function ProjectScansPage({ params }: { params: Promise<{ id: str
         
         <div className="flex space-x-2">
           <Link 
-            href={`/projects/${projectId}/scan/new`}
+            href={`/projects/${projectId}/scans/new`}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Start New Scan
@@ -132,108 +74,8 @@ export default function ProjectScansPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      {scans.length > 0 ? (
-        <div className="bg-white rounded-lg shadow">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Started
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Completed
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Duration
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {scans.map((scan) => (
-                <tr key={scan.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(scan.status)}`}>
-                      {scan.status.charAt(0).toUpperCase() + scan.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 capitalize">
-                    {scan.configuration_name || "Standard"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {scan.started_at ? formatDate(scan.started_at) : formatDate(scan.created_at)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {scan.completed_at ? formatDate(scan.completed_at) : "-"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {scan.completed_at && scan.started_at ? (
-                      formatDuration(
-                        new Date(scan.completed_at).getTime() - new Date(scan.started_at).getTime()
-                      )
-                    ) : (
-                      scan.status === "in_progress" ? "Running..." : "-"
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    {scan.status === "completed" ? (
-                      <Link href={`/scans/${scan.id}/results`} className="text-blue-600 hover:underline">
-                        View Results
-                      </Link>
-                    ) : scan.status === "in_progress" ? (
-                      <Link href={`/scans/${scan.id}/status`} className="text-blue-600 hover:underline">
-                        View Progress
-                      </Link>
-                    ) : scan.status === "failed" || scan.status === "stopped" ? (
-                      <Link href={`/scans/${scan.id}/status`} className="text-blue-600 hover:underline">
-                        View Details
-                      </Link>
-                    ) : (
-                      <span className="text-gray-400">Pending</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="bg-white p-8 rounded-lg shadow text-center">
-          <h2 className="text-xl font-semibold mb-4">No Scans Found</h2>
-          <p className="text-gray-600 mb-6">No security scans have been performed for this project yet.</p>
-          <Link 
-            href={`/projects/${projectId}/scan/new`}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Start Your First Scan
-          </Link>
-        </div>
-      )}
+      <ScanTable scans={scans} projectId={projectId} />
     </div>
   );
 }
 
-// Helper function to format duration in milliseconds
-function formatDuration(ms: number): string {
-  if (ms < 0) return '-';
-  
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  
-  if (hours > 0) {
-    return `${hours}h ${minutes % 60}m`;
-  } else if (minutes > 0) {
-    return `${minutes}m ${seconds % 60}s`;
-  } else {
-    return `${seconds}s`;
-  }
-}

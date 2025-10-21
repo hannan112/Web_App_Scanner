@@ -28,7 +28,12 @@ export const getScanById = async (id: string) => {
  */
 export const getScanResults = async (id: string) => {
   try {
-    const response = await apiClient.get(SCAN_ENDPOINTS.RESULTS(id));
+    const response = await apiClient.get(SCAN_ENDPOINTS.RESULTS(id), {
+      params: {
+        // Ensure backend does not truncate/limit vulnerabilities
+        limit_vulnerabilities: false,
+      },
+    });
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -41,6 +46,18 @@ export const getScanResults = async (id: string) => {
 export const checkScanStatus = async (id: string) => {
   try {
     const response = await apiClient.get(SCAN_ENDPOINTS.STATUS(id));
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error);
+  }
+};
+
+/**
+ * Get scan progress (real-time updates)
+ */
+export const getScanProgress = async (id: string) => {
+  try {
+    const response = await apiClient.get(SCAN_ENDPOINTS.PROGRESS(id));
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -93,7 +110,6 @@ export const getAllScans = async () => {
 export const createScan = async (projectId: string, configId: string) => {
   try {
     const response = await apiClient.post(SCAN_ENDPOINTS.LIST, {
-      project: projectId,
       configuration: configId,
     });
     return response.data;
@@ -121,13 +137,99 @@ export const getScanConfigurations = async (projectId: string) => {
  */
 export const createScanConfiguration = async (configData: {
   project: string;
-  scan_type: string;
-  crawl_depth: number;
-  respect_robots_txt: boolean;
-  crawl_max_pages: number;
+  scan_type: 'passive' | 'active' | 'comprehensive';
+  min_confidence: number;
+  user_agent?: string;
+  request_timeout: number;
+  
+  // Passive scan tools
+  use_sslyze: boolean;
+  use_nuclei: boolean;
+  use_wappalyzer: boolean;
+  use_zap_passive: boolean;
+  
+  // Active scan settings
+  use_zap_active?: boolean;
+  enable_spider?: boolean;
+  enable_ajax_spider?: boolean;
+  max_spider_depth?: number;
+  max_spider_duration?: number;
+  
+  // ZAP Active Scan Configuration
+  zap_attack_strength?: 'LOW' | 'MEDIUM' | 'HIGH' | 'INSANE';
+  zap_active_scan_policy?: string;
+  
+  // Vulnerability testing categories
+  test_sql_injection?: boolean;
+  test_xss?: boolean;
+  test_csrf?: boolean;
+  test_authentication?: boolean;
+  test_authorization?: boolean;
+  test_session_management?: boolean;
+  test_file_inclusion?: boolean;
+  test_path_traversal?: boolean;
+  test_command_injection?: boolean;
+  test_xxe?: boolean;
+  
+  // Rate limiting and safety
+  max_concurrent_requests?: number;
+  request_delay_ms?: number;
+  scan_timeout_minutes?: number;
+  
+  // Enhanced discovery settings
+  use_enhanced_discovery?: boolean;
+  discovery_timeout?: number;
+  max_subdomains?: number;
+  max_wayback_urls?: number;
+  max_directories?: number;
 }) => {
   try {
-    const response = await apiClient.post(SCAN_ENDPOINTS.CONFIGURATIONS, configData);
+    // Convert minutes to seconds for backend compatibility
+    const processedConfigData = {
+      ...configData,
+      // Convert spider duration from minutes to seconds (backend expects seconds)
+      max_spider_duration: configData.max_spider_duration ? configData.max_spider_duration * 60 : undefined,
+      // Convert discovery timeout from seconds to seconds (no conversion needed)
+      discovery_timeout: configData.discovery_timeout,
+      // Keep scan_timeout_minutes in minutes (backend expects minutes)
+      scan_timeout_minutes: configData.scan_timeout_minutes,
+    };
+    
+    console.log('Creating scan configuration with converted values:', {
+      original_spider_duration: configData.max_spider_duration,
+      converted_spider_duration: processedConfigData.max_spider_duration,
+      original_discovery_timeout: configData.discovery_timeout,
+      converted_discovery_timeout: processedConfigData.discovery_timeout,
+      original_scan_timeout: configData.scan_timeout_minutes,
+      converted_scan_timeout: processedConfigData.scan_timeout_minutes,
+    });
+    
+    const response = await apiClient.post(SCAN_ENDPOINTS.CONFIGURATIONS, processedConfigData);
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error);
+  }
+};
+
+/**
+ * Get ZAP connection status
+ */
+export const getZAPStatus = async () => {
+  try {
+    const response = await apiClient.get(SCAN_ENDPOINTS.ZAP_STATUS);
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error);
+  }
+};
+
+
+/**
+ * Get active scan statistics
+ */
+export const getActiveScanStatistics = async (id: string) => {
+  try {
+    const response = await apiClient.get(SCAN_ENDPOINTS.STATISTICS(id));
     return response.data;
   } catch (error) {
     throw handleApiError(error);

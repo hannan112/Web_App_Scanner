@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
 //import Image from "next/image";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { user, isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -45,7 +45,7 @@ export default function Navbar() {
 
           {/* Right side: Profile dropdown */}
           <div className="flex items-center">
-            {session ? (
+            {isAuthenticated ? (
               <ProfileDropdown />
             ) : (
               <div className="flex space-x-4">

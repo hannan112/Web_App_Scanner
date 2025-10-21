@@ -1,5 +1,5 @@
-from scanning.discovery.crawler import Crawler
-from scanning.discovery.sitemap_parser import SitemapParser
-from scanning.passive.unified_scanner import UnifiedPassiveScanner
+"""Passive scanning components"""
 
-__all__ = ["UnifiedPassiveScanner", "Crawler", "SitemapParser"]
+from .scanner import PassiveScanner
+
+__all__ = ["PassiveScanner"]

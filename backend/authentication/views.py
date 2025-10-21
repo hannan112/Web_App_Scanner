@@ -285,3 +285,23 @@ class GoogleAuthCallbackView(APIView):
             f"<html><body>Authentication successful. <a href='{redirect_url}'>Click here</a> if not redirected automatically."
             f"<script>window.location.href='{redirect_url}';</script></body></html>"
         )
+
+
+class UserProfileView(APIView):
+    """
+    Get current user profile
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """Get current user profile"""
+        user = request.user
+        return Response({
+            "id": user.id,
+            "email": user.email,
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "is_active": user.is_active,
+            "date_joined": user.date_joined,
+        }, status=status.HTTP_200_OK)

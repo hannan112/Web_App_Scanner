@@ -1,0 +1,10 @@
+#!/bin/bash
+# Wrapper script for gospider using Docker
+# This script provides a local-like interface for gospider running in Docker
+
+# Get the directory of this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+
+# Run gospider in the discovery-tools container
+docker exec docker-containers-discovery-tools-1 gospider "$@"

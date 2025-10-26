@@ -145,3 +145,4 @@ class Command(BaseCommand):
         self.stdout.write("   • Categorizes findings by severity")
 
 
+

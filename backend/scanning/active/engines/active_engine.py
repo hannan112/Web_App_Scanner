@@ -837,10 +837,12 @@ class ActiveScanningEngine:
                 try:
                     from scanning.integrations.sqlmap_adapter import SQLMapAdapter
                     
+                    # Use shorter timeout for faster scanning, especially for vulnerable apps like DVWA
+                    sqlmap_timeout = min(self.configuration.sqlmap_timeout, 30)  # Cap at 30 seconds
                     sqlmap_config = {
                         "risk_level": self.configuration.sqlmap_risk_level,
                         "level": self.configuration.sqlmap_level,
-                        "timeout": self.configuration.sqlmap_timeout
+                        "timeout": sqlmap_timeout
                     }
                     
                     sqlmap_adapter = SQLMapAdapter(sqlmap_config)
@@ -856,15 +858,28 @@ class ActiveScanningEngine:
                     logger.info(f"Testing {len(urls_to_test)} URLs with SQLMap (filtered for parameters)")
                     
                     # Test each discovered URL
-                    for url in urls_to_test:
-                        logger.info(f"Testing {url} with SQLMap")
-                        sqlmap_findings = sqlmap_adapter.scan_url(url, discovered_forms)
-                        sql_results["sqlmap_results"].extend(sqlmap_findings)
-                        
-                        # Add to vulnerabilities if found
-                        for finding in sqlmap_findings:
-                            if finding.get("severity") in ["critical", "high", "medium"]:
-                                sql_results["sql_injection_vulnerabilities"].append(finding)
+                    for i, url in enumerate(urls_to_test):
+                        logger.info(f"Testing {i+1}/{len(urls_to_test)}: {url} with SQLMap")
+                        try:
+                            sqlmap_findings = sqlmap_adapter.scan_url(url, discovered_forms)
+                            sql_results["sqlmap_results"].extend(sqlmap_findings)
+                            
+                            # Add to vulnerabilities if found
+                            for finding in sqlmap_findings:
+                                if finding.get("severity") in ["critical", "high", "medium"]:
+                                    sql_results["sql_injection_vulnerabilities"].append(finding)
+                            
+                            logger.info(f"Completed SQLMap test for {url} - found {len(sqlmap_findings)} findings")
+                        except Exception as e:
+                            logger.error(f"SQLMap test failed for {url}: {e}")
+                            sql_results["sqlmap_results"].append({
+                                "name": "SQLMap Test Error",
+                                "description": f"SQLMap test failed: {str(e)}",
+                                "severity": "info",
+                                "url": url,
+                                "confidence": 0.0,
+                                "source": "sqlmap"
+                            })
                     
                     logger.info(f"SQLMap testing completed. Found {len(sql_results['sqlmap_results'])} findings")
                     

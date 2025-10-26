@@ -24,11 +24,10 @@ ChartJS.register(
 
 interface ScanBarChartProps {
   scans: Scan[];
-  projects: { [key: string]: string };
   projectsData: Project[];
 }
 
-export default function ScanBarChart({ scans, projects, projectsData }: ScanBarChartProps) {
+export default function ScanBarChart({ scans, projectsData }: ScanBarChartProps) {
   // Group scans by project and sort by project name for consistent alignment
   const projectScanData = projectsData
     .map(project => {
@@ -42,7 +41,7 @@ export default function ScanBarChart({ scans, projects, projectsData }: ScanBarC
         totalScans: projectScans.length,
         completedScans: projectScans.filter(scan => scan.status === 'completed').length,
         inProgressScans: projectScans.filter(scan => 
-          scan.status === 'in_progress' || scan.status === 'running'
+          scan.status === 'in_progress'
         ).length,
         failedScans: projectScans.filter(scan => scan.status === 'failed').length,
       };
@@ -102,7 +101,7 @@ export default function ScanBarChart({ scans, projects, projectsData }: ScanBarC
           padding: 20,
           font: {
             size: 12,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
         },
       },
@@ -146,7 +145,7 @@ export default function ScanBarChart({ scans, projects, projectsData }: ScanBarC
         ticks: {
           font: {
             size: 11,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
           color: '#6B7280',
           maxRotation: 45,
@@ -157,7 +156,7 @@ export default function ScanBarChart({ scans, projects, projectsData }: ScanBarC
           text: 'Projects',
           font: {
             size: 13,
-            weight: '600' as const,
+            weight: 'bold' as const,
           },
           color: '#374151',
           padding: {
@@ -176,7 +175,7 @@ export default function ScanBarChart({ scans, projects, projectsData }: ScanBarC
           stepSize: 1,
           font: {
             size: 11,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
           color: '#6B7280',
           padding: 8,
@@ -186,7 +185,7 @@ export default function ScanBarChart({ scans, projects, projectsData }: ScanBarC
           text: 'Number of Scans',
           font: {
             size: 13,
-            weight: '600' as const,
+            weight: 'bold' as const,
           },
           color: '#374151',
           padding: {

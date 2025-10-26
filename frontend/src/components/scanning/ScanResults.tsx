@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/scanning/ScanResults.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PassiveReconResult, ScanResult, AjaxSpiderResult, CrawlData, ActiveScanResult, ScanStatistics } from '@/types/project';
 import {
   Chart as ChartJS,
@@ -149,7 +149,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
         onError('Error validating scan data');
       }
     }
-  }, [sanitizedPassiveReconData, sanitizedActiveReconData, onError]);
+  }, [sanitizedPassiveReconData, sanitizedActiveReconData, onError, effectiveScanType, scanType]);
 
   // Get filtered vulnerabilities based on severity
   const safeVulnerabilities = sanitizedVulnerabilities.map(vuln => {
@@ -212,7 +212,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
   };
 
   // Get all discovered URLs from various sources
-  const getAllDiscoveredUrls = () => {
+  const getAllDiscoveredUrls = useCallback(() => {
     const urls = new Set<string>();
 
     // From passive recon - safely add URLs
@@ -236,7 +236,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
     }
 
     return Array.from(urls);
-  };
+  }, [sanitizedPassiveReconData, sanitizedActiveReconData]);
 
 
   // Helper to safely render any value as string

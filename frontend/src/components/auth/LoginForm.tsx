@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import { UserCredentials } from "@/types/api";
-import GoogleAuthDebug from "./GoogleAuthDebug";
+// import GoogleAuthDebug from "./GoogleAuthDebug";
 
 export default function LoginForm() {
   const { login, loginWithGoogle } = useAuth();
@@ -78,7 +78,7 @@ export default function LoginForm() {
       const client = window.google.accounts.oauth2.initTokenClient({
         client_id: googleClientId,
         scope: "profile email",
-        callback: async (response: any) => {
+        callback: async (response: { access_token: string }) => {
           try {
             console.log("Google token received, exchanging with backend...");
             const result = await loginWithGoogle(response.access_token);

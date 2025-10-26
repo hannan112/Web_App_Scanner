@@ -24,7 +24,7 @@ export default function ScansPage() {
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const [shouldPoll, setShouldPoll] = useState(true);
   const scansRef = useRef<Scan[]>([]);
-  const refreshScansRef = useRef<() => Promise<void>>();
+  const refreshScansRef = useRef<() => Promise<void>>(() => Promise.resolve());
 
   // Global cleanup on component unmount
   useEffect(() => {
@@ -116,14 +116,13 @@ export default function ScansPage() {
 
     // Check if there are running scans and start polling
     const hasRunningScans = scansRef.current.some(scan => 
-      scan.status === 'running' || 
-      scan.status === 'in_progress' || 
+      scan.status === 'in_progress' ||
       scan.status === 'pending'
     );
 
     if (hasRunningScans && !pollingRef.current) {
       const runningScans = scansRef.current.filter(s => 
-        s.status === 'running' || s.status === 'in_progress' || s.status === 'pending'
+        s.status === 'in_progress' || s.status === 'pending'
       );
       console.log('Starting polling - found running scans:', runningScans.map(s => ({ id: s.id, status: s.status })));
       
@@ -144,8 +143,7 @@ export default function ScansPage() {
           
           // Check if we should stop polling after refresh
           const stillHasRunningScans = scansRef.current.some(scan => 
-            scan.status === 'running' || 
-            scan.status === 'in_progress' || 
+            scan.status === 'in_progress' ||
             scan.status === 'pending'
           );
           
@@ -187,7 +185,6 @@ export default function ScansPage() {
         
         // Check if there are any remaining running scans
         const hasRemainingRunningScans = updatedScans.some(scan => 
-          scan.status === 'running' || 
           scan.status === 'in_progress' || 
           scan.status === 'pending'
         );
@@ -228,7 +225,6 @@ export default function ScansPage() {
       case 'completed':
         return 'bg-green-100 text-green-800';
       case 'in_progress':
-      case 'running':
         return 'bg-blue-100 text-blue-800';
       case 'failed':
         return 'bg-red-100 text-red-800';
@@ -285,7 +281,6 @@ export default function ScansPage() {
         <div className="mb-8">
           <ScanBarChart 
             scans={scans} 
-            projects={projects} 
             projectsData={projectsData} 
           />
         </div>
@@ -335,12 +330,12 @@ export default function ScansPage() {
                           View Results
                         </Link>
                       )}
-                      {(scan.status === 'in_progress' || scan.status === 'running') && (
+                      {(scan.status === 'in_progress') && (
                         <Link href={`/scans/${scan.id}/status`} className="text-blue-600 hover:underline">
                           View Progress
                         </Link>
                       )}
-                      {(scan.status === 'in_progress' || scan.status === 'running') && (
+                      {(scan.status === 'in_progress') && (
                         <button
                           onClick={() => handleStop(scan.id)}
                           disabled={stoppingId === scan.id}

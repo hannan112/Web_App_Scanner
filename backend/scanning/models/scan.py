@@ -81,6 +81,21 @@ class ScanConfiguration(models.Model):
     max_subdomains = models.IntegerField(default=100)
     max_wayback_urls = models.IntegerField(default=200)
     max_directories = models.IntegerField(default=50)
+    
+    # Parameter fuzzing settings
+    enable_parameter_fuzzing = models.BooleanField(default=True)
+    max_parameter_combinations = models.IntegerField(default=50, help_text="Maximum parameter combinations to test per URL")
+    max_parameters_per_url = models.IntegerField(default=10, help_text="Maximum parameters to test per URL")
+    parameter_fuzzing_values = models.JSONField(default=list, help_text="Custom parameter values to test")
+    
+    # Authentication settings for authenticated applications
+    enable_authentication = models.BooleanField(default=False, help_text="Enable authentication for authenticated applications")
+    auth_login_url = models.URLField(blank=True, null=True, help_text="Login page URL")
+    auth_username_field = models.CharField(max_length=100, default="username", help_text="Username field name")
+    auth_password_field = models.CharField(max_length=100, default="password", help_text="Password field name")
+    auth_username = models.CharField(max_length=255, blank=True, null=True, help_text="Username for authentication")
+    auth_password = models.CharField(max_length=255, blank=True, null=True, help_text="Password for authentication")
+    auth_success_indicators = models.JSONField(default=list, help_text="Indicators of successful authentication")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

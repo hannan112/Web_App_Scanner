@@ -101,11 +101,11 @@ export default function ProfilePage() {
           <div className="space-y-4">
             <div>
               <h3 className="text-sm font-medium text-gray-500">Username</h3>
-              <p className="mt-1 text-gray-700">{session?.user?.name || "N/A"}</p>
+              <p className="mt-1 text-gray-700">{user?.username || "N/A"}</p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Email</h3>
-              <p className="mt-1 text-gray-700">{session?.user?.email}</p>
+              <p className="mt-1 text-gray-700">{user?.email}</p>
             </div>
           </div>
         )}

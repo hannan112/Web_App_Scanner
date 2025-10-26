@@ -70,6 +70,21 @@ class ScanConfigurationSerializer(serializers.ModelSerializer):
             "max_subdomains",
             "max_wayback_urls",
             "max_directories",
+            
+            # Parameter fuzzing settings
+            "enable_parameter_fuzzing",
+            "max_parameter_combinations",
+            "max_parameters_per_url",
+            "parameter_fuzzing_values",
+            
+            # Authentication settings
+            "enable_authentication",
+            "auth_login_url",
+            "auth_username_field",
+            "auth_password_field",
+            "auth_username",
+            "auth_password",
+            "auth_success_indicators",
         ]
         extra_kwargs = {
             "project": {"required": True},

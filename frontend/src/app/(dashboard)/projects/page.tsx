@@ -10,7 +10,7 @@ import { getProjects, deleteProject } from "@/lib/api/projects";
 import { Project } from "@/types/project";
 
 export default function ProjectsPage() {
-  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);

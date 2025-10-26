@@ -478,6 +478,7 @@ class UnifiedScanningEngine:
         try:
             from scanning.models.scan import PassiveReconResult, ScanLog
             from scanning.models.vulnerability import Vulnerability
+            from scanning.utils.url_discovery_logger import URLDiscoveryLogger
             
             # Ensure scan object is loaded
             if self.scan is None:
@@ -509,6 +510,14 @@ class UnifiedScanningEngine:
                 recon_result.save()
             
             logger.info(f"Passive results saved successfully. Enhanced discovery: {bool(recon_result.enhanced_discovery)}")
+            
+            # Log URL discoveries to files
+            try:
+                url_logger = URLDiscoveryLogger(self.scan_id, self.target_url)
+                url_logger.log_url_discoveries(results, "passive")
+                logger.info("URL discoveries logged to files for passive scan")
+            except Exception as e:
+                logger.error(f"Failed to log URL discoveries for passive scan: {e}")
             
             # Save passive vulnerabilities with deduplication
             vulnerabilities = results.get('vulnerabilities', [])
@@ -549,6 +558,7 @@ class UnifiedScanningEngine:
         try:
             from scanning.models.scan import ActiveScanResult
             from scanning.models.vulnerability import Vulnerability
+            from scanning.utils.url_discovery_logger import URLDiscoveryLogger
             
             # Save comprehensive results to ActiveScanResult
             active_result, created = ActiveScanResult.objects.get_or_create(
@@ -560,6 +570,14 @@ class UnifiedScanningEngine:
                     'urls_discovered': self._extract_urls_from_results(results),
                 }
             )
+            
+            # Log URL discoveries to files
+            try:
+                url_logger = URLDiscoveryLogger(self.scan_id, self.target_url)
+                url_logger.log_url_discoveries(results, "active")
+                logger.info("URL discoveries logged to files for active scan")
+            except Exception as e:
+                logger.error(f"Failed to log URL discoveries for active scan: {e}")
             
             # Save active vulnerabilities with deduplication
             vulnerabilities = results.get('vulnerability_details', [])
@@ -740,9 +758,56 @@ class UnifiedScanningEngine:
             # 4. Reduce false positives
             
             from scanning.models.scan import ScanLog
+            from scanning.utils.url_discovery_logger import URLDiscoveryLogger
             
             # Get total vulnerability count
             total_vulns = self.scan.vulnerabilities.count()
+            
+            # Log comprehensive scan summary with all discovered URLs
+            try:
+                # Collect all discovered URLs from both phases
+                comprehensive_results = {
+                    'enhanced_discovery': {},
+                    'spider_results': {},
+                    'ajax_spider_results': {},
+                    'urls_discovered': []
+                }
+                
+                # Get passive results
+                try:
+                    from scanning.models.scan import PassiveReconResult
+                    passive_result = PassiveReconResult.objects.get(scan=self.scan)
+                    comprehensive_results['enhanced_discovery'] = passive_result.enhanced_discovery or {}
+                except PassiveReconResult.DoesNotExist:
+                    logger.warning("No passive results found for comprehensive integration")
+                
+                # Get active results
+                try:
+                    from scanning.models.scan import ActiveScanResult
+                    active_result = ActiveScanResult.objects.get(scan=self.scan)
+                    comprehensive_results['spider_results'] = active_result.spider_results or {}
+                    comprehensive_results['ajax_spider_results'] = active_result.ajax_spider_results or {}
+                    comprehensive_results['urls_discovered'] = active_result.urls_discovered or []
+                except ActiveScanResult.DoesNotExist:
+                    logger.warning("No active results found for comprehensive integration")
+                
+                # Log comprehensive URL discoveries
+                url_logger = URLDiscoveryLogger(self.scan_id, self.target_url)
+                url_logger.log_url_discoveries(comprehensive_results, "comprehensive")
+                
+                # Log scan summary
+                scan_summary = {
+                    'vulnerabilities': list(self.scan.vulnerabilities.values()),
+                    'urls_discovered': comprehensive_results.get('urls_discovered', []),
+                    'forms': comprehensive_results.get('spider_results', {}).get('forms', []),
+                    'parameters': comprehensive_results.get('spider_results', {}).get('parameters', [])
+                }
+                url_logger.log_scan_summary(scan_summary, "comprehensive")
+                
+                logger.info("Comprehensive URL discoveries and scan summary logged to files")
+                
+            except Exception as e:
+                logger.error(f"Failed to log comprehensive URL discoveries: {e}")
             
             ScanLog.objects.create(
                 scan=self.scan,

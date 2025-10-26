@@ -74,6 +74,8 @@ export const authOptions: NextAuthOptions = {
           response_type: "code",
         },
       },
+      // Explicitly set redirect URI if needed
+      // redirectUri: "http://localhost:3000/api/auth/callback/google",
     }),
   ],
 

@@ -7,7 +7,7 @@ import Link from "next/link";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (

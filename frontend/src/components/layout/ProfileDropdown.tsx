@@ -3,13 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function ProfileDropdown() {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   // Close dropdown when clicking outside
   useEffect(() => {

@@ -9,7 +9,7 @@ psycopg2-binary>=2.9.5
 
 # Security-related dependencies
 python-owasp-zap-v2.4>=0.0.20
-sslyze>=5.1.0
+sslyze
 python-Wappalyzer  # For technology detection
 dnspython>=2.3.0
 python-dotenv>=1.0.0

@@ -20,7 +20,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -39,7 +39,7 @@ interface ProjectDetailPageProps {
 }
 
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [projectId, setProjectId] = useState<string>("");
   const [projectStats, setProjectStats] = useState<ProjectStats | null>(null);
@@ -93,7 +93,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
         // Prefer server-provided summary if present
         const summary = data?.summary || null;
         setLastScanSummary(summary);
-      } catch (e) {
+      } catch {
         // If results fetch fails, keep meta only
         setLastScanSummary(null);
       }

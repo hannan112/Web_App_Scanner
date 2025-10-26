@@ -33,10 +33,10 @@ class SQLMapAdapter:
                     self.sqlmap_path = "sqlmap"  # Fallback to system sqlmap
         else:
             self.sqlmap_path = default_path
-        self.min_confidence = float(self.config.get("min_confidence", 0.7))
-        self.timeout = int(self.config.get("timeout", 60))  # 1 minute default (reduced from 5 minutes)
-        self.risk_level = int(self.config.get("risk_level", 1))  # 1-3
-        self.level = int(self.config.get("level", 1))  # 1-5
+        self.min_confidence = float(self.config.get("min_confidence", 0.5))  # Lower threshold for better detection
+        self.timeout = int(self.config.get("timeout", 30))  # 30 seconds default for faster scanning
+        self.risk_level = int(self.config.get("risk_level", 2))  # Higher risk level for better detection
+        self.level = int(self.config.get("level", 2))  # Higher level for more thorough testing
         
     def _is_global_sqlmap_available(self) -> bool:
         """Check if global sqlmap is available in PATH"""
@@ -346,7 +346,7 @@ class SQLMapAdapter:
                     "--batch",  # Non-interactive mode
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "5",  # Further reduced timeout for faster scanning
+                    "--timeout", "3",  # 3 seconds timeout for faster scanning
                     "--retries", "1",
                     "--threads", "1",
                     "--delay", "0.5",  # Reduced delay for faster scanning
@@ -364,7 +364,7 @@ class SQLMapAdapter:
                     "--batch",  # Non-interactive mode
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "5",  # Further reduced timeout for faster scanning
+                    "--timeout", "3",  # 3 seconds timeout for faster scanning
                     "--retries", "1",
                     "--threads", "1",
                     "--delay", "0.5",  # Reduced delay for faster scanning
@@ -385,12 +385,24 @@ class SQLMapAdapter:
             
             # Run SQLMap with timeout
             start_time = time.time()
-            result = subprocess.run(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                timeout=self.timeout
-            )
+            try:
+                result = subprocess.run(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    timeout=self.timeout
+                )
+            except subprocess.TimeoutExpired:
+                logger.warning(f"SQLMap scan timed out after {self.timeout}s for {url}")
+                return [{
+                    "name": "SQLMap Timeout",
+                    "description": f"SQLMap scan timed out after {self.timeout} seconds. This may indicate a slow or unresponsive target.",
+                    "severity": "info",
+                    "url": url,
+                    "confidence": 0.3,
+                    "source": "sqlmap",
+                    "remediation": "Consider increasing timeout or testing with a faster target"
+                }]
             
             # Parse results - be more sensitive to detection
             output_text = result.stdout.decode().lower()
@@ -458,13 +470,15 @@ class SQLMapAdapter:
                     "--batch",
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "5",  # Further reduced timeout for faster scanning
+                    "--timeout", "3",  # 3 seconds timeout for faster scanning
                     "--retries", "1",
                     "--threads", "1",
                     "--delay", "0.5",  # Reduced delay for faster scanning
                     "--skip-waf",  # Skip WAF detection to speed up
-                    "--technique=BEUSTQ",  # Use faster techniques only
-                    "--no-cast"  # Skip type casting for speed
+                    "--technique=BEUSTQ",  # Use all techniques for better detection
+                    "--no-cast",  # Skip type casting for speed
+                    "--smart",  # Smart detection for faster results
+                    "--keep-alive"  # Keep connection alive
                 ]
             else:
                 # It's a global command (system installation)
@@ -475,13 +489,15 @@ class SQLMapAdapter:
                     "--batch",
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "5",  # Further reduced timeout for faster scanning
+                    "--timeout", "3",  # 3 seconds timeout for faster scanning
                     "--retries", "1",
                     "--threads", "1",
                     "--delay", "0.5",  # Reduced delay for faster scanning
                     "--skip-waf",  # Skip WAF detection to speed up
-                    "--technique=BEUSTQ",  # Use faster techniques only
-                    "--no-cast"  # Skip type casting for speed
+                    "--technique=BEUSTQ",  # Use all techniques for better detection
+                    "--no-cast",  # Skip type casting for speed
+                    "--smart",  # Smart detection for faster results
+                    "--keep-alive"  # Keep connection alive
                 ]
             
             if form.get("method", "GET").upper() == "POST":
@@ -490,12 +506,24 @@ class SQLMapAdapter:
             logger.info(f"Testing form for SQL injection: {url}")
             
             # Run SQLMap
-            result = subprocess.run(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                timeout=self.timeout
-            )
+            try:
+                result = subprocess.run(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    timeout=self.timeout
+                )
+            except subprocess.TimeoutExpired:
+                logger.warning(f"SQLMap form test timed out after {self.timeout}s for {url}")
+                return [{
+                    "name": "SQLMap Form Timeout",
+                    "description": f"SQLMap form test timed out after {self.timeout} seconds. This may indicate a slow or unresponsive target.",
+                    "severity": "info",
+                    "url": url,
+                    "confidence": 0.3,
+                    "source": "sqlmap",
+                    "remediation": "Consider increasing timeout or testing with a faster target"
+                }]
             
             # Parse results - be more sensitive to detection
             output_text = result.stdout.decode().lower()

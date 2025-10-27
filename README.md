@@ -193,7 +193,7 @@ npm test
 ### 👥 Contributors
 
 List of contributors:
-- [Add your name here]
+- [Hannan Ali - hannanhaxor686@gmail.com]
 
 ### 📄 License
 

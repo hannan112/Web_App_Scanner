@@ -297,3 +297,8 @@ class URLDiscoveryLogger:
             logger.error(f"Failed to log scan summary: {e}")
 
 
+
+
+
+
+

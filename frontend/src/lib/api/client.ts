@@ -2,15 +2,20 @@
 // src/lib/api/client.ts
 import axios from 'axios';
 
-// Base API URL
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Base API URL normalized to include exactly one /api
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const TRIMMED_API_URL = RAW_API_URL.replace(/\/$/, '');
+export const API_URL = /\/api$/.test(TRIMMED_API_URL)
+  ? TRIMMED_API_URL
+  : `${TRIMMED_API_URL}/api`;
 
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Include session cookies
+  // Do not send cookies; use JWT Authorization header to avoid CSRF
+  withCredentials: false,
 });
 
 // Add request interceptor with Django JWT token retrieval
@@ -52,9 +57,9 @@ apiClient.interceptors.response.use(
         
         if (refreshToken) {
           // Try to refresh the token
-          console.log('🔄 Attempting refresh with endpoint:', `${API_URL}/api/auth/token/refresh/`);
+          console.log('🔄 Attempting refresh with endpoint:', `${API_URL}/auth/token/refresh/`);
           
-          const response = await axios.post(`${API_URL}/api/auth/token/refresh/`, {
+          const response = await axios.post(`${API_URL}/auth/token/refresh/`, {
             refresh: refreshToken
           });
           

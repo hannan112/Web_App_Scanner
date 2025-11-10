@@ -20,8 +20,11 @@ export async function POST(request: NextRequest) {
     // Log what we're sending to the backend
     console.log('Forwarding Google tokens to backend');
     
-    // Forward the exact token structure to your backend API
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/`;
+    // Build backend API URL robustly to avoid double /api prefixes
+    const rawBase = process.env.NEXT_PUBLIC_API_URL || '';
+    const trimmedBase = rawBase.replace(/\/$/, ''); // remove trailing slash if present
+    const apiBase = /\/api$/.test(trimmedBase) ? trimmedBase : `${trimmedBase}/api`;
+    const apiUrl = `${apiBase}/auth/google/`;
     console.log('Backend API URL:', apiUrl);
     
     const response = await fetch(apiUrl, {

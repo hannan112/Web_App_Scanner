@@ -1,4 +1,5 @@
 import EmailVerification from "@/components/auth/EmailVerification";
+import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 
 interface VerifyEmailPageProps {
   params: Promise<{
@@ -8,10 +9,13 @@ interface VerifyEmailPageProps {
 
 export default async function VerifyEmailPage({ params }: VerifyEmailPageProps) {
   const { token } = await params;
-  
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <EmailVerification token={token} />
+    <div className="relative flex items-center justify-center min-h-screen">
+      <WorldMapAnimation />
+      <div className="relative z-10">
+        <EmailVerification token={token} />
+      </div>
     </div>
   );
 }

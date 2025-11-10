@@ -19,42 +19,44 @@ logger = logging.getLogger(__name__)
 
 class ZAPActiveAdapter:
     """Enhanced ZAP adapter for active scanning with maximum Docker potential"""
-    
-    def __init__(self, config=None, scan_id=None):
+
+    def __init__(self, config=None, scan_id=None, scan_logger=None, engine=None):
         self.config = config or {}
         self.scan_id = scan_id  # Store scan ID for unique session naming
-        
+        self.scan_logger = scan_logger  # Scan-specific logger instance
+        self.engine = engine  # Reference to UnifiedScanningEngine for stop checks
+
         # Try multiple possible ZAP hosts (similar to views.py logic)
         possible_hosts = [
             os.getenv("ZAP_HOST"),
-            "localhost", 
+            "localhost",
             "127.0.0.1",
             "zap"  # Docker service name as fallback
         ]
-        
+
         # Filter out None values and try to find working host
         zap_hosts = [h for h in possible_hosts if h is not None]
         if not zap_hosts:
             zap_hosts = ["localhost"]
-        
+
         self.zap_port = os.getenv("ZAP_PORT", "8080")
         self.api_key = os.getenv("ZAP_API_KEY", "changeme123")
-        
+
         # Find working ZAP host
         self.zap_host = self._find_working_host(zap_hosts)
         if not self.zap_host:
             self.zap_host = "localhost"  # Default fallback
-            
+
         self.base_url = f"http://{self.zap_host}:{self.zap_port}"
-        
+
         # ZAP API endpoints
         self.api_url = f"{self.base_url}/JSON"
-        
+
         # Scan tracking
         self.spider_id = None
         self.ajax_spider_id = None
         self.active_scan_id = None
-        
+
         # Results storage
         self.results = {
             "spider_results": {},
@@ -63,10 +65,10 @@ class ZAPActiveAdapter:
             "vulnerability_details": [],
             "scan_statistics": {}
         }
-        
+
         # Target scoping
         self.target_url: Optional[str] = None
-        
+
         # Session management for isolation
         self.session_name = None
         self.context_ids = []  # Track contexts created by this adapter
@@ -102,35 +104,57 @@ class ZAPActiveAdapter:
         try:
             # Create unique session name
             self.session_name = self._create_unique_session_name()
-            
+
             # Clean up previous contexts first
             self._cleanup_previous_contexts()
-            
+
             # Start fresh session with unique name
-            self._make_api_post_request("core/action/newSession", {
-                "name": self.session_name, 
+            # Note: Some actions might not exist in all ZAP versions, handle gracefully
+            result = self._make_api_post_request("core/action/newSession", {
+                "name": self.session_name,
                 "overwriteSession": "true"
             })
-            
+            if result:
+                logger.info(f"Created new ZAP session: {self.session_name}")
+
             # Clear all alerts from previous scans
             self._make_api_post_request("core/action/deleteAllAlerts", {})
-            
-            # Clear site tree/history and contexts to remove any artifacts from previous scans
-            self._make_api_post_request("core/action/deleteAllAlerts", {})
-            self._make_api_post_request("core/action/deleteAllAlerts", {})  # keep double-call for certain ZAP versions
-            self._make_api_post_request("core/action/clearSiteTree", {})
-            self._make_api_post_request("core/action/clearExcludedFromProxy", {})
-            self._make_api_post_request("core/action/clearStats", {})
-            
+
+            # Clear site tree/history - these might not exist in all ZAP versions
+            # Don't fail if they don't work
+            try:
+                self._make_api_post_request("core/action/deleteAllAlerts", {})
+                self._make_api_post_request("core/action/deleteAllAlerts", {})  # double-call for certain versions
+            except:
+                pass
+
+            # Try to clear site tree and stats (might not exist)
+            try:
+                self._make_api_post_request("core/action/clearSiteTree", {})
+            except:
+                logger.debug("clearSiteTree action not available in this ZAP version")
+
+            try:
+                self._make_api_post_request("core/action/clearExcludedFromProxy", {})
+            except:
+                logger.debug("clearExcludedFromProxy action not available")
+
+            try:
+                self._make_api_post_request("core/action/clearStats", {})
+            except:
+                logger.debug("clearStats action not available")
+
             # Reset any running scans
             self._make_api_post_request("spider/action/stopAllScans", {})
             self._make_api_post_request("ascan/action/stopAllScans", {})
-            
-            logger.info(f"Reset ZAP state with unique session: {self.session_name}")
-            
+
+            logger.info(f"✅ Reset ZAP state with session: {self.session_name}")
+
         except Exception as e:
-            logger.error(f"Failed to reset ZAP state: {e}")
-            raise
+            # Don't fail the scan if reset has issues
+            logger.warning(f"Some ZAP reset actions failed (non-critical): {e}")
+            if self.scan_logger:
+                self.scan_logger.log_error("ZAP Reset Warning", f"Some cleanup actions not available: {str(e)}")
     
     def _find_working_host(self, hosts: List[str]) -> Optional[str]:
         """Find the first working ZAP host from the list"""
@@ -165,49 +189,99 @@ class ZAPActiveAdapter:
         return False
     
     def _make_api_request(self, endpoint: str, params: Dict = None) -> Optional[Dict]:
-        """Make API request to ZAP"""
+        """Make API request to ZAP with logging"""
         try:
             url = f"{self.api_url}/{endpoint}/"
             params = params or {}
             if self.api_key:
                 params["apikey"] = self.api_key
-            
+
             response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
-            
+
             result = response.json()
+
+            # Log successful request
+            if self.scan_logger:
+                self.scan_logger.log_api_request("GET", url, params, result)
+
             return result
-            
+
         except Exception as e:
             logger.error(f"ZAP API request failed for {endpoint}: {e}")
+
+            # Log failed request
+            if self.scan_logger:
+                self.scan_logger.log_api_request("GET", f"{self.api_url}/{endpoint}/", params, None, str(e))
+                self.scan_logger.log_error("ZAP API Request Failed", f"Endpoint: {endpoint}\nError: {str(e)}")
+
             return None
     
     def _make_api_post_request(self, endpoint: str, data: Dict = None) -> Optional[Dict]:
-        """Make POST API request to ZAP"""
+        """Make API request to ZAP with logging (uses GET, not POST)
+
+        IMPORTANT: Despite the name, this uses GET requests because ZAP's JSON API
+        action endpoints don't accept POST (returns CONTENT_TYPE_NOT_SUPPORTED).
+        ZAP's design: action endpoints work with GET, view endpoints also use GET.
+        """
         try:
             url = f"{self.api_url}/{endpoint}/"
-            data = data or {}
+
+            # Prepare parameters - API key MUST be in URL params
+            params = {}
             if self.api_key:
-                data["apikey"] = self.api_key
-            
-            response = requests.post(url, data=data, timeout=30)
+                params["apikey"] = self.api_key
+
+            # Add other data to params
+            data = data or {}
+            params.update(data)
+
+            # Use GET instead of POST - ZAP action endpoints don't accept POST!
+            response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
-            
+
             result = response.json()
+
+            # Log successful request
+            if self.scan_logger:
+                self.scan_logger.log_api_request("GET (action)", url, params, result)
+
             return result
-            
+
         except Exception as e:
-            logger.error(f"ZAP API POST request failed for {endpoint}: {e}")
+            logger.error(f"ZAP API request failed for {endpoint}: {e}")
+
+            # Log failed request
+            if self.scan_logger:
+                self.scan_logger.log_api_request("GET (action)", f"{self.api_url}/{endpoint}/", params, None, str(e))
+                self.scan_logger.log_error("ZAP API Request Failed", f"Endpoint: {endpoint}\nError: {str(e)}")
+
             return None
     
     def run_comprehensive_active_scan(self, target_url: str, scan_config) -> Dict:
         """Run comprehensive active scan maximizing ZAP potential"""
         logger.info(f"Starting comprehensive active scan for {target_url}")
-        
+
         if not self.check_zap_connection():
             raise ConnectionError("Cannot connect to ZAP. Ensure ZAP Docker container is running.")
-        
+
         try:
+            # Translate localhost URLs for Docker environment
+            from scanning.utils.docker_network_helper import get_docker_accessible_url
+
+            original_url = target_url
+            target_url = get_docker_accessible_url(target_url, self.zap_host)
+
+            if target_url != original_url:
+                logger.info(f"🐳 Translated URL for Docker: {original_url} → {target_url}")
+                if self.scan_logger:
+                    self.scan_logger.log_api_request(
+                        "INFO",
+                        "Docker URL Translation",
+                        {"original": original_url, "translated": target_url},
+                        {"note": "localhost translated to host.docker.internal for Docker access"}
+                    )
+
             # Set target for scoping
             self.target_url = target_url
 
@@ -299,32 +373,55 @@ class ZAPActiveAdapter:
     def _run_ajax_spider(self, target_url: str, config) -> Dict:
         """Run AJAX spider for modern web applications"""
         logger.info("Starting AJAX spider scan")
-        
+
         try:
             max_duration = getattr(config, 'max_spider_duration', 300)
-            
-            # Configure AJAX spider
+
+            # Configure AJAX spider with maximum duration
             self._make_api_post_request("ajaxSpider/action/setOptionMaxDuration", {"Integer": max_duration})
-            
+
+            # Store config for monitoring
+            self.config = config
+
             # Start AJAX spider
             ajax_response = self._make_api_post_request("ajaxSpider/action/scan", {"url": target_url})
             if not ajax_response or ajax_response.get("Result") == "ERROR":
                 raise Exception("Failed to start AJAX spider")
-                
-            logger.info("AJAX spider started")
-            
-            # Monitor AJAX spider progress
+
+            logger.info(f"AJAX spider started (max duration: {max_duration}s)")
+
+            # Monitor AJAX spider progress with timeout
+            # This will raise ConnectionError if ZAP becomes unavailable
             self._monitor_ajax_spider_progress()
-            
+
+            # CRITICAL: Aggressively stop AJAX spider to prevent resource leaks
+            logger.info("Stopping AJAX spider...")
+            self._force_stop_ajax_spider()
+
             # Get AJAX spider results
             ajax_results = self._get_ajax_spider_results()
-            
+
             logger.info(f"AJAX spider completed. Found {len(ajax_results.get('urls', []))} additional URLs")
             return ajax_results
-            
+
+        except ConnectionError as conn_err:
+            # ZAP connection lost - re-raise to fail the scan
+            logger.error(f"❌ AJAX spider failed due to ZAP connection loss: {conn_err}")
+            raise
         except Exception as e:
             logger.error(f"AJAX spider scan failed: {e}")
+            # Ensure spider is stopped on error (if ZAP is still available)
+            try:
+                self._force_stop_ajax_spider()
+            except:
+                pass
             return {"error": str(e)}
+        finally:
+            # Final cleanup - ensure AJAX spider is stopped no matter what
+            try:
+                self._force_stop_ajax_spider()
+            except Exception as cleanup_error:
+                logger.warning(f"Final AJAX spider cleanup warning: {cleanup_error}")
     
     def _run_active_vulnerability_scan(self, target_url: str, config, discovered_urls: List[str] = None, progress_callback=None, progress_range=(50.0, 75.0)) -> Dict:
         """Run comprehensive active vulnerability scanning on target and all discovered URLs"""
@@ -380,27 +477,105 @@ class ZAPActiveAdapter:
             return {"error": str(e)}
     
     def _configure_scan_policy(self, config):
-        """Configure ZAP scan policy based on configuration"""
+        """Configure ZAP scan policy based on configuration
+
+        IMPORTANT: ZAP's enableScanners API expects comma-separated plugin IDs
+        in a SINGLE request, not individual requests per scanner.
+        """
         try:
-            # Configure vulnerability categories
-            categories = {
-                "test_sql_injection": "40018",  # SQL Injection
-                "test_xss": "40012",           # Cross Site Scripting
-                "test_csrf": "10202",          # Absent Anti-CSRF Tokens
-                "test_path_traversal": "6",     # Path Traversal
-                "test_command_injection": "90020", # Command Injection
-                "test_xxe": "90019"            # XXE
+            # Map of comprehensive ZAP scanner plugin IDs (verified for ZAP 2.16.1)
+            # Each test type maps to MULTIPLE scanner plugins for better coverage
+            # NOTE: IDs verified against actual ZAP 2.16.1 scanners
+            scanner_categories = {
+                "test_sql_injection": [
+                    "40018",  # SQL Injection
+                    "40019",  # SQL Injection - MySQL (Time Based)
+                    "40020",  # SQL Injection - Hypersonic SQL (Time Based)
+                    "40021",  # SQL Injection - Oracle (Time Based)
+                    "40022",  # SQL Injection - PostgreSQL (Time Based)
+                    "40024",  # SQL Injection - SQLite (Time Based)
+                    "40027",  # SQL Injection - MsSQL (Time Based)
+                ],
+                "test_xss": [
+                    "40012",  # Cross Site Scripting (Reflected)
+                    "40014",  # Cross Site Scripting (Persistent)
+                    "40016",  # Cross Site Scripting (Persistent) - Prime
+                    "40017",  # Cross Site Scripting (Persistent) - Spider
+                    "40026",  # Cross Site Scripting (DOM Based)
+                ],
+                "test_csrf": [
+                    # Note: CSRF testing is done by passive scanners, not active
+                    # IDs 10202 and 20012 don't exist in ZAP 2.16.1
+                    # Leaving empty - CSRF detected by passive scan
+                ],
+                "test_path_traversal": [
+                    "6",      # Path Traversal
+                    "7",      # Remote File Inclusion
+                ],
+                "test_command_injection": [
+                    "90020",  # Remote OS Command Injection
+                    "90037",  # Remote OS Command Injection (Time Based)
+                    "90019",  # Server Side Code Injection
+                    "90035",  # Server Side Template Injection
+                    "90036",  # Server Side Template Injection (Blind)
+                ],
+                "test_xxe": [
+                    "90019",  # Server Side Code Injection (includes XXE)
+                    "90017",  # XSLT Injection
+                    "90029",  # SOAP XML Injection
+                ],
             }
-            
-            for test_name, plugin_id in categories.items():
-                enabled = getattr(config, test_name, True)
-                if enabled:
-                    self._make_api_post_request("ascan/action/enableScanners", {"ids": plugin_id})
+
+            # Collect all enabled scanner IDs
+            enabled_scanners = []
+            disabled_scanners = []
+
+            for test_name, plugin_ids in scanner_categories.items():
+                is_enabled = getattr(config, test_name, True)
+                if is_enabled:
+                    enabled_scanners.extend(plugin_ids)
                 else:
-                    self._make_api_post_request("ascan/action/disableScanners", {"ids": plugin_id})
-                    
+                    disabled_scanners.extend(plugin_ids)
+
+            # Enable scanners in ONE request (comma-separated)
+            # NOTE: Using GET instead of POST - ZAP's action endpoints work better with GET
+            if enabled_scanners:
+                scanner_ids_str = ",".join(enabled_scanners)
+                logger.info(f"Enabling {len(enabled_scanners)} ZAP scanners: {scanner_ids_str}")
+                result = self._make_api_request("ascan/action/enableScanners", {"ids": scanner_ids_str})
+                if result and result.get("Result") == "OK":
+                    logger.info("✅ Successfully enabled ZAP vulnerability scanners")
+                else:
+                    logger.warning(f"⚠️ Scanner enablement returned unexpected result: {result}")
+
+            # Disable scanners in ONE request (comma-separated)
+            if disabled_scanners:
+                scanner_ids_str = ",".join(disabled_scanners)
+                logger.info(f"Disabling {len(disabled_scanners)} ZAP scanners: {scanner_ids_str}")
+                self._make_api_request("ascan/action/disableScanners", {"ids": scanner_ids_str})
+
+            # Configure SQL injection scanner strength if enabled
+            if getattr(config, 'test_sql_injection', True):
+                sql_scanner_ids = scanner_categories.get("test_sql_injection", [])
+                for scanner_id in sql_scanner_ids:
+                    try:
+                        # Set attack strength to HIGH for SQL injection scanners
+                        self._make_api_post_request("ascan/action/setScannerAttackStrength", {
+                            "id": scanner_id,
+                            "attackStrength": "HIGH"
+                        })
+                        # Set alert threshold to LOW for better detection
+                        self._make_api_post_request("ascan/action/setScannerAlertThreshold", {
+                            "id": scanner_id,
+                            "alertThreshold": "LOW"
+                        })
+                    except Exception as scanner_e:
+                        logger.debug(f"Could not configure scanner {scanner_id}: {scanner_e}")
+                logger.info("✅ Configured SQL injection scanners with HIGH attack strength and LOW threshold")
+
         except Exception as e:
             logger.error(f"Failed to configure scan policy: {e}")
+            logger.error("⚠️ Continuing with default ZAP scanners")
     
     def _monitor_spider_progress(self):
         """Monitor spider progress until completion"""
@@ -409,6 +584,15 @@ class ZAPActiveAdapter:
             
         while True:
             try:
+                # CRITICAL: Check if user requested stop
+                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
+                    logger.info("🔴 Stop requested by user - stopping spider monitoring")
+                    try:
+                        self._make_api_post_request("spider/action/stop", {"scanId": self.spider_id})
+                    except Exception as stop_error:
+                        logger.error(f"Error stopping spider on user stop: {stop_error}")
+                    break
+                
                 status = self._make_api_request("spider/view/status", {"scanId": self.spider_id})
                 progress = int(status.get("status", 0))
                 
@@ -425,23 +609,140 @@ class ZAPActiveAdapter:
                 break
     
     def _monitor_ajax_spider_progress(self):
-        """Monitor AJAX spider progress until completion"""
+        """Monitor AJAX spider progress until completion with timeout"""
+        max_duration = getattr(self.config, 'max_spider_duration', 300)  # Default 5 minutes
+        start_time = time.time()
+        timeout_seconds = max_duration + 60  # Add 1 minute buffer to configured duration
+        connection_failures = 0  # Track consecutive connection failures
+        max_connection_failures = 3  # Fail after 3 consecutive connection errors
+
+        logger.info(f"Monitoring AJAX spider (timeout: {timeout_seconds}s)")
+
         while True:
             try:
-                status = self._make_api_request("ajaxSpider/view/status")
-                current_status = status.get("status", "").lower()
-                
-                logger.debug(f"AJAX spider status: {current_status}")
-                
-                if current_status == "stopped":
-                    logger.info("AJAX spider completed")
+                # CRITICAL: Check if user requested stop
+                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
+                    logger.info("🔴 Stop requested by user - stopping AJAX spider monitoring")
+                    try:
+                        self._force_stop_ajax_spider()
+                    except Exception as stop_error:
+                        logger.error(f"Error force stopping AJAX spider on user stop: {stop_error}")
                     break
-                    
-                time.sleep(2)
                 
+                # Check for timeout
+                elapsed = time.time() - start_time
+                if elapsed > timeout_seconds:
+                    logger.warning(f"AJAX spider timeout reached after {elapsed:.1f}s, stopping spider")
+                    try:
+                        self._make_api_post_request("ajaxSpider/action/stop")
+                        time.sleep(2)  # Give it a moment to stop
+                    except Exception as stop_error:
+                        logger.error(f"Error stopping AJAX spider: {stop_error}")
+                    break
+
+                status = self._make_api_request("ajaxSpider/view/status")
+                
+                # Check if we got a valid response
+                if status is None:
+                    connection_failures += 1
+                    logger.error(f"❌ Failed to get AJAX spider status (attempt {connection_failures}/{max_connection_failures})")
+                    
+                    if connection_failures >= max_connection_failures:
+                        logger.error(f"❌❌❌ ZAP connection lost after {connection_failures} attempts - ZAP may have crashed!")
+                        logger.error("Failing scan due to ZAP unavailability")
+                        raise ConnectionError(f"ZAP connection lost - failed to get status {connection_failures} times in a row")
+                    
+                    # Wait a bit longer before retry when having connection issues
+                    time.sleep(3)
+                    continue
+                else:
+                    # Reset connection failure counter on successful response
+                    connection_failures = 0
+                
+                current_status = status.get("status", "").lower()
+
+                logger.debug(f"AJAX spider status: {current_status} (elapsed: {elapsed:.1f}s)")
+
+                if current_status == "stopped":
+                    logger.info("AJAX spider completed normally")
+                    break
+
+                time.sleep(2)
+
+            except ConnectionError:
+                # Re-raise connection errors (ZAP is down)
+                raise
             except Exception as e:
                 logger.error(f"Error monitoring AJAX spider: {e}")
-                break
+                connection_failures += 1
+                
+                if connection_failures >= max_connection_failures:
+                    logger.error(f"❌ Too many errors monitoring AJAX spider, ZAP may be unavailable")
+                    raise ConnectionError(f"Failed to monitor AJAX spider: {e}")
+                
+                # Try to stop spider before continuing/breaking
+                try:
+                    self._make_api_post_request("ajaxSpider/action/stop")
+                except:
+                    pass
+                
+                time.sleep(3)  # Wait before retry
+
+    def _force_stop_ajax_spider(self):
+        """AGGRESSIVELY stop AJAX spider with verification and multiple retries"""
+        max_retries = 10  # Increased from 5 to 10
+        retry_delay = 1   # Reduced from 2 to 1 second for faster iterations
+
+        logger.info(f"🔴 Force stopping AJAX spider (max {max_retries} retries)...")
+
+        for attempt in range(max_retries):
+            try:
+                # Send stop command MULTIPLE times (redundancy)
+                for i in range(3):  # Send 3 stop commands per attempt
+                    try:
+                        stop_response = self._make_api_post_request("ajaxSpider/action/stop")
+                        logger.debug(f"Stop command {i+1}/3 sent in attempt {attempt + 1}")
+                    except Exception as stop_error:
+                        logger.warning(f"Stop command {i+1}/3 failed: {stop_error}")
+
+                # Wait a moment
+                time.sleep(retry_delay)
+
+                # Verify it stopped
+                status = self._make_api_request("ajaxSpider/view/status")
+                current_status = status.get("status", "").lower() if status else "unknown"
+
+                logger.info(f"Attempt {attempt + 1}/{max_retries}: AJAX spider status = '{current_status}'")
+
+                if current_status == "stopped":
+                    logger.info(f"✅✅✅ AJAX spider successfully stopped (attempt {attempt + 1})")
+                    return True
+                else:
+                    logger.warning(f"⚠️ AJAX spider still running with status: {current_status}, retrying...")
+
+            except Exception as e:
+                logger.error(f"❌ Error in stop attempt {attempt + 1}: {e}")
+
+        # Final desperate attempt - try stopAllScans
+        logger.error("🔴 AJAX spider did not stop after normal retries - trying emergency stop...")
+        try:
+            # Try to stop all AJAX spiders (not just this one)
+            self._make_api_post_request("ajaxSpider/action/stopAllScans", {})
+            time.sleep(2)
+            
+            # Check status one more time
+            status = self._make_api_request("ajaxSpider/view/status")
+            current_status = status.get("status", "").lower() if status else "unknown"
+            
+            if current_status == "stopped":
+                logger.info("✅ AJAX spider stopped via emergency stopAllScans")
+                return True
+        except Exception as emergency_error:
+            logger.error(f"Emergency stop also failed: {emergency_error}")
+
+        logger.error("❌❌❌ CRITICAL: Failed to stop AJAX spider after ALL retries - may continue consuming CPU!")
+        logger.error("❌ Manual intervention may be required: docker restart zap")
+        return False
     
     def _monitor_active_scan_progress(self, progress_callback=None, progress_range=(50.0, 75.0)):
         """Monitor active scan progress until completion"""
@@ -453,6 +754,15 @@ class ZAPActiveAdapter:
             
         while True:
             try:
+                # CRITICAL: Check if user requested stop
+                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
+                    logger.info("🔴 Stop requested by user - stopping active scan monitoring")
+                    try:
+                        self._make_api_post_request("ascan/action/stop", {"scanId": self.active_scan_id})
+                    except Exception as stop_error:
+                        logger.error(f"Error stopping active scan on user stop: {stop_error}")
+                    break
+                
                 status = self._make_api_request("ascan/view/status", {"scanId": self.active_scan_id})
                 zap_progress = int(status.get("status", 0))
                 
@@ -1289,17 +1599,59 @@ class ZAPActiveAdapter:
             return "Unknown"
     
     def stop_all_scans(self):
-        """Stop all running scans"""
+        """Stop all running scans AGGRESSIVELY with multiple retries and verification"""
+        logger.info("🔴 Stopping all ZAP scans AGGRESSIVELY...")
+
         try:
+            # STEP 1: Stop AJAX spider FIRST (most critical - this is what causes CPU issues)
+            logger.info("🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)")
+            self._force_stop_ajax_spider()
+            
+            # STEP 2: Stop traditional spider
             if self.spider_id:
-                self._make_api_post_request("spider/action/stop", {"scanId": self.spider_id})
-            
-            self._make_api_post_request("ajaxSpider/action/stop")
-            
+                logger.info(f"🔴 STEP 2: Stopping traditional spider (ID: {self.spider_id})")
+                try:
+                    self._make_api_post_request("spider/action/stop", {"scanId": self.spider_id})
+                    logger.info(f"✅ Traditional spider {self.spider_id} stop command sent")
+                except Exception as e:
+                    logger.warning(f"⚠️ Error stopping traditional spider: {e}")
+
+            # STEP 3: Stop ALL spider scans as a precaution (catches any orphaned spiders)
+            logger.info("🔴 STEP 3: Stopping ALL spider scans (safety net)")
+            try:
+                self._make_api_post_request("spider/action/stopAllScans", {})
+                logger.info("✅ All spider scans stop command sent")
+            except Exception as e:
+                logger.warning(f"⚠️ Error stopping all spiders: {e}")
+
+            # STEP 4: Stop active scan
             if self.active_scan_id:
-                self._make_api_post_request("ascan/action/stop", {"scanId": self.active_scan_id})
-                
-            logger.info("All ZAP scans stopped")
+                logger.info(f"🔴 STEP 4: Stopping active scan (ID: {self.active_scan_id})")
+                try:
+                    self._make_api_post_request("ascan/action/stop", {"scanId": self.active_scan_id})
+                    logger.info(f"✅ Active scan {self.active_scan_id} stop command sent")
+                except Exception as e:
+                    logger.warning(f"⚠️ Error stopping active scan: {e}")
+
+            # STEP 5: Stop ALL active scans as a precaution
+            logger.info("🔴 STEP 5: Stopping ALL active scans (safety net)")
+            try:
+                self._make_api_post_request("ascan/action/stopAllScans", {})
+                logger.info("✅ All active scans stop command sent")
+            except Exception as e:
+                logger.warning(f"⚠️ Error stopping all active scans: {e}")
             
+            # STEP 6: Final verification - stop AJAX spider AGAIN (extra safety)
+            logger.info("🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)")
+            self._force_stop_ajax_spider()
+
+            logger.info("✅✅✅ All ZAP scans stopped successfully - 6 steps completed")
+
         except Exception as e:
-            logger.error(f"Error stopping scans: {e}")
+            logger.error(f"❌ Error stopping scans: {e}")
+            # Even if there's an error, try one more time to stop AJAX spider
+            try:
+                logger.error("🔴 EMERGENCY: Attempting final AJAX spider stop after error...")
+                self._force_stop_ajax_spider()
+            except:
+                pass

@@ -59,13 +59,38 @@ class UnifiedScanningEngine:
         except Exception as e:
             logger.exception(f"Unified scan engine failed: {e}")
             self._fail_scan(str(e))
-            # Unregister on failure
+            return False
+            
+        finally:
+            # CRITICAL: Always cleanup and unregister in finally block
+            # This ensures the scan is removed from tracker even if there's an exception
             try:
+                # Stop all adapters
+                logger.info(f"Finally block: Cleaning up scan {self.scan_id}...")
+                for adapter in self._active_adapters:
+                    try:
+                        if hasattr(adapter, 'stop_all_scans'):
+                            adapter.stop_all_scans()
+                            logger.debug(f"Finally block: Stopped adapter {type(adapter).__name__}")
+                    except Exception as adapter_error:
+                        logger.warning(f"Finally block: Error stopping adapter: {adapter_error}")
+                
+                # Always try to stop ZAP as final precaution
+                try:
+                    from scanning.active.zap_active_adapter import ZAPActiveAdapter
+                    zap_adapter = ZAPActiveAdapter()
+                    zap_adapter.stop_all_scans()
+                    logger.info("Finally block: ZAP scans stopped")
+                except Exception as zap_error:
+                    logger.debug(f"Finally block: ZAP stop error (may not be running): {zap_error}")
+                
+                # Unregister from tracker
                 from scanning.scan_tracker import get_scan_tracker
                 get_scan_tracker().unregister_scan(self.scan_id)
-            except:
-                pass
-            return False
+                logger.info(f"Finally block: Scan {self.scan_id} unregistered from tracker")
+                
+            except Exception as cleanup_error:
+                logger.error(f"Finally block cleanup error: {cleanup_error}")
 
     def _run_passive_scan(self):
         """Run passive scanning using existing passive engine"""
@@ -364,8 +389,13 @@ class UnifiedScanningEngine:
                 
             from scanning.active.zap_active_adapter import ZAPActiveAdapter
             
-            # Create ZAP adapter
-            zap_adapter = ZAPActiveAdapter(self.configuration)
+            # Create ZAP adapter with engine reference for stop checks
+            zap_adapter = ZAPActiveAdapter(
+                config=self.configuration,
+                scan_id=self.scan_id,
+                scan_logger=None,
+                engine=self
+            )
             
             # Register the ZAP adapter for proper cleanup
             self.register_adapter(zap_adapter)
@@ -823,6 +853,29 @@ class UnifiedScanningEngine:
     def _complete_scan(self):
         """Mark scan as completed"""
         try:
+            # CRITICAL: Stop all running scans and cleanup resources BEFORE marking as complete
+            # This prevents ZAP AJAX spider from continuing to run
+            logger.info("Stopping all running scans and cleaning up resources...")
+            
+            # Stop all active adapters
+            for adapter in self._active_adapters:
+                try:
+                    if hasattr(adapter, 'stop_all_scans'):
+                        adapter.stop_all_scans()
+                        logger.info(f"Stopped all scans for adapter: {type(adapter).__name__}")
+                except Exception as e:
+                    logger.warning(f"Error stopping adapter {type(adapter).__name__}: {e}")
+            
+            # Also try to stop ZAP directly as a precaution
+            try:
+                from scanning.active.zap_active_adapter import ZAPActiveAdapter
+                zap_adapter = ZAPActiveAdapter()
+                zap_adapter.stop_all_scans()
+                logger.info("ZAP scans stopped directly")
+            except Exception as e:
+                logger.warning(f"Error stopping ZAP scans directly: {e}")
+            
+            # Now mark as complete
             self.scan.status = 'completed'
             self.scan.end_time = timezone.now()
             self.scan.progress = 100.0
@@ -846,6 +899,29 @@ class UnifiedScanningEngine:
             return
             
         try:
+            # CRITICAL: Stop all running scans and cleanup resources BEFORE marking as failed
+            # This prevents ZAP AJAX spider from continuing to run
+            logger.info("Stopping all running scans before marking as failed...")
+            
+            # Stop all active adapters
+            for adapter in self._active_adapters:
+                try:
+                    if hasattr(adapter, 'stop_all_scans'):
+                        adapter.stop_all_scans()
+                        logger.info(f"Stopped all scans for adapter: {type(adapter).__name__}")
+                except Exception as e:
+                    logger.warning(f"Error stopping adapter {type(adapter).__name__}: {e}")
+            
+            # Also try to stop ZAP directly as a precaution
+            try:
+                from scanning.active.zap_active_adapter import ZAPActiveAdapter
+                zap_adapter = ZAPActiveAdapter()
+                zap_adapter.stop_all_scans()
+                logger.info("ZAP scans stopped directly")
+            except Exception as e:
+                logger.warning(f"Error stopping ZAP scans directly: {e}")
+            
+            # Now mark as failed
             self.scan.status = 'failed'
             self.scan.error_message = error_message
             self.scan.end_time = timezone.now()
@@ -896,30 +972,45 @@ class UnifiedScanningEngine:
     def stop_scan(self):
         """Stop the running scan and all associated processes"""
         try:
-            logger.info(f"Stopping scan {self.scan_id}")
+            logger.info(f"⛔ Stopping scan {self.scan_id} - User requested stop")
             self._stop_requested = True
             
-            # Stop all active adapters
-            for adapter in self._active_adapters:
-                try:
-                    if hasattr(adapter, 'stop_all_scans'):
-                        adapter.stop_all_scans()
-                    elif hasattr(adapter, 'stop'):
-                        adapter.stop()
-                    logger.info(f"Stopped adapter: {type(adapter).__name__}")
-                except Exception as e:
-                    logger.warning(f"Error stopping adapter {type(adapter).__name__}: {e}")
-            
-            # Stop ZAP specifically if it's running
+            # CRITICAL: Aggressively stop ZAP FIRST before anything else
+            # This is the most important step to prevent AJAX spider from continuing
+            logger.info("🔴 STEP 1: Aggressively stopping ZAP (AJAX spider, traditional spider, active scan)...")
             try:
                 from scanning.active.zap_active_adapter import ZAPActiveAdapter
                 zap_adapter = ZAPActiveAdapter()
                 zap_adapter.stop_all_scans()
-                logger.info("ZAP scans stopped")
+                logger.info("✅ ZAP scans stopped successfully")
             except Exception as e:
-                logger.warning(f"Error stopping ZAP scans: {e}")
+                logger.error(f"❌ Error stopping ZAP scans: {e}")
             
-            # Update scan status
+            # STEP 2: Stop all active adapters (may include ZAP adapter with session)
+            logger.info("🔴 STEP 2: Stopping all registered adapters...")
+            for adapter in self._active_adapters:
+                try:
+                    if hasattr(adapter, 'stop_all_scans'):
+                        adapter.stop_all_scans()
+                        logger.info(f"✅ Stopped adapter (stop_all_scans): {type(adapter).__name__}")
+                    elif hasattr(adapter, 'stop'):
+                        adapter.stop()
+                        logger.info(f"✅ Stopped adapter (stop): {type(adapter).__name__}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Error stopping adapter {type(adapter).__name__}: {e}")
+            
+            # STEP 3: Extra precaution - stop ZAP again with fresh instance
+            logger.info("🔴 STEP 3: Stopping ZAP again as extra precaution...")
+            try:
+                from scanning.active.zap_active_adapter import ZAPActiveAdapter
+                fresh_zap = ZAPActiveAdapter()
+                fresh_zap.stop_all_scans()
+                logger.info("✅ ZAP scans stopped again (fresh instance)")
+            except Exception as e:
+                logger.warning(f"⚠️ Second ZAP stop attempt error: {e}")
+            
+            # STEP 4: Update scan status in database
+            logger.info("🔴 STEP 4: Updating scan status in database...")
             if self.scan and self.scan.status == 'running':
                 self.scan.status = 'stopped'
                 self.scan.end_time = timezone.now()
@@ -932,19 +1023,22 @@ class UnifiedScanningEngine:
                     message="Scan stopped by user"
                 )
                 
-                logger.info(f"Scan {self.scan_id} stopped successfully")
+                logger.info(f"✅ Scan {self.scan_id} marked as stopped in database")
             
-            # Unregister from tracker
+            # STEP 5: Unregister from tracker
+            logger.info("🔴 STEP 5: Unregistering scan from tracker...")
             try:
                 from scanning.scan_tracker import get_scan_tracker
                 get_scan_tracker().unregister_scan(self.scan_id)
+                logger.info(f"✅ Scan {self.scan_id} unregistered from tracker")
             except Exception as e:
-                logger.warning(f"Error unregistering scan from tracker: {e}")
+                logger.warning(f"⚠️ Error unregistering scan from tracker: {e}")
             
+            logger.info(f"✅✅✅ Scan {self.scan_id} stopped successfully - All 5 steps completed")
             return True
                 
         except Exception as e:
-            logger.error(f"Error stopping scan: {e}")
+            logger.error(f"❌ Error stopping scan: {e}")
             return False
         
     def is_stop_requested(self):

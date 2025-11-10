@@ -10,6 +10,7 @@ from django.utils import timezone
 from scanning.active.zap_active_adapter import ZAPActiveAdapter
 from scanning.active.enhanced_discovery import ZAPEnhancedAdapter
 from scanning.utils.url_parser import is_same_domain
+from scanning.utils.scan_logger import create_scan_logger
 
 logger = logging.getLogger(__name__)
 
@@ -23,13 +24,22 @@ class ActiveScanningEngine:
         self.target_url = None
         self.configuration = None
         self.zap_adapter = None
+        self.scan_logger = None  # Per-scan logger instance
+        self._stop_requested = False  # Flag for user-requested stop
 
     def start(self):
-        """Start active scanning process"""
+        """Start active scanning process with comprehensive logging"""
+        # Initialize scan-specific logger
+        self.scan_logger = create_scan_logger(self.scan_id)
+
         try:
+            # Start Docker log capture in background
+            self.scan_logger.start_docker_log_capture()
+            logger.info(f"🔍 Started Docker log capture for scan {self.scan_id}")
+
             # Lazy import to avoid circular dependencies
             from scanning.models.scan import Scan
-            
+
             # Load scan details
             self.scan = Scan.objects.get(id=self.scan_id)
             self.target_url = self.scan.target_url or self.scan.configuration.project.target_url
@@ -39,9 +49,14 @@ class ActiveScanningEngine:
             if self.configuration.scan_type not in ['active', 'comprehensive']:
                 raise ValueError(f"Engine only supports active/comprehensive scans, got: {self.configuration.scan_type}")
 
-            # Initialize ZAP adapter with scan ID for proper isolation
-            self.zap_adapter = ZAPActiveAdapter(self.configuration, self.scan_id)
-            
+            # Initialize ZAP adapter with scan ID, logger, and engine reference for proper isolation
+            self.zap_adapter = ZAPActiveAdapter(
+                config=self.configuration,
+                scan_id=self.scan_id,
+                scan_logger=self.scan_logger,
+                engine=self  # Pass engine reference for stop checks
+            )
+
             # Initialize enhanced discovery adapter
             self.enhanced_adapter = ZAPEnhancedAdapter(self.zap_adapter, self.target_url)
 
@@ -50,16 +65,50 @@ class ActiveScanningEngine:
                 self.zap_adapter._reset_zap_state()
             except Exception as e:
                 logger.warning(f"Could not fully reset ZAP state at scan start: {e}")
+                if self.scan_logger:
+                    self.scan_logger.log_error("ZAP Reset Warning", f"Could not fully reset ZAP: {str(e)}")
 
             # Run active scan
             self._run_active_scan()
-            
+
             return True
 
         except Exception as e:
             logger.exception(f"Active scan engine failed: {e}")
+            if self.scan_logger:
+                import traceback
+                self.scan_logger.log_error("Active Scan Engine Failed", str(e), traceback.format_exc())
+            
+            # Mark scan as failed
             self._fail_scan(str(e))
             return False
+
+        finally:
+            # CRITICAL: Always stop all ZAP scans in finally block to prevent resource leaks
+            # This ensures AJAX spider is stopped even if there's an exception
+            if self.zap_adapter:
+                try:
+                    logger.info("Finally block: Ensuring all ZAP scans are stopped...")
+                    self.zap_adapter.stop_all_scans()
+                    logger.info("Finally block: ZAP scans stopped successfully")
+                except Exception as cleanup_error:
+                    logger.error(f"Finally block: Error stopping ZAP scans: {cleanup_error}")
+            
+            # Always stop Docker log capture and create summary
+            if self.scan_logger:
+                try:
+                    self.scan_logger.stop_docker_log_capture()
+                    summary_file = self.scan_logger.create_summary()
+                    logger.info(f"📊 Scan logs saved: {summary_file}")
+
+                    # Save scan metadata
+                    self.scan_logger.save_metadata({
+                        'target_url': self.target_url,
+                        'scan_type': self.configuration.scan_type if self.configuration else 'unknown',
+                        'status': self.scan.status if self.scan else 'unknown'
+                    })
+                except Exception as logger_error:
+                    logger.error(f"Error in scan logger cleanup: {logger_error}")
 
     def _run_active_scan(self):
         """Execute active scanning workflow"""
@@ -165,6 +214,10 @@ class ActiveScanningEngine:
             if self.configuration.enable_ajax_spider:
                 try:
                     zap_ajax_results = self.zap_adapter._run_ajax_spider(self.target_url, self.configuration)
+                except ConnectionError as conn_err:
+                    # ZAP connection lost - fail the entire scan
+                    logger.error(f"❌ ZAP connection lost during AJAX spider: {conn_err}")
+                    raise Exception(f"ZAP service unavailable: {conn_err}")
                 except Exception as e:
                     logger.warning(f"ZAP AJAX spider failed: {e}")
                     zap_ajax_results = {"error": str(e), "urls": [], "forms": []}
@@ -705,6 +758,16 @@ class ActiveScanningEngine:
     def _complete_scan(self):
         """Mark scan as completed"""
         try:
+            # CRITICAL: Stop all ZAP scans BEFORE marking as complete
+            # This prevents AJAX spider from continuing to run after completion
+            if self.zap_adapter:
+                try:
+                    logger.info("Stopping all ZAP scans before marking scan as complete...")
+                    self.zap_adapter.stop_all_scans()
+                    logger.info("ZAP scans stopped successfully")
+                except Exception as e:
+                    logger.error(f"Failed to stop ZAP scans during completion: {e}")
+            
             self.scan.status = 'completed'
             self.scan.end_time = timezone.now()
             self.scan.progress = 100.0
@@ -736,6 +799,16 @@ class ActiveScanningEngine:
             return
             
         try:
+            # CRITICAL: Stop any running ZAP scans FIRST before marking as failed
+            # This prevents AJAX spider from continuing to run after failure
+            if self.zap_adapter:
+                try:
+                    logger.info("Stopping all ZAP scans before marking scan as failed...")
+                    self.zap_adapter.stop_all_scans()
+                    logger.info("ZAP scans stopped successfully")
+                except Exception as e:
+                    logger.error(f"Failed to stop ZAP scans during failure: {e}")
+            
             self.scan.status = 'failed'
             self.scan.error_message = error_message
             self.scan.end_time = timezone.now()
@@ -746,11 +819,8 @@ class ActiveScanningEngine:
                     self.zap_adapter.cleanup_scan_contexts()
                 except Exception as e:
                     logger.warning(f"Failed to cleanup ZAP contexts on failure: {e}")
+            
             self.scan.save()
-
-            # Stop any running ZAP scans
-            if self.zap_adapter:
-                self.zap_adapter.stop_all_scans()
             
             # Create error log
             from scanning.models.scan import ScanLog
@@ -798,6 +868,10 @@ class ActiveScanningEngine:
     def stop_scan(self):
         """Stop the active scan"""
         try:
+            # Set stop flag FIRST so monitoring loops can detect it
+            self._stop_requested = True
+            logger.info(f"🔴 Stop requested for active scan {self.scan_id}")
+            
             if self.zap_adapter:
                 self.zap_adapter.stop_all_scans()
             
@@ -818,6 +892,10 @@ class ActiveScanningEngine:
             
         except Exception as e:
             logger.error(f"Error stopping active scan: {e}")
+    
+    def is_stop_requested(self):
+        """Check if stop has been requested"""
+        return self._stop_requested
 
     def _sql_injection_testing_phase(self, discovery_results: dict) -> dict:
         """Run SQL injection testing using specialized tools"""

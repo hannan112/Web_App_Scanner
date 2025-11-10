@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "authentication",
     "projects",
     "scanning",
+    "blog",
     # OAuth related
     "django.contrib.sites",
     "allauth",
@@ -89,11 +90,16 @@ if DEBUG:
 else:
     CORS_ALLOW_ALL_ORIGINS = False
 
+# CSRF trusted origins for frontend
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
 # REST Framework settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [

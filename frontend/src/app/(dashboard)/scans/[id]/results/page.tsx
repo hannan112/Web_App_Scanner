@@ -109,8 +109,10 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
   // Handle raw data download
   const handleDownload = async (type: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${backendUrl}/api/scanning/scans/${scanId}/download_raw_data/?type=${type}`, {
+      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const trimmedBase = rawBase.replace(/\/$/, '');
+      const apiBase = /\/api$/.test(trimmedBase) ? trimmedBase : `${trimmedBase}/api`;
+      const response = await fetch(`${apiBase}/scanning/scans/${scanId}/download_raw_data/?type=${type}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,

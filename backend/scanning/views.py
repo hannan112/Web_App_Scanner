@@ -123,19 +123,21 @@ class ScanViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # Enforce one running/pending scan per project
+        # Enforce one running/pending scan per USER (not just per project)
+        # This prevents CPU overload from multiple simultaneous scans
         try:
-            existing_active_qs = Scan.objects.filter(
-                configuration__project=project,
+            # Check for ANY running scan for this user across ALL projects
+            user_active_scans = Scan.objects.filter(
+                configuration__project__owner=request.user,
                 status__in=["pending", "running", "in_progress"],
             ).order_by("-start_time", "-created_at")
 
             # Reconcile stale statuses against the in-memory tracker
-            if existing_active_qs.exists():
+            if user_active_scans.exists():
                 try:
                     from scanning.scan_tracker import get_scan_tracker
                     tracker = get_scan_tracker()
-                    for candidate in list(existing_active_qs):
+                    for candidate in list(user_active_scans):
                         if not tracker.is_scan_running(candidate.id):
                             # Auto-correct stale running/pending scan
                             candidate.status = "failed"
@@ -143,20 +145,24 @@ class ScanViewSet(viewsets.ModelViewSet):
                             candidate.end_time = timezone.now()
                             candidate.save(update_fields=["status", "error_message", "end_time", "updated_at"])
                     # Refresh queryset after corrections
-                    existing_active_qs = Scan.objects.filter(
-                        configuration__project=project,
+                    user_active_scans = Scan.objects.filter(
+                        configuration__project__owner=request.user,
                         status__in=["pending", "running", "in_progress"],
                     ).order_by("-start_time", "-created_at")
                 except Exception as reconcile_error:
                     logger.warning(f"Could not reconcile stale scans: {reconcile_error}")
 
-            if existing_active_qs.exists():
-                active_scan = existing_active_qs.first()
+            if user_active_scans.exists():
+                active_scan = user_active_scans.first()
+                active_project = active_scan.configuration.project if active_scan.configuration else None
                 return Response(
                     {
-                        "error": "Another scan is already pending or running for this project.",
+                        "error": "You already have a scan running. Please wait for it to complete or stop it before starting a new scan.",
                         "active_scan_id": active_scan.id,
                         "active_scan_status": active_scan.status,
+                        "active_project_id": active_project.id if active_project else None,
+                        "active_project_name": active_project.name if active_project else "Unknown",
+                        "active_target_url": active_scan.target_url or (active_project.target_url if active_project else None),
                     },
                     status=status.HTTP_409_CONFLICT,
                 )
@@ -1199,6 +1205,69 @@ class ScanViewSet(viewsets.ModelViewSet):
                 "error": str(e),
                 "traceback": traceback.format_exc()
             })
+
+    @action(detail=False, methods=["get"])
+    def running_scan(self, request):
+        """Get the currently running scan for this user (if any)"""
+        try:
+            # Get any running scan for this user
+            running_scans = Scan.objects.filter(
+                configuration__project__owner=request.user,
+                status__in=["pending", "running", "in_progress"],
+            ).order_by("-start_time", "-created_at")
+
+            # Reconcile stale scans
+            try:
+                from scanning.scan_tracker import get_scan_tracker
+                tracker = get_scan_tracker()
+                for candidate in list(running_scans):
+                    if not tracker.is_scan_running(candidate.id):
+                        candidate.status = "failed"
+                        candidate.error_message = (candidate.error_message or "") + "\nAuto-corrected stale running status"
+                        candidate.end_time = timezone.now()
+                        candidate.save(update_fields=["status", "error_message", "end_time", "updated_at"])
+
+                # Refresh after corrections
+                running_scans = Scan.objects.filter(
+                    configuration__project__owner=request.user,
+                    status__in=["pending", "running", "in_progress"],
+                ).order_by("-start_time", "-created_at")
+            except Exception as reconcile_error:
+                logger.warning(f"Could not reconcile stale scans: {reconcile_error}")
+
+            if running_scans.exists():
+                scan = running_scans.first()
+                project = scan.configuration.project if scan.configuration else None
+
+                # Get recent logs
+                recent_logs = ScanLog.objects.filter(scan=scan).order_by("-timestamp")[:5]
+
+                return Response({
+                    "has_running_scan": True,
+                    "scan": {
+                        "id": scan.id,
+                        "status": scan.status,
+                        "progress": scan.progress,
+                        "target_url": scan.target_url,
+                        "start_time": scan.start_time,
+                        "project_id": project.id if project else None,
+                        "project_name": project.name if project else "Unknown",
+                        "scan_type": scan.configuration.scan_type if scan.configuration else "unknown",
+                        "recent_logs": ScanLogSerializer(recent_logs, many=True).data,
+                    }
+                })
+            else:
+                return Response({
+                    "has_running_scan": False,
+                    "scan": None
+                })
+
+        except Exception as e:
+            logger.error(f"Error checking running scan: {str(e)}")
+            return Response(
+                {"error": f"Error checking running scan: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     @action(detail=True, methods=["get"])
     def data_summary(self, request, pk=None):

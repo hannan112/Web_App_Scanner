@@ -34,7 +34,7 @@ class SQLMapAdapter:
         else:
             self.sqlmap_path = default_path
         self.min_confidence = float(self.config.get("min_confidence", 0.5))  # Lower threshold for better detection
-        self.timeout = int(self.config.get("timeout", 30))  # 30 seconds default for faster scanning
+        self.timeout = int(self.config.get("timeout", 300))  # Use full 300 seconds (5 minutes) from config
         self.risk_level = int(self.config.get("risk_level", 2))  # Higher risk level for better detection
         self.level = int(self.config.get("level", 2))  # Higher level for more thorough testing
         
@@ -346,15 +346,14 @@ class SQLMapAdapter:
                     "--batch",  # Non-interactive mode
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "3",  # 3 seconds timeout for faster scanning
-                    "--retries", "1",
+                    "--timeout", "10",  # 10 seconds per HTTP request (allows time-based detection)
+                    "--retries", "2",  # Retry twice on failure
                     "--threads", "1",
-                    "--delay", "0.5",  # Reduced delay for faster scanning
-                    "--skip-waf",  # Skip WAF detection to speed up
-                    "--technique=BEUSTQ",  # Use faster techniques only
+                    "--delay", "0",  # No delay for faster scanning
+                    "--technique=BEUSTQ",  # All techniques for comprehensive testing
                     "--no-cast",  # Skip type casting for speed
-                    "--output-dir", tempfile.gettempdir(),
-                    "--log-file", output_file.replace('.json', '.log')
+                    "-v", "1",  # Verbose level 1 for better output parsing
+                    "--output-dir", tempfile.gettempdir()
                 ]
             else:
                 # It's a global command (system installation)
@@ -364,15 +363,14 @@ class SQLMapAdapter:
                     "--batch",  # Non-interactive mode
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "3",  # 3 seconds timeout for faster scanning
-                    "--retries", "1",
+                    "--timeout", "10",  # 10 seconds per HTTP request (allows time-based detection)
+                    "--retries", "2",  # Retry twice on failure
                     "--threads", "1",
-                    "--delay", "0.5",  # Reduced delay for faster scanning
-                    "--skip-waf",  # Skip WAF detection to speed up
-                    "--technique=BEUSTQ",  # Use faster techniques only
+                    "--delay", "0",  # No delay for faster scanning
+                    "--technique=BEUSTQ",  # All techniques for comprehensive testing
                     "--no-cast",  # Skip type casting for speed
-                    "--output-dir", tempfile.gettempdir(),
-                    "--log-file", output_file.replace('.json', '.log')
+                    "-v", "1",  # Verbose level 1 for better output parsing
+                    "--output-dir", tempfile.gettempdir()
                 ]
             
             # Add JSON output if supported
@@ -392,6 +390,8 @@ class SQLMapAdapter:
                     stderr=subprocess.PIPE,
                     timeout=self.timeout
                 )
+                elapsed_time = time.time() - start_time
+                logger.info(f"SQLMap completed in {elapsed_time:.1f}s for {url}")
             except subprocess.TimeoutExpired:
                 logger.warning(f"SQLMap scan timed out after {self.timeout}s for {url}")
                 return [{
@@ -403,24 +403,37 @@ class SQLMapAdapter:
                     "source": "sqlmap",
                     "remediation": "Consider increasing timeout or testing with a faster target"
                 }]
-            
-            # Parse results - be more sensitive to detection
-            output_text = result.stdout.decode().lower()
-            stderr_text = result.stderr.decode().lower()
+
+            # Parse results - ALWAYS parse output regardless of return code
+            output_text = result.stdout.decode()
+            stderr_text = result.stderr.decode()
             combined_output = output_text + " " + stderr_text
-            
-            # Check for SQL injection indicators
+
+            # Log full output for debugging
+            logger.debug(f"SQLMap return code: {result.returncode}")
+            logger.debug(f"SQLMap output (first 500 chars): {output_text[:500]}")
+
+            # Check for SQL injection indicators in output
+            output_lower = combined_output.lower()
             injection_indicators = [
-                "sql injection", "injection", "vulnerable", "exploitable",
+                "sql injection", "vulnerable", "exploitable",
                 "boolean-based blind", "time-based blind", "error-based",
-                "union query", "stacked queries", "mysql", "postgresql",
-                "sqlite", "mssql", "oracle", "database", "sql"
+                "union query", "stacked queries", "injectable"
             ]
-            
-            if (result.returncode == 0 or 
-                any(indicator in combined_output for indicator in injection_indicators) or
-                "injection" in combined_output):
-                findings.extend(self._parse_sqlmap_output(result.stdout.decode(), url))
+
+            has_injection = any(indicator in output_lower for indicator in injection_indicators)
+
+            # Always parse output - don't rely on return code
+            parsed_findings = self._parse_sqlmap_output(output_text, url)
+            findings.extend(parsed_findings)
+
+            # Log if we found vulnerabilities
+            if parsed_findings:
+                logger.info(f"✓ SQLMap found {len(parsed_findings)} SQL injection vulnerabilities in {url}")
+            elif has_injection:
+                logger.warning(f"SQLMap output contains injection keywords but parser found nothing for {url}")
+            else:
+                logger.info(f"✗ SQLMap found no SQL injection vulnerabilities in {url}")
             
             # Clean up temp files
             if os.path.exists(output_file):
@@ -470,15 +483,14 @@ class SQLMapAdapter:
                     "--batch",
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "3",  # 3 seconds timeout for faster scanning
-                    "--retries", "1",
+                    "--timeout", "10",  # 10 seconds per HTTP request
+                    "--retries", "2",  # Retry twice on failure
                     "--threads", "1",
-                    "--delay", "0.5",  # Reduced delay for faster scanning
-                    "--skip-waf",  # Skip WAF detection to speed up
-                    "--technique=BEUSTQ",  # Use all techniques for better detection
+                    "--delay", "0",  # No delay for faster scanning
+                    "--technique=BEUSTQ",  # All techniques for comprehensive testing
                     "--no-cast",  # Skip type casting for speed
-                    "--smart",  # Smart detection for faster results
-                    "--keep-alive"  # Keep connection alive
+                    "-v", "1",  # Verbose level 1
+                    "--output-dir", tempfile.gettempdir()
                 ]
             else:
                 # It's a global command (system installation)
@@ -489,15 +501,14 @@ class SQLMapAdapter:
                     "--batch",
                     "--risk", str(self.risk_level),
                     "--level", str(self.level),
-                    "--timeout", "3",  # 3 seconds timeout for faster scanning
-                    "--retries", "1",
+                    "--timeout", "10",  # 10 seconds per HTTP request
+                    "--retries", "2",  # Retry twice on failure
                     "--threads", "1",
-                    "--delay", "0.5",  # Reduced delay for faster scanning
-                    "--skip-waf",  # Skip WAF detection to speed up
-                    "--technique=BEUSTQ",  # Use all techniques for better detection
+                    "--delay", "0",  # No delay for faster scanning
+                    "--technique=BEUSTQ",  # All techniques for comprehensive testing
                     "--no-cast",  # Skip type casting for speed
-                    "--smart",  # Smart detection for faster results
-                    "--keep-alive"  # Keep connection alive
+                    "-v", "1",  # Verbose level 1
+                    "--output-dir", tempfile.gettempdir()
                 ]
             
             if form.get("method", "GET").upper() == "POST":
@@ -506,6 +517,7 @@ class SQLMapAdapter:
             logger.info(f"Testing form for SQL injection: {url}")
             
             # Run SQLMap
+            start_time = time.time()
             try:
                 result = subprocess.run(
                     cmd,
@@ -513,6 +525,8 @@ class SQLMapAdapter:
                     stderr=subprocess.PIPE,
                     timeout=self.timeout
                 )
+                elapsed_time = time.time() - start_time
+                logger.info(f"SQLMap form test completed in {elapsed_time:.1f}s for {url}")
             except subprocess.TimeoutExpired:
                 logger.warning(f"SQLMap form test timed out after {self.timeout}s for {url}")
                 return [{
@@ -524,24 +538,25 @@ class SQLMapAdapter:
                     "source": "sqlmap",
                     "remediation": "Consider increasing timeout or testing with a faster target"
                 }]
-            
-            # Parse results - be more sensitive to detection
-            output_text = result.stdout.decode().lower()
-            stderr_text = result.stderr.decode().lower()
+
+            # Parse results - ALWAYS parse output regardless of return code
+            output_text = result.stdout.decode()
+            stderr_text = result.stderr.decode()
             combined_output = output_text + " " + stderr_text
-            
-            # Check for SQL injection indicators
-            injection_indicators = [
-                "sql injection", "injection", "vulnerable", "exploitable",
-                "boolean-based blind", "time-based blind", "error-based",
-                "union query", "stacked queries", "mysql", "postgresql",
-                "sqlite", "mssql", "oracle", "database", "sql"
-            ]
-            
-            if (result.returncode == 0 or 
-                any(indicator in combined_output for indicator in injection_indicators) or
-                "injection" in combined_output):
-                findings.extend(self._parse_sqlmap_output(result.stdout.decode(), url))
+
+            # Log full output for debugging
+            logger.debug(f"SQLMap form return code: {result.returncode}")
+            logger.debug(f"SQLMap form output (first 500 chars): {output_text[:500]}")
+
+            # Always parse output - don't rely on return code
+            parsed_findings = self._parse_sqlmap_output(output_text, url)
+            findings.extend(parsed_findings)
+
+            # Log results
+            if parsed_findings:
+                logger.info(f"✓ SQLMap found {len(parsed_findings)} SQL injection vulnerabilities in form at {url}")
+            else:
+                logger.info(f"✗ SQLMap found no SQL injection vulnerabilities in form at {url}")
             
             # Clean up
             if os.path.exists(output_file):
@@ -553,59 +568,92 @@ class SQLMapAdapter:
         return findings
 
     def _parse_sqlmap_output(self, output: str, url: str) -> List[Dict[str, Any]]:
-        """Parse SQLMap output for vulnerabilities"""
+        """Parse SQLMap output for vulnerabilities - Enhanced detection"""
         findings = []
-        
+
         output_lower = output.lower()
-        
-        # Check for SQL injection detection
-        if "sql injection" in output_lower or "injection" in output_lower:
-            # Determine injection type
-            injection_type = "Unknown"
+
+        # Enhanced detection - check for multiple indicators
+        vulnerability_indicators = [
+            "parameter appears to be",  # SQLMap uses this phrase when it finds vulnerability
+            "payload:",  # SQLMap shows payload when injection works
+            "is vulnerable",
+            "might be injectable",
+            "injectable",
+            "sql injection",
+            "injection"
+        ]
+
+        has_vulnerability = any(indicator in output_lower for indicator in vulnerability_indicators)
+
+        # Additional check: SQLMap lists vulnerable parameters
+        if "parameter:" in output_lower and ("vulnerable" in output_lower or "injectable" in output_lower):
+            has_vulnerability = True
+
+        if has_vulnerability:
+            # Determine injection type (can be multiple)
+            injection_types = []
             if "boolean-based blind" in output_lower:
-                injection_type = "Boolean-based Blind SQL Injection"
-            elif "time-based blind" in output_lower:
-                injection_type = "Time-based Blind SQL Injection"
-            elif "error-based" in output_lower:
-                injection_type = "Error-based SQL Injection"
-            elif "union query" in output_lower:
-                injection_type = "Union Query SQL Injection"
-            elif "stacked queries" in output_lower:
-                injection_type = "Stacked Queries SQL Injection"
-            
+                injection_types.append("Boolean-based Blind")
+            if "time-based blind" in output_lower:
+                injection_types.append("Time-based Blind")
+            if "error-based" in output_lower:
+                injection_types.append("Error-based")
+            if "union query" in output_lower or "union-based" in output_lower:
+                injection_types.append("Union Query")
+            if "stacked queries" in output_lower:
+                injection_types.append("Stacked Queries")
+
+            # Default if no specific type detected
+            if not injection_types:
+                injection_types = ["SQL Injection"]
+
+            # Extract parameter name if possible
+            parameter = "unknown"
+            if "parameter:" in output_lower:
+                try:
+                    param_line = [line for line in output.split('\n') if 'parameter:' in line.lower()]
+                    if param_line:
+                        parameter = param_line[0].split('parameter:')[1].strip().split()[0]
+                except:
+                    pass
+
             # Extract database information
             database = "Unknown"
             if "mysql" in output_lower:
                 database = "MySQL"
-            elif "postgresql" in output_lower:
+            elif "postgresql" in output_lower or "postgres" in output_lower:
                 database = "PostgreSQL"
             elif "sqlite" in output_lower:
                 database = "SQLite"
-            elif "mssql" in output_lower or "sql server" in output_lower:
-                database = "SQL Server"
+            elif "mssql" in output_lower or "sql server" in output_lower or "microsoft" in output_lower:
+                database = "Microsoft SQL Server"
             elif "oracle" in output_lower:
                 database = "Oracle"
-            
-            # Determine severity based on injection type
-            severity = "high"
-            if "blind" in injection_type.lower():
-                severity = "medium"
-            elif "error-based" in injection_type.lower() or "union" in injection_type.lower():
-                severity = "critical"
-            
-            finding = {
-                "name": f"SQL Injection - {injection_type}",
-                "description": f"SQLMap detected {injection_type} vulnerability. Database: {database}",
-                "severity": severity,
-                "url": url,
-                "confidence": 0.9,
-                "source": "sqlmap",
-                "evidence": f"SQLMap output: {output[:500]}...",
-                "remediation": "Use parameterized queries or prepared statements to prevent SQL injection"
-            }
-            
-            findings.append(finding)
-        
+
+            # Create a finding for each injection type detected
+            for injection_type in injection_types:
+                # Determine severity based on injection type
+                severity = "high"
+                if "blind" in injection_type.lower():
+                    severity = "high"  # Blind injections are still serious
+                elif "error-based" in injection_type.lower() or "union" in injection_type.lower():
+                    severity = "critical"  # Direct data extraction
+
+                finding = {
+                    "name": f"SQL Injection - {injection_type}",
+                    "description": f"SQLMap detected {injection_type} SQL injection vulnerability in parameter '{parameter}'. Target database: {database}. This vulnerability allows an attacker to manipulate SQL queries and potentially read, modify, or delete database data.",
+                    "severity": severity,
+                    "url": url,
+                    "parameter": parameter,
+                    "confidence": 0.9,
+                    "source": "sqlmap",
+                    "evidence": f"SQLMap detected injectable parameter. Output excerpt: {output[:500]}...",
+                    "remediation": "Use parameterized queries (prepared statements) to prevent SQL injection. Never concatenate user input directly into SQL queries. Implement input validation and use ORM frameworks where possible."
+                }
+
+                findings.append(finding)
+
         return findings
 
     def _supports_json_output(self) -> bool:

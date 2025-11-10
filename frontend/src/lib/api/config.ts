@@ -2,8 +2,12 @@
 // src/lib/api/config.ts
 import axios from 'axios';
 
-// Correct API base URL with /api prefix
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+// Normalize API base URL to ensure exactly one /api prefix
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const TRIMMED_API_URL = RAW_API_URL.replace(/\/$/, '');
+export const API_URL = /\/api$/.test(TRIMMED_API_URL)
+  ? TRIMMED_API_URL
+  : `${TRIMMED_API_URL}/api`;
 
 // Create axios instance with the correct base URL
 const api = axios.create({

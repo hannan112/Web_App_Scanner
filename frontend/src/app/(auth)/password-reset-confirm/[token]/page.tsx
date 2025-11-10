@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import PasswordResetConfirmForm from "@/components/auth/PasswordResetConfirmForm";
+import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -28,11 +29,14 @@ export default async function PasswordResetConfirmPage({
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <PasswordResetConfirmForm 
-        token={token} 
-        uid={uid.toString()} 
-      />
+    <div className="relative flex items-center justify-center min-h-screen">
+      <WorldMapAnimation />
+      <div className="relative z-10">
+        <PasswordResetConfirmForm
+          token={token}
+          uid={uid.toString()}
+        />
+      </div>
     </div>
   );
 }

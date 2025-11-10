@@ -39,7 +39,7 @@ export const getProjectDashboard = async (): Promise<DashboardData> => {
     // Log the request for debugging
     console.log("Requesting dashboard data with token:", token.substring(0, 10) + '...');
     
-    const response = await apiClient.get('/api/projects/dashboard/');
+    const response = await apiClient.get('/projects/dashboard/');
     return response.data;
   } catch (error) {
     console.error("Dashboard API error:", error);
@@ -56,7 +56,7 @@ export const getProjectDashboard = async (): Promise<DashboardData> => {
 // Similarly update other functions
 export const getProjects = async (): Promise<Project[]> => {
   try {
-    const response = await apiClient.get('/api/projects/');
+    const response = await apiClient.get('/projects/');
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -65,7 +65,7 @@ export const getProjects = async (): Promise<Project[]> => {
 
 export const getProjectById = async (id: number | string): Promise<Project> => {
   try {
-    const response = await apiClient.get(`/api/projects/${id}/`);
+    const response = await apiClient.get(`/projects/${id}/`);
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -74,7 +74,7 @@ export const getProjectById = async (id: number | string): Promise<Project> => {
 
 export const getProjectStats = async (id: number | string): Promise<ProjectStats> => {
   try {
-    const response = await apiClient.get(`/api/projects/${id}/stats/`);
+    const response = await apiClient.get(`/projects/${id}/stats/`);
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -83,7 +83,7 @@ export const getProjectStats = async (id: number | string): Promise<ProjectStats
 
 export const createProject = async (projectData: Partial<Project>): Promise<Project> => {
   try {
-    const response = await apiClient.post('/api/projects/', projectData);
+    const response = await apiClient.post('/projects/', projectData);
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -92,7 +92,7 @@ export const createProject = async (projectData: Partial<Project>): Promise<Proj
 
 export const updateProject = async (id: number | string, projectData: Partial<Project>): Promise<Project> => {
   try {
-    const response = await apiClient.patch(`/api/projects/${id}/`, projectData);
+    const response = await apiClient.patch(`/projects/${id}/`, projectData);
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -101,7 +101,7 @@ export const updateProject = async (id: number | string, projectData: Partial<Pr
 
 export const deleteProject = async (id: number | string): Promise<void> => {
   try {
-    await apiClient.delete(`/api/projects/${id}/`);
+    await apiClient.delete(`/projects/${id}/`);
   } catch (error) {
     throw handleApiError(error);
   }

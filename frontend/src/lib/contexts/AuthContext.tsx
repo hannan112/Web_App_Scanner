@@ -38,7 +38,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Verify token with backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/auth/user/`, {
+      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const trimmedBase = rawBase.replace(/\/$/, '');
+      const apiBase = /\/api$/.test(trimmedBase) ? trimmedBase : `${trimmedBase}/api`;
+      const response = await fetch(`${apiBase}/auth/user/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -63,7 +66,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/auth/login/`, {
+      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const trimmedBase = rawBase.replace(/\/$/, '');
+      const apiBase = /\/api$/.test(trimmedBase) ? trimmedBase : `${trimmedBase}/api`;
+      const response = await fetch(`${apiBase}/auth/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async (accessToken: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/auth/google/`, {
+      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const trimmedBase = rawBase.replace(/\/$/, '');
+      const apiBase = /\/api$/.test(trimmedBase) ? trimmedBase : `${trimmedBase}/api`;
+      const response = await fetch(`${apiBase}/auth/google/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,19 +137,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!loading) {
       const currentPath = window.location.pathname;
-      const isAuthPage = ['/login', '/register', '/password-reset'].some(route => 
+      const isAuthPage = ['/login', '/register', '/password-reset'].some(route =>
         currentPath.startsWith(route)
       );
-      const isProtectedRoute = ['/dashboard', '/projects', '/scans'].some(route => 
+      // Only these are protected, not root/home/blog/contact
+      const isProtectedRoute = ['/dashboard', '/projects', '/scans'].some(route =>
         currentPath.startsWith(route)
       );
-      const isRootPath = currentPath === '/';
-
-      if (!user && (isProtectedRoute || isRootPath)) {
-        // User not authenticated and trying to access protected route or root
+      // Remove isRootPath logic; root/home should be public
+      if (!user && isProtectedRoute) {
+        // User not authenticated and trying to access protected route
         router.push('/login');
-      } else if (user && (isAuthPage || isRootPath)) {
-        // User authenticated but on auth page or root
+      } else if (user && isAuthPage) {
+        // User authenticated but on auth page (not home)
         router.push('/dashboard');
       }
     }

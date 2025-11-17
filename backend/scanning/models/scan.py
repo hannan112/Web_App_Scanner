@@ -110,6 +110,7 @@ class Scan(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("running", "Running"),
+        ("stopping", "Stopping"),
         ("completed", "Completed"),
         ("failed", "Failed"),
         ("stopped", "Stopped"),

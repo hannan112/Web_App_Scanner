@@ -43,32 +43,39 @@ class ScanTracker:
             return scan_id in self._running_scans
     
     def stop_scan(self, scan_id: int) -> bool:
-        """Stop a running scan"""
+        """Stop a running scan - does NOT remove from tracker until engine confirms"""
         with self._lock:
             engine = self._running_scans.get(scan_id)
             if engine:
                 try:
                     # Stop the scan engine
+                    # The engine's stop_scan() method will handle:
+                    # 1. Setting stop event
+                    # 2. Stopping ZAP processes
+                    # 3. Updating database status
+                    # 4. Unregistering from tracker (after verification)
                     success = engine.stop_scan()
-                    
+
                     # Clean up resources
                     try:
                         engine.cleanup_resources()
                     except Exception as cleanup_error:
                         logger.warning(f"Error cleaning up resources for scan {scan_id}: {cleanup_error}")
-                    
-                    # Remove from tracker
-                    del self._running_scans[scan_id]
-                    logger.info(f"Successfully stopped scan {scan_id}")
+
+                    # NOTE: We no longer immediately delete from tracker here.
+                    # The engine will call unregister_scan() after verifying stop.
+                    # This allows retry if stop fails.
+                    logger.info(f"Initiated stop for scan {scan_id}, engine will unregister after verification")
                     return success
                 except Exception as e:
                     logger.error(f"Error stopping scan {scan_id}: {e}")
-                    # Still remove from tracker to prevent memory leaks
+                    # On exception, remove from tracker to prevent memory leaks
                     if scan_id in self._running_scans:
                         del self._running_scans[scan_id]
+                        logger.warning(f"Removed scan {scan_id} from tracker due to stop error")
                     return False
             else:
-                logger.warning(f"Scan {scan_id} not found in tracker")
+                logger.warning(f"Scan {scan_id} not found in tracker - may have already stopped")
                 return False
     
     def get_running_scan_ids(self) -> list:

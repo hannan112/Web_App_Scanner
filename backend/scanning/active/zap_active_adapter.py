@@ -83,7 +83,7 @@ class ZAPActiveAdapter:
         """Clean up any contexts created by previous scans to prevent cross-contamination"""
         try:
             # Get all existing contexts
-            contexts_response = self._make_api_get_request("context/view/contextList")
+            contexts_response = self._make_api_request("context/view/contextList")
             if contexts_response and "contextList" in contexts_response:
                 existing_contexts = contexts_response["contextList"]
                 logger.info(f"Found {len(existing_contexts)} existing contexts")
@@ -581,7 +581,7 @@ class ZAPActiveAdapter:
         """Monitor spider progress until completion"""
         if not self.spider_id:
             return
-            
+
         while True:
             try:
                 # CRITICAL: Check if user requested stop
@@ -592,18 +592,23 @@ class ZAPActiveAdapter:
                     except Exception as stop_error:
                         logger.error(f"Error stopping spider on user stop: {stop_error}")
                     break
-                
+
                 status = self._make_api_request("spider/view/status", {"scanId": self.spider_id})
                 progress = int(status.get("status", 0))
-                
+
                 logger.debug(f"Spider progress: {progress}%")
-                
+
                 if progress >= 100:
                     logger.info("Spider scan completed")
                     break
-                    
+
+                # Check stop flag before sleeping
+                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
+                    logger.info("🔴 Stop requested during spider sleep period")
+                    break
+
                 time.sleep(2)
-                
+
             except Exception as e:
                 logger.error(f"Error monitoring spider: {e}")
                 break
@@ -615,6 +620,7 @@ class ZAPActiveAdapter:
         timeout_seconds = max_duration + 60  # Add 1 minute buffer to configured duration
         connection_failures = 0  # Track consecutive connection failures
         max_connection_failures = 3  # Fail after 3 consecutive connection errors
+        last_progress_log = 0  # Track when we last logged progress
 
         logger.info(f"Monitoring AJAX spider (timeout: {timeout_seconds}s)")
 
@@ -628,7 +634,7 @@ class ZAPActiveAdapter:
                     except Exception as stop_error:
                         logger.error(f"Error force stopping AJAX spider on user stop: {stop_error}")
                     break
-                
+
                 # Check for timeout
                 elapsed = time.time() - start_time
                 if elapsed > timeout_seconds:
@@ -640,31 +646,42 @@ class ZAPActiveAdapter:
                         logger.error(f"Error stopping AJAX spider: {stop_error}")
                     break
 
+                # Log progress every 10 seconds to show activity
+                if elapsed - last_progress_log >= 10:
+                    progress_percent = min(100, (elapsed / timeout_seconds) * 100)
+                    logger.info(f"AJAX spider running: {elapsed:.0f}s / {timeout_seconds}s ({progress_percent:.1f}%)")
+                    last_progress_log = elapsed
+
                 status = self._make_api_request("ajaxSpider/view/status")
-                
+
                 # Check if we got a valid response
                 if status is None:
                     connection_failures += 1
                     logger.error(f"❌ Failed to get AJAX spider status (attempt {connection_failures}/{max_connection_failures})")
-                    
+
                     if connection_failures >= max_connection_failures:
                         logger.error(f"❌❌❌ ZAP connection lost after {connection_failures} attempts - ZAP may have crashed!")
                         logger.error("Failing scan due to ZAP unavailability")
                         raise ConnectionError(f"ZAP connection lost - failed to get status {connection_failures} times in a row")
-                    
+
                     # Wait a bit longer before retry when having connection issues
                     time.sleep(3)
                     continue
                 else:
                     # Reset connection failure counter on successful response
                     connection_failures = 0
-                
+
                 current_status = status.get("status", "").lower()
 
                 logger.debug(f"AJAX spider status: {current_status} (elapsed: {elapsed:.1f}s)")
 
                 if current_status == "stopped":
                     logger.info("AJAX spider completed normally")
+                    break
+
+                # Check stop flag before sleeping
+                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
+                    logger.info("🔴 Stop requested during AJAX spider sleep period")
                     break
 
                 time.sleep(2)
@@ -675,17 +692,17 @@ class ZAPActiveAdapter:
             except Exception as e:
                 logger.error(f"Error monitoring AJAX spider: {e}")
                 connection_failures += 1
-                
+
                 if connection_failures >= max_connection_failures:
                     logger.error(f"❌ Too many errors monitoring AJAX spider, ZAP may be unavailable")
                     raise ConnectionError(f"Failed to monitor AJAX spider: {e}")
-                
+
                 # Try to stop spider before continuing/breaking
                 try:
                     self._make_api_post_request("ajaxSpider/action/stop")
                 except:
                     pass
-                
+
                 time.sleep(3)  # Wait before retry
 
     def _force_stop_ajax_spider(self):
@@ -748,10 +765,12 @@ class ZAPActiveAdapter:
         """Monitor active scan progress until completion"""
         if not self.active_scan_id:
             return
-            
+
         start_progress, end_progress = progress_range
         progress_range_size = end_progress - start_progress
-            
+        start_time = time.time()
+        last_progress_log = 0
+
         while True:
             try:
                 # CRITICAL: Check if user requested stop
@@ -762,10 +781,16 @@ class ZAPActiveAdapter:
                     except Exception as stop_error:
                         logger.error(f"Error stopping active scan on user stop: {stop_error}")
                     break
-                
+
                 status = self._make_api_request("ascan/view/status", {"scanId": self.active_scan_id})
                 zap_progress = int(status.get("status", 0))
-                
+
+                # Log progress every 30 seconds to show activity
+                elapsed = time.time() - start_time
+                if elapsed - last_progress_log >= 30:
+                    logger.info(f"Active vulnerability scan progress: {zap_progress}% (running for {elapsed:.0f}s)")
+                    last_progress_log = elapsed
+
                 logger.debug(f"ZAP active scan progress: {zap_progress}%")
                 
                 # Update progress through callback if provided
@@ -773,13 +798,18 @@ class ZAPActiveAdapter:
                     # Map ZAP progress (0-100) to our progress range
                     mapped_progress = start_progress + (zap_progress * progress_range_size / 100.0)
                     progress_callback(mapped_progress, f"ZAP active scan: {zap_progress}%")
-                
+
                 if zap_progress >= 100:
                     logger.info("Active scan completed")
                     break
-                    
+
+                # Check stop flag before sleeping
+                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
+                    logger.info("🔴 Stop requested during active scan sleep period")
+                    break
+
                 time.sleep(3)  # Shorter interval for more responsive updates
-                
+
             except Exception as e:
                 logger.error(f"Error monitoring active scan: {e}")
                 break
@@ -1331,7 +1361,7 @@ class ZAPActiveAdapter:
             for context_id in self.context_ids:
                 try:
                     # Get context name first
-                    context_info = self._make_api_get_request(f"context/view/context/?contextId={context_id}")
+                    context_info = self._make_api_request(f"context/view/context", {"contextId": context_id})
                     if context_info and "context" in context_info:
                         context_name = context_info["context"]
                         logger.info(f"Cleaning up context: {context_name}")

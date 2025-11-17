@@ -273,6 +273,84 @@ class ScanViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+    @action(detail=True, methods=["post"])
+    def force_stop(self, request, pk=None):
+        """Force stop a scan using Docker-level termination (emergency stop)"""
+        scan = self.get_object()
+
+        try:
+            import subprocess
+
+            logger.warning(f"⚠️ FORCE STOP requested for scan {scan.id}")
+
+            # Step 1: Try normal stop first
+            from scanning.scan_tracker import get_scan_tracker
+            tracker = get_scan_tracker()
+            tracker.stop_scan(scan.id)
+
+            # Step 2: Force kill ZAP browser processes
+            logger.info("🔴 Force killing AJAX spider browser processes...")
+            try:
+                subprocess.run(
+                    ["docker", "exec", "zap", "pkill", "-9", "-f", "firefox"],
+                    capture_output=True,
+                    timeout=5
+                )
+                logger.info("Sent SIGKILL to firefox processes")
+            except Exception as e:
+                logger.warning(f"Firefox force kill failed: {e}")
+
+            try:
+                subprocess.run(
+                    ["docker", "exec", "zap", "pkill", "-9", "-f", "chrome"],
+                    capture_output=True,
+                    timeout=5
+                )
+                logger.info("Sent SIGKILL to chrome processes")
+            except Exception as e:
+                logger.warning(f"Chrome force kill failed: {e}")
+
+            # Step 3: Kill all Java processes in ZAP (nuclear option)
+            # logger.warning("🔴🔴🔴 NUCLEAR: Killing all ZAP Java processes...")
+            # try:
+            #     subprocess.run(
+            #         ["docker", "exec", "zap", "pkill", "-9", "-f", "java"],
+            #         capture_output=True,
+            #         timeout=5
+            #     )
+            #     logger.info("Sent SIGKILL to Java processes (ZAP will restart)")
+            # except Exception as e:
+            #     logger.warning(f"Java process kill failed: {e}")
+
+            # Step 4: Update scan status
+            scan.refresh_from_db()
+            scan.status = 'stopped'
+            scan.end_time = timezone.now()
+            scan.save()
+
+            from scanning.models.scan import ScanLog
+            ScanLog.objects.create(
+                scan=scan,
+                level='WARNING',
+                message="Scan FORCE STOPPED by user (Docker-level termination)"
+            )
+
+            logger.warning(f"✅ Scan {scan.id} FORCE STOPPED")
+
+            return Response({
+                "message": "Scan force stopped (Docker-level termination)",
+                "status": scan.status,
+                "warning": "ZAP browser processes were forcibly killed",
+                "end_time": scan.end_time
+            })
+
+        except Exception as e:
+            logger.error(f"Error force stopping scan {scan.id}: {e}")
+            return Response(
+                {"error": f"Error force stopping scan: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
     @action(detail=True, methods=["get"])
     def download_raw_data(self, request, pk=None):
         """Download complete raw scan data for manual analysis"""

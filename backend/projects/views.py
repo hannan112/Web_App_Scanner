@@ -44,6 +44,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Set the owner to the authenticated user when creating a project"""
         serializer.save(owner=self.request.user)
+    
+    def create(self, request, *args, **kwargs):
+        """Override create to log validation errors"""
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            logger.error(f"Project creation validation failed: {serializer.errors}")
+            logger.error(f"Request data: {request.data}")
+        return super().create(request, *args, **kwargs)
 
     @action(detail=False, methods=["get"])
     def dashboard(self, request):

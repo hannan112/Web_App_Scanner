@@ -82,7 +82,7 @@ export default function RootLayout({
           defer
         ></script>
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>
           {children}
         </AuthProvider>

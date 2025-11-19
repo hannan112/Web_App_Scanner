@@ -77,14 +77,13 @@ RUN pip install --no-cache-dir --upgrade pip \
 RUN pip install --no-cache-dir sslyze>=5.1.0
 
 # Create and customize requirements.txt
-# Removing the problematic wappalyzer-python package
+# Note: PostgreSQL dependency removed as we use SQLite
 RUN echo "Django>=5.2,<6.0" > requirements.txt \
     && echo "djangorestframework>=3.14.0" >> requirements.txt \
     && echo "djangorestframework-simplejwt>=5.2.2" >> requirements.txt \
     && echo "django-cors-headers>=4.0.0" >> requirements.txt \
     && echo "django-allauth>=0.54.0" >> requirements.txt \
     && echo "dj-rest-auth>=4.0.1" >> requirements.txt \
-    && echo "psycopg2-binary>=2.9.5" >> requirements.txt \
     && echo "python-owasp-zap-v2.4>=0.0.20" >> requirements.txt \
     && echo "sslyze>=5.1.0" >> requirements.txt \
     && echo "dnspython>=2.3.0" >> requirements.txt \
@@ -102,10 +101,6 @@ RUN mkdir -p /app/logs /app/data /app/backend /app/scanning /app/projects /app/a
 # Copy the application code
 COPY ./backend /app
 
-# Copy and set up the entrypoint script
-COPY ./docker-containers/docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh && ls -la /app/docker-entrypoint.sh
-
 # Copy wrapper scripts for discovery tools
 COPY ./docker-containers/scripts/ /usr/local/bin/
 RUN chmod +x /usr/local/bin/*-docker
@@ -119,6 +114,5 @@ RUN chmod -R 755 /app
 # Expose port
 EXPOSE 8000
 
-# Set up entrypoint and default command
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Default command (overridden by docker-compose for discovery-tools)
+CMD ["sleep", "infinity"]

@@ -1,0 +1,42 @@
+# Ignore large directories that don't need to be in Docker builds
+backend/logs/
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/db.sqlite3
+backend/database/
+backend/media/
+backend/static/
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# Environment
+.env
+.env.local
+*.log
+
+# Documentation
+*.md
+LICENSE
+

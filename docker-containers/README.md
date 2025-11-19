@@ -12,11 +12,10 @@ This directory contains the Docker configuration for the security scanner with a
 ## 📦 Services
 
 ### **Core Services**
-1. **web** - Django backend application
-2. **db** - PostgreSQL database
-3. **zap** - OWASP ZAP for security scanning
-4. **discovery-tools** - Enhanced discovery tools container
-5. **pgadmin** - Database management (optional)
+1. **zap** - OWASP ZAP for security scanning
+2. **discovery-tools** - Enhanced discovery tools container
+
+> **Note:** The Django backend runs locally using SQLite, not in Docker.
 
 ### **Discovery Tools Container**
 The `discovery-tools` service includes:
@@ -59,23 +58,18 @@ gospider --version
 
 ### **Environment Variables**
 ```yaml
-# Web Service
-DATABASE_URL: postgres://scanner:scanner@db:5432/scanner
-ZAP_HOST: zap
-ZAP_PORT: 8080
+# ZAP Service
 ZAP_API_KEY: changeme123
+JAVA_OPTS: -Xmx2g
 
 # Discovery Tools
-ENABLE_ACTIVE_SCANNING: true
-MAX_CONCURRENT_ACTIVE_SCANS: 3
-ACTIVE_SCAN_TIMEOUT_MINUTES: 60
+PYTHONUNBUFFERED: 1
 ```
 
 ### **Volumes**
-- `postgres_data` - Database persistence
-- `zap_data` - ZAP session data
+- `zap_data` - ZAP configuration and data
+- `zap_sessions` - ZAP session data
 - `discovery_data` - Discovery tool data
-- `logs_volume` - Application logs
 
 ## 🛠️ Tool Integration
 
@@ -199,7 +193,6 @@ docker exec discovery-tools_1 katana --version
 
 ### **Health Checks**
 - ZAP: `http://localhost:8080/JSON/core/view/version/`
-- Database: Automatic connection testing
 - Discovery Tools: Container status monitoring
 
 ### **Resource Usage**

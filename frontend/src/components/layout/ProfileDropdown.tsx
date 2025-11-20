@@ -33,7 +33,7 @@ export default function ProfileDropdown() {
   }
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative z-50" ref={dropdownRef}>
       {/* Profile button that toggles dropdown */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -64,7 +64,7 @@ export default function ProfileDropdown() {
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-[100] border border-gray-200">
           <div className="px-4 py-2 border-b border-gray-100">
             <p className="text-sm font-medium text-gray-700">{user?.username ?? "User"}</p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>

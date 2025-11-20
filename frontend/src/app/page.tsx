@@ -42,7 +42,7 @@ export default function Home() {
       <WorldMapAnimation />
 
       {/* NAVBAR */}
-      <nav className="relative z-10 flex items-center justify-between py-5 px-8 shadow bg-white/80 backdrop-blur-md">
+      <nav className="relative z-50 flex items-center justify-between py-5 px-8 shadow bg-white/80 backdrop-blur-md">
         <div className="flex items-center gap-6">
           <Link href="/" className="text-2xl font-bold text-blue-700">Security Scanner</Link>
           <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium">Home</Link>

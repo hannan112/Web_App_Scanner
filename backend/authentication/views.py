@@ -20,6 +20,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, EmailVerification, PasswordResetToken
 from .serializers import (
+    ChangePasswordSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetRequestSerializer,
     UserLoginSerializer,
@@ -305,3 +306,32 @@ class UserProfileView(APIView):
             "is_active": user.is_active,
             "date_joined": user.date_joined,
         }, status=status.HTTP_200_OK)
+
+
+class ChangePasswordView(APIView):
+    """
+    View for changing user password
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Change user password"""
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        
+        if serializer.is_valid():
+            # Set the new password
+            user = request.user
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            
+            logger.info(f"Password changed successfully for user: {user.email}")
+            
+            return Response(
+                {"message": "Password changed successfully."},
+                status=status.HTTP_200_OK
+            )
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

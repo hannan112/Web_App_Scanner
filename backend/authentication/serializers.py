@@ -108,6 +108,40 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         return data
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+    """Serializer for changing user password"""
+    
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, min_length=8, write_only=True)
+    
+    def validate_new_password(self, value):
+        """Validate that the new password meets complexity requirements"""
+        if not any(char.isdigit() for char in value):
+            raise serializers.ValidationError(
+                "Password must contain at least one number."
+            )
+        if not any(char in "!@#$%^&*()_+" for char in value):
+            raise serializers.ValidationError(
+                "Password must contain at least one special character."
+            )
+        return value
+    
+    def validate_old_password(self, value):
+        """Validate that the old password is correct"""
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Current password is incorrect.")
+        return value
+    
+    def validate(self, data):
+        """Validate that the new password is different from old password"""
+        if data['old_password'] == data['new_password']:
+            raise serializers.ValidationError({
+                "new_password": "New password must be different from current password."
+            })
+        return data
+
+
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     # Add any custom authentication backends here

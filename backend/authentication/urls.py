@@ -3,6 +3,7 @@ from django.contrib.auth.views import LogoutView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import (
+    ChangePasswordView,
     EmailVerificationView,
     GoogleAuthCallbackView,
     GoogleLoginView,
@@ -36,5 +37,6 @@ urlpatterns = [
     path("google/", GoogleLoginView.as_view(), name="google_login"),
     path("google/callback/", GoogleAuthCallbackView.as_view(), name="google_callback"),
     path("user/", UserProfileView.as_view(), name="user_profile"),
+    path("password/change/", ChangePasswordView.as_view(), name="change_password"),
     path("logout/", LogoutView.as_view(next_page='/api/auth/login/'), name="logout"),
 ]

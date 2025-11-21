@@ -76,6 +76,7 @@ export default function WorldMapAnimation() {
     if (!ctx) return;
 
     function toPx(city: City) {
+      if (!canvas) return { x: 0, y: 0 };
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
 
@@ -107,6 +108,7 @@ export default function WorldMapAnimation() {
     }
 
     function draw() {
+      if (!canvas || !ctx) return;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);

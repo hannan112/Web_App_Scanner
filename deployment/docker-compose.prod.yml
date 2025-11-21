@@ -20,6 +20,7 @@ services:
       - ZAP_HOST=zap
       - ZAP_PORT=8080
       - ZAP_API_KEY=${ZAP_API_KEY:-changeme123}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
     ports:
       - "8000:8000"
     depends_on:
@@ -54,7 +55,7 @@ services:
       - "8080:8080"
     environment:
       - ZAP_API_KEY=${ZAP_API_KEY:-changeme123}
-      - JAVA_OPTS=-Xmx512m  # Optimized for 1GB RAM instance
+      - JAVA_OPTS=-Xmx512m # Optimized for 1GB RAM instance
     networks:
       - scanner_network
 
@@ -64,6 +65,7 @@ volumes:
   media_volume:
   logs_volume:
   zap_data:
+
 
 networks:
   scanner_network:

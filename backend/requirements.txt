@@ -6,6 +6,7 @@ django-cors-headers>=4.0.0
 django-allauth>=0.54.0
 dj-rest-auth>=4.0.1
 psycopg2-binary>=2.9.5
+dj-database-url>=2.1.0
 
 # Security-related dependencies
 python-owasp-zap-v2.4>=0.0.20

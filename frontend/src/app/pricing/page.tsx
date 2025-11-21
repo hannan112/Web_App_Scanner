@@ -11,7 +11,7 @@ export default function PricingPage() {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
 
-  const handleGetStarted = (plan: string) => {
+  const handleGetStarted = () => {
     if (loading) return;
     if (isAuthenticated) {
       router.push("/dashboard");
@@ -102,7 +102,7 @@ export default function PricingPage() {
               </ul>
 
               <button
-                onClick={() => handleGetStarted('free')}
+                onClick={() => handleGetStarted()}
                 className="w-full py-3 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition shadow-md"
                 disabled={loading}
               >
@@ -163,7 +163,7 @@ export default function PricingPage() {
               </ul>
 
               <button
-                onClick={() => handleGetStarted('active')}
+                onClick={() => handleGetStarted()}
                 className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md"
                 disabled={loading}
               >
@@ -220,7 +220,7 @@ export default function PricingPage() {
               </ul>
 
               <button
-                onClick={() => handleGetStarted('comprehensive')}
+                onClick={() => handleGetStarted()}
                 className="w-full py-3 px-6 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition shadow-md"
                 disabled={loading}
               >

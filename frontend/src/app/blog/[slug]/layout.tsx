@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { getBlogPost } from '@/lib/api/blog';
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
+  const params = await props.params;
   try {
     const post = await getBlogPost(params.slug);
     const title = post.meta_title || `${post.title} | Security Scanner`;

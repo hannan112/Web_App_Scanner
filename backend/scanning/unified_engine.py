@@ -129,7 +129,8 @@ class UnifiedScanningEngine:
             # Use the active scanning engine
             from scanning.active.engines.active_engine import ActiveScanningEngine
             
-            active_engine = ActiveScanningEngine(self.scan_id)
+            # Active scan is 0-100%
+            active_engine = ActiveScanningEngine(self.scan_id, progress_range=(0.0, 100.0))
             success = active_engine.start()
             
             if success:
@@ -175,7 +176,8 @@ class UnifiedScanningEngine:
             
             # Phase 2: Active scanning (next 50% of progress)  
             self._update_progress(45.0, "Running active vulnerability testing phase")
-            active_success = self._run_active_phase()
+            # Pass progress range 45-90% for active phase
+            active_success = self._run_active_phase(progress_range=(45.0, 90.0))
             
             # Check for stop request
             if self.is_stop_requested():
@@ -245,7 +247,8 @@ class UnifiedScanningEngine:
             
             # Phase 2: Active scanning (next 45% of progress)  
             self._update_progress(50.0, "Running active vulnerability testing phase")
-            active_success = self._run_active_phase()
+            # Pass progress range 50-90% for active phase
+            active_success = self._run_active_phase(progress_range=(50.0, 90.0))
             
             # Check for stop request
             if self.is_stop_requested():
@@ -337,7 +340,7 @@ class UnifiedScanningEngine:
             logger.error(f"Passive phase failed: {e}")
             return False
 
-    def _run_active_phase(self):
+    def _run_active_phase(self, progress_range=(0.0, 100.0)):
         """Run the active phase with enhanced discovery integration"""
         try:
             # Check for stop request before starting
@@ -345,13 +348,13 @@ class UnifiedScanningEngine:
                 logger.info("Scan stop requested before active phase")
                 return False
                 
-            logger.info("Starting enhanced active phase with passive discovery integration")
+            logger.info(f"Starting enhanced active phase with passive discovery integration (Range: {progress_range})")
             
             # Use the enhanced active scanning engine for ALL active scans
             from scanning.active.engines.active_engine import ActiveScanningEngine
             
-            # Create enhanced active engine
-            active_engine = ActiveScanningEngine(self.scan_id)
+            # Create enhanced active engine with progress range
+            active_engine = ActiveScanningEngine(self.scan_id, progress_range=progress_range)
             
             # Register the active engine for proper cleanup
             self.register_adapter(active_engine)

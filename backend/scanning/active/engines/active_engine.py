@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class ActiveScanningEngine:
     """Active scanning engine for comprehensive vulnerability testing"""
 
-    def __init__(self, scan_id: int):
+    def __init__(self, scan_id: int, progress_range: tuple = (0.0, 100.0)):
         self.scan_id = scan_id
         self.scan = None
         self.target_url = None
@@ -26,6 +26,7 @@ class ActiveScanningEngine:
         self.zap_adapter = None
         self.scan_logger = None  # Per-scan logger instance
         self._stop_requested = False  # Flag for user-requested stop
+        self.progress_range = progress_range  # Range to map progress to (start, end)
 
     def start(self):
         """Start active scanning process with comprehensive logging"""
@@ -116,7 +117,8 @@ class ActiveScanningEngine:
             # Update scan status
             self.scan.status = 'running'
             self.scan.start_time = timezone.now()
-            self.scan.progress = 0.0
+            # Initialize progress to the start of the configured range
+            self.scan.progress = self.progress_range[0]
             self.scan.save()
 
             self._update_progress(5.0, "Initializing active scan")
@@ -838,18 +840,23 @@ class ActiveScanningEngine:
     def _update_progress(self, percent: float, message: str):
         """Update scan progress and log message"""
         try:
+            # Map internal percentage (0-100) to configured range
+            start_range, end_range = self.progress_range
+            range_size = end_range - start_range
+            mapped_percent = start_range + (percent * range_size / 100.0)
+            
             if self.scan:
                 # Refresh scan object to avoid stale data
                 self.scan.refresh_from_db()
                 
                 # Ensure progress only moves forward (never decreases)
                 current_progress = self.scan.progress
-                if percent < current_progress:
-                    logger.warning(f"Progress would decrease from {current_progress}% to {percent}%, keeping current progress")
-                    percent = current_progress
+                if mapped_percent < current_progress:
+                    logger.warning(f"Progress would decrease from {current_progress}% to {mapped_percent}%, keeping current progress")
+                    mapped_percent = current_progress
                 
                 # Update progress
-                self.scan.progress = percent
+                self.scan.progress = mapped_percent
                 self.scan.save(update_fields=['progress', 'updated_at'])
                 
                 # Create log entry
@@ -857,10 +864,10 @@ class ActiveScanningEngine:
                 ScanLog.objects.create(
                     scan=self.scan,
                     level='INFO',
-                    message=f"{percent:.1f}% - {message}"
+                    message=f"{mapped_percent:.1f}% - {message}"
                 )
             
-            logger.info(f"Active scan {self.scan_id}: {percent:.1f}% - {message}")
+            logger.info(f"Active scan {self.scan_id}: {mapped_percent:.1f}% - {message}")
             
         except Exception as e:
             logger.error(f"Failed to update progress: {e}")

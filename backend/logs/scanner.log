@@ -60941,3 +60941,1222 @@ INFO 2025-11-19 08:05:39,808 zap_active_adapter ✅✅✅ AJAX spider successful
 INFO 2025-11-19 08:05:39,808 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
 INFO 2025-11-19 08:05:39,808 unified_engine Finally block: ZAP scans stopped
 INFO 2025-11-19 08:05:39,808 unified_engine Finally block: Scan 41 unregistered from tracker
+ERROR 2025-11-20 07:09:12,399 active_engine Failed to update progress: Mock object has no attribute '_state'
+ERROR 2025-11-20 07:09:12,399 active_engine Failed to update progress: Mock object has no attribute '_state'
+ERROR 2025-11-20 07:09:42,967 active_engine Failed to update progress: Mock object has no attribute '_state'
+ERROR 2025-11-20 07:09:42,967 active_engine Failed to update progress: Mock object has no attribute '_state'
+ERROR 2025-11-20 07:09:42,967 active_engine Failed to update progress: Mock object has no attribute '_state'
+ERROR 2025-11-20 07:09:42,967 active_engine Failed to update progress: Mock object has no attribute '_state'
+ERROR 2025-11-20 07:09:42,967 active_engine Failed to update progress: Mock object has no attribute '_state'
+INFO 2025-11-20 07:12:46,387 views ScanConfiguration create called with data: {'project': '11', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-20 07:12:46,390 views Creating scan configuration with data: {'project': '11', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-20 07:12:46,397 views Scan configuration created successfully: 42
+INFO 2025-11-20 07:12:46,490 views Creating scan with data: {'configuration': 42}
+INFO 2025-11-20 07:12:46,490 views Config ID from request: 42 (type: <class 'int'>)
+INFO 2025-11-20 07:12:46,490 views Converted config ID: 42
+INFO 2025-11-20 07:12:46,500 views Starting scan engine for scan 42
+INFO 2025-11-20 07:12:46,506 scan_tracker Registered scan 42 in tracker
+INFO 2025-11-20 07:12:46,506 views Scan 42 started asynchronously
+INFO 2025-11-20 07:12:46,506 views Attempting to return scan data for scan 42
+INFO 2025-11-20 07:12:46,507 views Using existing scan object, status: running
+INFO 2025-11-20 07:12:46,507 views Preparing full scan response for scan 42
+INFO 2025-11-20 07:12:46,507 views Full scan response prepared for scan 42
+INFO 2025-11-20 07:12:46,509 unified_engine Starting active scan with passive reconnaissance for scan ID: 42
+INFO 2025-11-20 07:12:46,609 unified_engine Scan 42: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-11-20 07:12:46,619 unified_engine Scan 42: 10.0% - Running passive reconnaissance phase
+INFO 2025-11-20 07:12:46,810 scanner Scan 42: 5.0% - Starting passive reconnaissance
+INFO 2025-11-20 07:12:46,820 unified_engine Scan 42: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-11-20 07:12:47,321 scanner Scan 42: 15.0% - Analyzing target URL
+INFO 2025-11-20 07:12:47,330 unified_engine Scan 42: 15.2% - Passive: Analyzing target URL
+INFO 2025-11-20 07:12:47,330 scanner Target analysis completed for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:47,630 scanner Scan 42: 25.0% - Performing DNS analysis
+INFO 2025-11-20 07:12:47,642 unified_engine Scan 42: 18.8% - Passive: Performing DNS analysis
+INFO 2025-11-20 07:12:49,901 scanner DNS analysis completed for www.infinitywaveinc.com
+INFO 2025-11-20 07:12:50,402 scanner Scan 42: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-11-20 07:12:50,414 unified_engine Scan 42: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-11-20 07:12:50,578 scanner SSL analysis completed for www.infinitywaveinc.com
+INFO 2025-11-20 07:12:50,979 scanner Scan 42: 55.0% - Detecting technologies
+INFO 2025-11-20 07:12:50,992 unified_engine Scan 42: 29.2% - Passive: Detecting technologies
+INFO 2025-11-20 07:12:51,186 scanner Technology detection completed for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:51,586 scanner Scan 42: 70.0% - Analyzing security headers
+INFO 2025-11-20 07:12:51,598 unified_engine Scan 42: 34.5% - Passive: Analyzing security headers
+INFO 2025-11-20 07:12:51,751 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-11-20 07:12:51,759 zap_adapter ZAP response status code: 200
+INFO 2025-11-20 07:12:51,759 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-11-20 07:12:57,056 scanner ZAP found 3 header-related issues
+INFO 2025-11-20 07:12:57,056 scanner Headers analysis completed for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:57,357 scanner Scan 42: 85.0% - Analyzing content for information disclosure
+INFO 2025-11-20 07:12:57,375 unified_engine Scan 42: 39.8% - Passive: Analyzing content for information disclosure
+INFO 2025-11-20 07:12:57,534 scanner Content analysis completed for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:57,935 scanner Scan 42: 95.0% - Analyzing cookies
+INFO 2025-11-20 07:12:57,949 unified_engine Scan 42: 43.2% - Passive: Analyzing cookies
+INFO 2025-11-20 07:12:58,113 scanner Cookie analysis completed for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:58,414 scanner Scan 42: 98.0% - Running enhanced discovery
+INFO 2025-11-20 07:12:58,427 unified_engine Scan 42: 44.3% - Passive: Running enhanced discovery
+INFO 2025-11-20 07:12:58,428 scanner Starting enhanced discovery for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:58,428 enhanced_discovery_adapter Starting comprehensive discovery for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:12:58,428 enhanced_discovery_adapter Starting subdomain discovery for www.infinitywaveinc.com
+ERROR 2025-11-20 07:12:58,429 enhanced_discovery_adapter Subdomain discovery failed for www.infinitywaveinc.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-11-20 07:12:58,429 enhanced_discovery_adapter Starting wayback URL discovery for www.infinitywaveinc.com
+ERROR 2025-11-20 07:12:58,429 enhanced_discovery_adapter Wayback URL discovery failed for www.infinitywaveinc.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-20 07:12:58,429 enhanced_discovery_adapter Starting directory discovery for https://www.infinitywaveinc.com/
+ERROR 2025-11-20 07:12:58,430 enhanced_discovery_adapter Directory discovery failed for https://www.infinitywaveinc.com/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-11-20 07:12:58,430 enhanced_discovery_adapter Starting API endpoint discovery for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:13:00,978 enhanced_discovery_adapter Starting wayback URL discovery for www.infinitywaveinc.com
+ERROR 2025-11-20 07:13:00,979 enhanced_discovery_adapter Wayback URL discovery failed for www.infinitywaveinc.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-20 07:13:00,979 enhanced_discovery_adapter Found 16 API endpoints for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:13:00,980 enhanced_discovery_adapter Comprehensive discovery completed for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:13:00,981 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 16, 'total_discoveries': 16}
+INFO 2025-11-20 07:13:00,981 scanner Enhanced discovery completed: 16 URLs discovered
+INFO 2025-11-20 07:13:00,981 scanner Enhanced discovery results stored: True
+INFO 2025-11-20 07:13:01,181 scanner Scan 42: 99.0% - Aggregating security findings
+INFO 2025-11-20 07:13:01,248 unified_engine Scan 42: 44.6% - Passive: Aggregating security findings
+INFO 2025-11-20 07:13:01,248 scanner Vulnerability aggregation completed: 13 findings
+INFO 2025-11-20 07:13:01,448 scanner Scan 42: 100.0% - Passive scan completed
+INFO 2025-11-20 07:13:01,460 unified_engine Scan 42: 45.0% - Passive: Passive scan completed
+INFO 2025-11-20 07:13:01,461 unified_engine Saving passive results with keys: ['target_info', 'dns_analysis', 'ssl_analysis', 'technology_detection', 'security_headers', 'content_analysis', 'cookie_analysis', 'enhanced_discovery', 'vulnerabilities', 'vulnerability_summary']
+INFO 2025-11-20 07:13:01,461 unified_engine Enhanced discovery in results: True
+INFO 2025-11-20 07:13:01,467 unified_engine Passive results saved successfully. Enhanced discovery: True
+INFO 2025-11-20 07:13:01,468 url_discovery_logger URL discoveries logged to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_42/url_discoveries_passive_20251120_071301.json - 16 URLs discovered
+INFO 2025-11-20 07:13:01,469 url_discovery_logger URL list saved to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_42/discovered_urls_passive_20251120_071301.txt
+INFO 2025-11-20 07:13:01,469 unified_engine URL discoveries logged to files for passive scan
+INFO 2025-11-20 07:13:01,483 unified_engine Saved 1 new passive vulnerabilities (12 already existed)
+INFO 2025-11-20 07:13:01,491 unified_engine Scan 42: 45.0% - Running active vulnerability testing phase
+INFO 2025-11-20 07:13:01,491 unified_engine Starting enhanced active phase with passive discovery integration (Range: (45.0, 90.0))
+INFO 2025-11-20 07:13:01,493 scan_logger Initialized scan logger for scan 42 at /home/hannan/IDM_Project/prototype-2/backend/logs/scan_42
+INFO 2025-11-20 07:13:01,506 scan_logger Found 2 Docker containers to monitor: ['docker-containers-discovery-tools-1', 'docker-containers-zap-1']
+INFO 2025-11-20 07:13:01,506 scan_logger Started Docker log capture for: docker-containers-discovery-tools-1
+INFO 2025-11-20 07:13:01,506 scan_logger Started Docker log capture for: docker-containers-zap-1
+INFO 2025-11-20 07:13:01,507 active_engine 🔍 Started Docker log capture for scan 42
+INFO 2025-11-20 07:13:01,508 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-11-20 07:14:04,371 enhanced_discovery Enhanced discovery initialized for https://www.infinitywaveinc.com/
+INFO 2025-11-20 07:14:04,371 enhanced_discovery Available tools: []
+INFO 2025-11-20 07:14:04,376 zap_active_adapter Found 0 existing contexts
+INFO 2025-11-20 07:14:04,972 zap_active_adapter Created new ZAP session: scan_42_1763622844
+ERROR 2025-11-20 07:14:04,997 zap_active_adapter ZAP API request failed for core/action/clearSiteTree: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearSiteTree/?apikey=changeme123
+ERROR 2025-11-20 07:14:05,007 zap_active_adapter ZAP API request failed for core/action/clearStats: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearStats/?apikey=changeme123
+INFO 2025-11-20 07:14:05,016 zap_active_adapter ✅ Reset ZAP state with session: scan_42_1763622844
+INFO 2025-11-20 07:14:05,031 active_engine Active scan 42: 47.2% - Initializing active scan
+INFO 2025-11-20 07:14:05,040 active_engine Active scan 42: 49.5% - Validating target and ZAP connection
+INFO 2025-11-20 07:14:05,045 zap_active_adapter ZAP connection successful at http://localhost:8080
+INFO 2025-11-20 07:14:05,230 active_engine Prerequisites validation completed successfully
+INFO 2025-11-20 07:14:05,243 active_engine Active scan 42: 54.0% - Starting discovery phase
+INFO 2025-11-20 07:14:05,243 active_engine Starting enhanced discovery phase with passive discovery integration
+INFO 2025-11-20 07:14:05,253 active_engine Active scan 42: 54.0% - Loading enhanced discovery results from passive scan
+INFO 2025-11-20 07:14:05,254 active_engine Loaded 16 URLs from passive enhanced discovery
+INFO 2025-11-20 07:14:05,263 active_engine Active scan 42: 56.2% - Running enhanced discovery with multiple security tools
+INFO 2025-11-20 07:14:05,263 enhanced_discovery Starting enhanced discovery with multiple tools...
+INFO 2025-11-20 07:14:05,263 enhanced_discovery Starting comprehensive discovery...
+INFO 2025-11-20 07:14:05,263 enhanced_discovery Analyzing for API endpoints...
+INFO 2025-11-20 07:14:06,988 enhanced_discovery Analyzing discovered URLs for forms...
+INFO 2025-11-20 07:14:06,988 enhanced_discovery Discovery completed: 0 URLs, 0 forms, 0 API endpoints
+ERROR 2025-11-20 07:14:06,994 zap_active_adapter ZAP API request failed for spider/view/results: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/view/results/?apikey=changeme123
+INFO 2025-11-20 07:14:06,999 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-11-20 07:14:06,999 enhanced_discovery Enhanced discovery completed: {}
+INFO 2025-11-20 07:14:07,010 active_engine Active scan 42: 58.5% - Integrating passive discovery results with ZAP
+INFO 2025-11-20 07:14:07,010 active_engine Adding 16 discovered URLs to ZAP context
+WARNING 2025-11-20 07:14:07,072 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/api-docs
+WARNING 2025-11-20 07:14:07,134 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/docs
+WARNING 2025-11-20 07:14:07,192 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/webhook
+WARNING 2025-11-20 07:14:07,250 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/swagger
+WARNING 2025-11-20 07:14:07,309 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/internal/api/
+WARNING 2025-11-20 07:14:07,366 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/swagger-ui
+WARNING 2025-11-20 07:14:07,431 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/webhooks
+WARNING 2025-11-20 07:14:07,490 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/api/v1/
+WARNING 2025-11-20 07:14:07,546 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/graphql
+WARNING 2025-11-20 07:14:07,603 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/swagger.json
+WARNING 2025-11-20 07:14:07,660 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/api/
+WARNING 2025-11-20 07:14:07,717 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/openapi.json
+WARNING 2025-11-20 07:14:07,776 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/api/v2/
+WARNING 2025-11-20 07:14:07,833 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/rest/
+WARNING 2025-11-20 07:14:07,892 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/api/v3/
+WARNING 2025-11-20 07:14:07,962 active_engine Failed to add URL to ZAP context: https://www.infinitywaveinc.com/admin/api/
+INFO 2025-11-20 07:14:07,962 active_engine Successfully added 16 URLs to ZAP context
+INFO 2025-11-20 07:14:07,974 active_engine Active scan 42: 60.8% - Running ZAP traditional spider
+INFO 2025-11-20 07:14:07,974 zap_active_adapter Starting advanced spider scan
+INFO 2025-11-20 07:14:07,989 zap_active_adapter Spider started with ID: 0
+INFO 2025-11-20 07:14:09,996 zap_active_adapter Spider scan completed
+INFO 2025-11-20 07:14:10,000 zap_active_adapter Spider attack surface extraction: 0 URLs, 0 forms, 0 parameters
+INFO 2025-11-20 07:14:10,000 zap_active_adapter Spider completed. Found 0 URLs
+INFO 2025-11-20 07:14:10,010 active_engine Active scan 42: 63.0% - Running ZAP AJAX spider for modern web apps
+INFO 2025-11-20 07:14:10,011 zap_active_adapter Starting AJAX spider scan
+INFO 2025-11-20 07:14:10,025 zap_active_adapter AJAX spider started (max duration: 600s)
+INFO 2025-11-20 07:14:10,025 zap_active_adapter Monitoring AJAX spider (timeout: 660s)
+INFO 2025-11-20 07:14:20,052 zap_active_adapter AJAX spider running: 10s / 660s (1.5%)
+INFO 2025-11-20 07:14:30,090 zap_active_adapter AJAX spider running: 20s / 660s (3.0%)
+INFO 2025-11-20 07:14:40,156 zap_active_adapter AJAX spider running: 30s / 660s (4.6%)
+INFO 2025-11-20 07:14:50,208 zap_active_adapter AJAX spider running: 40s / 660s (6.1%)
+INFO 2025-11-20 07:15:00,360 zap_active_adapter AJAX spider running: 50s / 660s (7.6%)
+INFO 2025-11-20 07:15:10,459 zap_active_adapter AJAX spider running: 60s / 660s (9.2%)
+INFO 2025-11-20 07:15:20,531 zap_active_adapter AJAX spider running: 71s / 660s (10.7%)
+INFO 2025-11-20 07:15:30,615 zap_active_adapter AJAX spider running: 81s / 660s (12.2%)
+INFO 2025-11-20 07:15:40,726 zap_active_adapter AJAX spider running: 91s / 660s (13.7%)
+INFO 2025-11-20 07:15:50,805 zap_active_adapter AJAX spider running: 101s / 660s (15.3%)
+INFO 2025-11-20 07:16:00,869 zap_active_adapter AJAX spider running: 111s / 660s (16.8%)
+INFO 2025-11-20 07:16:10,957 zap_active_adapter AJAX spider running: 121s / 660s (18.3%)
+INFO 2025-11-20 07:16:21,050 zap_active_adapter AJAX spider running: 131s / 660s (19.9%)
+INFO 2025-11-20 07:16:31,158 zap_active_adapter AJAX spider running: 141s / 660s (21.4%)
+INFO 2025-11-20 07:16:41,251 zap_active_adapter AJAX spider running: 151s / 660s (22.9%)
+INFO 2025-11-20 07:16:51,342 zap_active_adapter AJAX spider running: 161s / 660s (24.4%)
+INFO 2025-11-20 07:17:01,444 zap_active_adapter AJAX spider running: 171s / 660s (26.0%)
+INFO 2025-11-20 07:17:11,531 zap_active_adapter AJAX spider running: 182s / 660s (27.5%)
+INFO 2025-11-20 07:17:21,588 zap_active_adapter AJAX spider running: 192s / 660s (29.0%)
+INFO 2025-11-20 07:17:31,659 zap_active_adapter AJAX spider running: 202s / 660s (30.6%)
+INFO 2025-11-20 07:17:41,716 zap_active_adapter AJAX spider running: 212s / 660s (32.1%)
+INFO 2025-11-20 07:17:51,770 zap_active_adapter AJAX spider running: 222s / 660s (33.6%)
+INFO 2025-11-20 07:18:01,830 zap_active_adapter AJAX spider running: 232s / 660s (35.1%)
+INFO 2025-11-20 07:18:07,906 zap_active_adapter AJAX spider completed normally
+INFO 2025-11-20 07:18:07,906 zap_active_adapter Stopping AJAX spider...
+INFO 2025-11-20 07:18:07,906 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 07:18:08,919 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 07:18:08,919 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 07:18:13,274 zap_active_adapter AJAX spider attack surface: 26 URLs, 0 AJAX requests, 3 JS files
+INFO 2025-11-20 07:18:13,275 zap_active_adapter AJAX spider completed. Found 26 additional URLs
+INFO 2025-11-20 07:18:13,275 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 07:18:14,286 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 07:18:14,286 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 07:18:14,312 active_engine Active scan 42: 65.2% - Enhanced discovery completed: 16 URLs, 0 forms, 0 API endpoints found
+INFO 2025-11-20 07:18:14,313 active_engine Enhanced discovery summary: {'total_urls': 0, 'total_endpoints': 11, 'total_forms': 0, 'total_subdomains': 0, 'total_technologies': 0, 'tools_used': [], 'discovery_time': 1763622846.988512}
+INFO 2025-11-20 07:18:14,313 active_engine Passive discovery integration: 16 URLs loaded
+INFO 2025-11-20 07:18:14,322 active_engine Active scan 42: 65.2% - Starting active vulnerability testing
+INFO 2025-11-20 07:18:14,322 active_engine Starting active vulnerability testing phase
+INFO 2025-11-20 07:18:14,322 active_engine Extracted 0 total valid URLs for comprehensive vulnerability testing
+INFO 2025-11-20 07:18:14,322 active_engine No external URLs discovered, testing target URL only
+INFO 2025-11-20 07:18:14,322 zap_active_adapter Starting comprehensive active vulnerability scan
+INFO 2025-11-20 07:18:14,322 zap_active_adapter Enabling 20 ZAP scanners: 40018,40019,40020,40021,40022,40024,40027,40012,40014,40016,40017,40026,90020,90037,90019,90035,90036,90019,90017,90029
+INFO 2025-11-20 07:18:14,336 zap_active_adapter ✅ Successfully enabled ZAP vulnerability scanners
+INFO 2025-11-20 07:18:14,336 zap_active_adapter Disabling 2 ZAP scanners: 6,7
+INFO 2025-11-20 07:18:14,440 zap_active_adapter ✅ Configured SQL injection scanners with HIGH attack strength and LOW threshold
+INFO 2025-11-20 07:18:14,441 zap_active_adapter No discovered URLs provided, scanning target URL only
+INFO 2025-11-20 07:18:14,441 zap_active_adapter Starting standard active scan
+INFO 2025-11-20 07:18:14,451 zap_active_adapter Active scan started with ID: 0
+INFO 2025-11-20 07:18:14,464 active_engine Active scan 42: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 07:18:17,476 active_engine Active scan 42: 66.1% - ZAP active scan: 6%
+INFO 2025-11-20 07:18:20,490 active_engine Active scan 42: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 07:18:23,504 active_engine Active scan 42: 67.1% - ZAP active scan: 14%
+INFO 2025-11-20 07:18:26,519 active_engine Active scan 42: 67.8% - ZAP active scan: 19%
+INFO 2025-11-20 07:18:29,535 active_engine Active scan 42: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 07:18:32,549 active_engine Active scan 42: 68.9% - ZAP active scan: 27%
+INFO 2025-11-20 07:18:35,564 active_engine Active scan 42: 69.7% - ZAP active scan: 33%
+INFO 2025-11-20 07:18:38,587 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 07:18:41,613 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 07:18:44,634 zap_active_adapter Active vulnerability scan progress: 35% (running for 30s)
+INFO 2025-11-20 07:18:44,664 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 07:18:47,806 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 07:18:50,865 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 07:18:54,028 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 07:18:57,097 active_engine Active scan 42: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 13:57:37,508 views ScanConfiguration create called with data: {'project': '18', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': '3', 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-20 13:57:37,548 views Creating scan configuration with data: {'project': '18', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': '3', 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-20 13:57:37,557 views Scan configuration created successfully: 43
+INFO 2025-11-20 13:57:37,648 views Creating scan with data: {'configuration': 43}
+INFO 2025-11-20 13:57:37,648 views Config ID from request: 43 (type: <class 'int'>)
+INFO 2025-11-20 13:57:37,648 views Converted config ID: 43
+INFO 2025-11-20 13:57:37,659 views Starting scan engine for scan 43
+INFO 2025-11-20 13:57:37,665 scan_tracker Registered scan 43 in tracker
+INFO 2025-11-20 13:57:37,665 views Scan 43 started asynchronously
+INFO 2025-11-20 13:57:37,665 views Attempting to return scan data for scan 43
+INFO 2025-11-20 13:57:37,665 views Using existing scan object, status: running
+INFO 2025-11-20 13:57:37,665 views Preparing full scan response for scan 43
+INFO 2025-11-20 13:57:37,666 views Full scan response prepared for scan 43
+INFO 2025-11-20 13:57:37,668 unified_engine Starting active scan with passive reconnaissance for scan ID: 43
+INFO 2025-11-20 13:57:37,687 unified_engine Scan 43: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-11-20 13:57:37,699 unified_engine Scan 43: 10.0% - Running passive reconnaissance phase
+INFO 2025-11-20 13:57:38,005 scanner Scan 43: 5.0% - Starting passive reconnaissance
+INFO 2025-11-20 13:57:38,015 unified_engine Scan 43: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-11-20 13:57:38,516 scanner Scan 43: 15.0% - Analyzing target URL
+INFO 2025-11-20 13:57:38,525 unified_engine Scan 43: 15.2% - Passive: Analyzing target URL
+INFO 2025-11-20 13:57:38,526 scanner Target analysis completed for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:38,826 scanner Scan 43: 25.0% - Performing DNS analysis
+INFO 2025-11-20 13:57:38,839 unified_engine Scan 43: 18.8% - Passive: Performing DNS analysis
+INFO 2025-11-20 13:57:45,078 scanner DNS analysis completed for student.riphahfsd.edu.pk
+INFO 2025-11-20 13:57:45,578 scanner Scan 43: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-11-20 13:57:45,628 unified_engine Scan 43: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-11-20 13:57:45,724 scanner SSL analysis completed for student.riphahfsd.edu.pk
+INFO 2025-11-20 13:57:46,125 scanner Scan 43: 55.0% - Detecting technologies
+INFO 2025-11-20 13:57:46,138 unified_engine Scan 43: 29.2% - Passive: Detecting technologies
+INFO 2025-11-20 13:57:46,273 scanner Technology detection completed for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:46,674 scanner Scan 43: 70.0% - Analyzing security headers
+INFO 2025-11-20 13:57:46,687 unified_engine Scan 43: 34.5% - Passive: Analyzing security headers
+INFO 2025-11-20 13:57:46,945 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-11-20 13:57:46,948 zap_adapter ZAP response status code: 200
+INFO 2025-11-20 13:57:46,948 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-11-20 13:57:52,347 scanner ZAP found 6 header-related issues
+INFO 2025-11-20 13:57:52,347 scanner Headers analysis completed for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:52,648 scanner Scan 43: 85.0% - Analyzing content for information disclosure
+INFO 2025-11-20 13:57:52,663 unified_engine Scan 43: 39.8% - Passive: Analyzing content for information disclosure
+INFO 2025-11-20 13:57:52,872 scanner Content analysis completed for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:53,273 scanner Scan 43: 95.0% - Analyzing cookies
+INFO 2025-11-20 13:57:53,286 unified_engine Scan 43: 43.2% - Passive: Analyzing cookies
+INFO 2025-11-20 13:57:53,436 scanner Cookie analysis completed for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:53,737 scanner Scan 43: 98.0% - Running enhanced discovery
+INFO 2025-11-20 13:57:53,751 unified_engine Scan 43: 44.3% - Passive: Running enhanced discovery
+INFO 2025-11-20 13:57:53,751 scanner Starting enhanced discovery for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:53,752 enhanced_discovery_adapter Starting comprehensive discovery for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:53,752 enhanced_discovery_adapter Starting subdomain discovery for student.riphahfsd.edu.pk
+ERROR 2025-11-20 13:57:53,753 enhanced_discovery_adapter Subdomain discovery failed for student.riphahfsd.edu.pk: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-11-20 13:57:53,753 enhanced_discovery_adapter Starting wayback URL discovery for student.riphahfsd.edu.pk
+ERROR 2025-11-20 13:57:53,753 enhanced_discovery_adapter Wayback URL discovery failed for student.riphahfsd.edu.pk: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-20 13:57:53,753 enhanced_discovery_adapter Starting directory discovery for https://student.riphahfsd.edu.pk/
+ERROR 2025-11-20 13:57:53,754 enhanced_discovery_adapter Directory discovery failed for https://student.riphahfsd.edu.pk/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-11-20 13:57:53,754 enhanced_discovery_adapter Starting API endpoint discovery for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:56,220 enhanced_discovery_adapter Starting wayback URL discovery for student.riphahfsd.edu.pk
+ERROR 2025-11-20 13:57:56,221 enhanced_discovery_adapter Wayback URL discovery failed for student.riphahfsd.edu.pk: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-20 13:57:56,221 enhanced_discovery_adapter Found 16 API endpoints for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:56,221 enhanced_discovery_adapter Comprehensive discovery completed for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:57:56,221 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 16, 'total_discoveries': 16}
+INFO 2025-11-20 13:57:56,222 scanner Enhanced discovery completed: 16 URLs discovered
+INFO 2025-11-20 13:57:56,222 scanner Enhanced discovery results stored: True
+INFO 2025-11-20 13:57:56,422 scanner Scan 43: 99.0% - Aggregating security findings
+INFO 2025-11-20 13:57:56,473 unified_engine Scan 43: 44.6% - Passive: Aggregating security findings
+INFO 2025-11-20 13:57:56,473 scanner Vulnerability aggregation completed: 21 findings
+INFO 2025-11-20 13:57:56,673 scanner Scan 43: 100.0% - Passive scan completed
+INFO 2025-11-20 13:57:56,687 unified_engine Scan 43: 45.0% - Passive: Passive scan completed
+INFO 2025-11-20 13:57:56,689 unified_engine Saving passive results with keys: ['target_info', 'dns_analysis', 'ssl_analysis', 'technology_detection', 'security_headers', 'content_analysis', 'cookie_analysis', 'enhanced_discovery', 'vulnerabilities', 'vulnerability_summary']
+INFO 2025-11-20 13:57:56,689 unified_engine Enhanced discovery in results: True
+INFO 2025-11-20 13:57:56,699 unified_engine Passive results saved successfully. Enhanced discovery: True
+INFO 2025-11-20 13:57:56,700 url_discovery_logger URL discoveries logged to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/url_discoveries_passive_20251120_135756.json - 16 URLs discovered
+INFO 2025-11-20 13:57:56,700 url_discovery_logger URL list saved to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/discovered_urls_passive_20251120_135756.txt
+INFO 2025-11-20 13:57:56,700 unified_engine URL discoveries logged to files for passive scan
+INFO 2025-11-20 13:57:56,723 unified_engine Saved 2 new passive vulnerabilities (19 already existed)
+INFO 2025-11-20 13:57:56,823 unified_engine Scan 43: 45.0% - Running active vulnerability testing phase
+INFO 2025-11-20 13:57:56,823 unified_engine Starting enhanced active phase with passive discovery integration (Range: (45.0, 90.0))
+INFO 2025-11-20 13:57:56,827 scan_logger Initialized scan logger for scan 43 at /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43
+INFO 2025-11-20 13:57:56,840 scan_logger Found 2 Docker containers to monitor: ['docker-containers-discovery-tools-1', 'docker-containers-zap-1']
+INFO 2025-11-20 13:57:56,841 scan_logger Started Docker log capture for: docker-containers-discovery-tools-1
+INFO 2025-11-20 13:57:56,841 scan_logger Started Docker log capture for: docker-containers-zap-1
+INFO 2025-11-20 13:57:56,841 active_engine 🔍 Started Docker log capture for scan 43
+INFO 2025-11-20 13:57:56,844 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-11-20 13:58:49,924 enhanced_discovery Enhanced discovery initialized for https://student.riphahfsd.edu.pk/
+INFO 2025-11-20 13:58:49,925 enhanced_discovery Available tools: []
+INFO 2025-11-20 13:58:49,930 zap_active_adapter Found 0 existing contexts
+INFO 2025-11-20 13:58:50,454 zap_active_adapter Created new ZAP session: scan_43_1763647129
+ERROR 2025-11-20 13:58:50,476 zap_active_adapter ZAP API request failed for core/action/clearSiteTree: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearSiteTree/?apikey=changeme123
+ERROR 2025-11-20 13:58:50,483 zap_active_adapter ZAP API request failed for core/action/clearStats: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearStats/?apikey=changeme123
+INFO 2025-11-20 13:58:50,492 zap_active_adapter ✅ Reset ZAP state with session: scan_43_1763647129
+INFO 2025-11-20 13:58:50,507 active_engine Active scan 43: 47.2% - Initializing active scan
+INFO 2025-11-20 13:58:50,516 active_engine Active scan 43: 49.5% - Validating target and ZAP connection
+INFO 2025-11-20 13:58:50,521 zap_active_adapter ZAP connection successful at http://localhost:8080
+INFO 2025-11-20 13:58:50,658 active_engine Prerequisites validation completed successfully
+INFO 2025-11-20 13:58:50,672 active_engine Active scan 43: 54.0% - Starting discovery phase
+INFO 2025-11-20 13:58:50,672 active_engine Starting enhanced discovery phase with passive discovery integration
+INFO 2025-11-20 13:58:50,681 active_engine Active scan 43: 54.0% - Loading enhanced discovery results from passive scan
+INFO 2025-11-20 13:58:50,682 active_engine Loaded 16 URLs from passive enhanced discovery
+INFO 2025-11-20 13:58:50,690 active_engine Active scan 43: 56.2% - Running enhanced discovery with multiple security tools
+INFO 2025-11-20 13:58:50,690 enhanced_discovery Starting enhanced discovery with multiple tools...
+INFO 2025-11-20 13:58:50,690 enhanced_discovery Starting comprehensive discovery...
+INFO 2025-11-20 13:58:50,690 enhanced_discovery Analyzing for API endpoints...
+INFO 2025-11-20 13:58:52,233 enhanced_discovery Analyzing discovered URLs for forms...
+INFO 2025-11-20 13:58:52,234 enhanced_discovery Discovery completed: 0 URLs, 0 forms, 0 API endpoints
+ERROR 2025-11-20 13:58:52,239 zap_active_adapter ZAP API request failed for spider/view/results: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/view/results/?apikey=changeme123
+INFO 2025-11-20 13:58:52,244 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-11-20 13:58:52,244 enhanced_discovery Enhanced discovery completed: {}
+INFO 2025-11-20 13:58:52,255 active_engine Active scan 43: 58.5% - Integrating passive discovery results with ZAP
+INFO 2025-11-20 13:58:52,255 active_engine Adding 16 discovered URLs to ZAP context
+WARNING 2025-11-20 13:58:52,351 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/webhooks
+WARNING 2025-11-20 13:58:52,535 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/rest/
+WARNING 2025-11-20 13:58:52,707 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/api/v2/
+WARNING 2025-11-20 13:58:52,891 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/api-docs
+WARNING 2025-11-20 13:58:53,081 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/admin/api/
+WARNING 2025-11-20 13:58:53,257 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/openapi.json
+WARNING 2025-11-20 13:58:53,432 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/graphql
+WARNING 2025-11-20 13:58:53,617 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/docs
+WARNING 2025-11-20 13:58:53,793 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/webhook
+WARNING 2025-11-20 13:58:53,984 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/swagger
+WARNING 2025-11-20 13:58:54,172 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/api/
+WARNING 2025-11-20 13:58:54,361 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/api/v1/
+WARNING 2025-11-20 13:58:54,538 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/swagger.json
+WARNING 2025-11-20 13:58:55,016 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/api/v3/
+WARNING 2025-11-20 13:58:55,206 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/internal/api/
+WARNING 2025-11-20 13:58:55,370 active_engine Failed to add URL to ZAP context: https://student.riphahfsd.edu.pk/swagger-ui
+INFO 2025-11-20 13:58:55,370 active_engine Successfully added 16 URLs to ZAP context
+INFO 2025-11-20 13:58:55,379 active_engine Active scan 43: 60.8% - Running ZAP traditional spider
+INFO 2025-11-20 13:58:55,380 zap_active_adapter Starting advanced spider scan
+INFO 2025-11-20 13:58:55,391 zap_active_adapter Spider started with ID: 0
+INFO 2025-11-20 13:58:57,399 zap_active_adapter Spider scan completed
+INFO 2025-11-20 13:58:57,401 zap_active_adapter Spider attack surface extraction: 0 URLs, 0 forms, 0 parameters
+INFO 2025-11-20 13:58:57,401 zap_active_adapter Spider completed. Found 0 URLs
+INFO 2025-11-20 13:58:57,412 active_engine Active scan 43: 63.0% - Running ZAP AJAX spider for modern web apps
+INFO 2025-11-20 13:58:57,412 zap_active_adapter Starting AJAX spider scan
+INFO 2025-11-20 13:58:57,425 zap_active_adapter AJAX spider started (max duration: 600s)
+INFO 2025-11-20 13:58:57,425 zap_active_adapter Monitoring AJAX spider (timeout: 660s)
+INFO 2025-11-20 13:59:07,447 zap_active_adapter AJAX spider running: 10s / 660s (1.5%)
+INFO 2025-11-20 13:59:17,470 zap_active_adapter AJAX spider running: 20s / 660s (3.0%)
+INFO 2025-11-20 13:59:25,492 zap_active_adapter AJAX spider completed normally
+INFO 2025-11-20 13:59:25,492 zap_active_adapter Stopping AJAX spider...
+INFO 2025-11-20 13:59:25,492 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 13:59:26,507 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 13:59:26,507 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 13:59:26,909 zap_active_adapter AJAX spider attack surface: 19 URLs, 2 AJAX requests, 8 JS files
+INFO 2025-11-20 13:59:26,910 zap_active_adapter AJAX spider completed. Found 19 additional URLs
+INFO 2025-11-20 13:59:26,910 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 13:59:27,922 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 13:59:27,922 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 13:59:27,938 active_engine Active scan 43: 65.2% - Enhanced discovery completed: 16 URLs, 0 forms, 0 API endpoints found
+INFO 2025-11-20 13:59:27,938 active_engine Enhanced discovery summary: {'total_urls': 0, 'total_endpoints': 11, 'total_forms': 0, 'total_subdomains': 0, 'total_technologies': 0, 'tools_used': [], 'discovery_time': 1763647132.234479}
+INFO 2025-11-20 13:59:27,938 active_engine Passive discovery integration: 16 URLs loaded
+INFO 2025-11-20 13:59:27,949 active_engine Active scan 43: 65.2% - Starting active vulnerability testing
+INFO 2025-11-20 13:59:27,950 active_engine Starting active vulnerability testing phase
+INFO 2025-11-20 13:59:27,950 active_engine Extracted 0 total valid URLs for comprehensive vulnerability testing
+INFO 2025-11-20 13:59:27,950 active_engine No external URLs discovered, testing target URL only
+INFO 2025-11-20 13:59:27,950 zap_active_adapter Starting comprehensive active vulnerability scan
+INFO 2025-11-20 13:59:27,950 zap_active_adapter Enabling 20 ZAP scanners: 40018,40019,40020,40021,40022,40024,40027,40012,40014,40016,40017,40026,90020,90037,90019,90035,90036,90019,90017,90029
+INFO 2025-11-20 13:59:27,965 zap_active_adapter ✅ Successfully enabled ZAP vulnerability scanners
+INFO 2025-11-20 13:59:27,965 zap_active_adapter Disabling 2 ZAP scanners: 6,7
+INFO 2025-11-20 13:59:28,111 zap_active_adapter ✅ Configured SQL injection scanners with HIGH attack strength and LOW threshold
+INFO 2025-11-20 13:59:28,111 zap_active_adapter No discovered URLs provided, scanning target URL only
+INFO 2025-11-20 13:59:28,111 zap_active_adapter Starting standard active scan
+INFO 2025-11-20 13:59:28,123 zap_active_adapter Active scan started with ID: 0
+INFO 2025-11-20 13:59:28,141 active_engine Active scan 43: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 13:59:31,158 active_engine Active scan 43: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 13:59:34,170 active_engine Active scan 43: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 13:59:37,184 active_engine Active scan 43: 65.7% - ZAP active scan: 3%
+INFO 2025-11-20 13:59:40,196 active_engine Active scan 43: 66.2% - ZAP active scan: 7%
+INFO 2025-11-20 13:59:43,211 active_engine Active scan 43: 66.5% - ZAP active scan: 9%
+INFO 2025-11-20 13:59:46,226 active_engine Active scan 43: 66.7% - ZAP active scan: 11%
+INFO 2025-11-20 13:59:49,239 active_engine Active scan 43: 67.1% - ZAP active scan: 14%
+INFO 2025-11-20 13:59:52,254 active_engine Active scan 43: 67.3% - ZAP active scan: 15%
+INFO 2025-11-20 13:59:55,270 active_engine Active scan 43: 67.5% - ZAP active scan: 17%
+INFO 2025-11-20 13:59:58,273 zap_active_adapter Active vulnerability scan progress: 20% (running for 30s)
+INFO 2025-11-20 13:59:58,283 active_engine Active scan 43: 68.0% - ZAP active scan: 20%
+INFO 2025-11-20 14:00:01,298 active_engine Active scan 43: 68.2% - ZAP active scan: 22%
+INFO 2025-11-20 14:00:04,313 active_engine Active scan 43: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:00:07,329 active_engine Active scan 43: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:00:10,346 active_engine Active scan 43: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:00:13,361 active_engine Active scan 43: 68.6% - ZAP active scan: 25%
+INFO 2025-11-20 14:00:16,374 active_engine Active scan 43: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:00:19,389 active_engine Active scan 43: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:00:22,401 active_engine Active scan 43: 69.3% - ZAP active scan: 30%
+INFO 2025-11-20 14:00:25,416 active_engine Active scan 43: 69.4% - ZAP active scan: 31%
+INFO 2025-11-20 14:00:28,420 zap_active_adapter Active vulnerability scan progress: 33% (running for 60s)
+INFO 2025-11-20 14:00:28,430 active_engine Active scan 43: 69.7% - ZAP active scan: 33%
+INFO 2025-11-20 14:00:31,444 active_engine Active scan 43: 69.8% - ZAP active scan: 34%
+INFO 2025-11-20 14:00:34,487 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:37,542 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:40,594 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:43,680 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:47,094 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:50,136 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:53,173 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:56,243 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:00:59,380 zap_active_adapter Active vulnerability scan progress: 35% (running for 91s)
+INFO 2025-11-20 14:01:00,344 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:03,848 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:07,071 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:10,314 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:15,105 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:18,195 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:21,463 active_engine Active scan 43: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:01:26,788 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:29,938 zap_active_adapter Active vulnerability scan progress: 36% (running for 122s)
+INFO 2025-11-20 14:01:29,966 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:35,808 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:42,616 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:45,880 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:48,978 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:52,022 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:55,130 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:01:58,262 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:01,275 zap_active_adapter Active vulnerability scan progress: 36% (running for 153s)
+INFO 2025-11-20 14:02:01,296 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:04,469 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:07,554 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:10,622 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:13,672 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:16,710 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:19,774 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:22,903 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:25,990 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:29,076 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:32,144 zap_active_adapter Active vulnerability scan progress: 36% (running for 184s)
+INFO 2025-11-20 14:02:32,168 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:35,272 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:38,327 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:41,348 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:44,373 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:47,388 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:50,402 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:53,424 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:56,439 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:02:59,451 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:03:02,455 zap_active_adapter Active vulnerability scan progress: 36% (running for 214s)
+INFO 2025-11-20 14:03:02,464 active_engine Active scan 43: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:03:05,475 active_engine Active scan 43: 70.2% - ZAP active scan: 37%
+INFO 2025-11-20 14:03:08,488 active_engine Active scan 43: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:03:11,506 active_engine Active scan 43: 70.5% - ZAP active scan: 39%
+INFO 2025-11-20 14:03:14,520 active_engine Active scan 43: 70.8% - ZAP active scan: 41%
+INFO 2025-11-20 14:03:17,538 active_engine Active scan 43: 70.8% - ZAP active scan: 41%
+INFO 2025-11-20 14:03:20,552 active_engine Active scan 43: 70.9% - ZAP active scan: 42%
+INFO 2025-11-20 14:03:23,574 active_engine Active scan 43: 70.9% - ZAP active scan: 42%
+INFO 2025-11-20 14:03:26,585 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:29,598 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:32,602 zap_active_adapter Active vulnerability scan progress: 43% (running for 244s)
+INFO 2025-11-20 14:03:32,613 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:35,628 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:38,645 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:41,663 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:44,680 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:47,694 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:50,710 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:53,730 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:03:57,384 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:04:02,860 active_engine Active scan 43: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:04:05,866 zap_active_adapter Active vulnerability scan progress: 45% (running for 278s)
+INFO 2025-11-20 14:04:05,966 active_engine Active scan 43: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:04:08,996 active_engine Active scan 43: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:04:12,474 active_engine Active scan 43: 71.7% - ZAP active scan: 48%
+INFO 2025-11-20 14:04:15,767 active_engine Active scan 43: 72.1% - ZAP active scan: 51%
+INFO 2025-11-20 14:04:19,193 active_engine Active scan 43: 72.4% - ZAP active scan: 53%
+INFO 2025-11-20 14:04:22,385 active_engine Active scan 43: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:04:25,407 active_engine Active scan 43: 73.2% - ZAP active scan: 59%
+INFO 2025-11-20 14:04:28,421 active_engine Active scan 43: 73.5% - ZAP active scan: 61%
+INFO 2025-11-20 14:04:31,432 active_engine Active scan 43: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:04:34,443 active_engine Active scan 43: 73.9% - ZAP active scan: 64%
+INFO 2025-11-20 14:04:37,448 zap_active_adapter Active vulnerability scan progress: 66% (running for 309s)
+INFO 2025-11-20 14:04:37,459 active_engine Active scan 43: 74.2% - ZAP active scan: 66%
+INFO 2025-11-20 14:04:40,473 active_engine Active scan 43: 74.4% - ZAP active scan: 68%
+INFO 2025-11-20 14:04:43,487 active_engine Active scan 43: 74.6% - ZAP active scan: 69%
+INFO 2025-11-20 14:04:46,504 active_engine Active scan 43: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:04:49,519 active_engine Active scan 43: 75.5% - ZAP active scan: 76%
+INFO 2025-11-20 14:04:52,532 active_engine Active scan 43: 75.8% - ZAP active scan: 78%
+INFO 2025-11-20 14:04:55,547 active_engine Active scan 43: 76.0% - ZAP active scan: 80%
+INFO 2025-11-20 14:04:58,561 active_engine Active scan 43: 76.6% - ZAP active scan: 84%
+INFO 2025-11-20 14:05:01,581 active_engine Active scan 43: 76.7% - ZAP active scan: 85%
+INFO 2025-11-20 14:05:04,596 active_engine Active scan 43: 76.7% - ZAP active scan: 85%
+INFO 2025-11-20 14:05:07,607 zap_active_adapter Active vulnerability scan progress: 85% (running for 339s)
+INFO 2025-11-20 14:05:07,616 active_engine Active scan 43: 76.7% - ZAP active scan: 85%
+INFO 2025-11-20 14:05:10,633 active_engine Active scan 43: 77.4% - ZAP active scan: 90%
+INFO 2025-11-20 14:05:13,645 active_engine Active scan 43: 77.7% - ZAP active scan: 92%
+INFO 2025-11-20 14:05:16,660 active_engine Active scan 43: 77.7% - ZAP active scan: 92%
+INFO 2025-11-20 14:05:19,677 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:22,691 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:25,708 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:28,720 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:31,735 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:34,749 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:37,752 zap_active_adapter Active vulnerability scan progress: 93% (running for 370s)
+INFO 2025-11-20 14:05:37,763 active_engine Active scan 43: 77.8% - ZAP active scan: 93%
+INFO 2025-11-20 14:05:40,779 active_engine Active scan 43: 78.2% - ZAP active scan: 96%
+INFO 2025-11-20 14:05:43,791 active_engine Active scan 43: 78.5% - ZAP active scan: 98%
+INFO 2025-11-20 14:05:46,809 active_engine Active scan 43: 78.6% - ZAP active scan: 99%
+INFO 2025-11-20 14:05:49,863 active_engine Active scan 43: 78.8% - ZAP active scan: 100%
+INFO 2025-11-20 14:05:49,863 zap_active_adapter Active scan completed
+INFO 2025-11-20 14:05:50,050 zap_active_adapter Extracted 191 vulnerabilities from ZAP
+INFO 2025-11-20 14:05:50,051 zap_active_adapter Active vulnerability scan completed
+INFO 2025-11-20 14:05:50,064 active_engine Active scan 43: 78.8% - Extracting and processing vulnerabilities
+INFO 2025-11-20 14:05:50,238 zap_active_adapter Extracted 191 vulnerabilities from ZAP
+INFO 2025-11-20 14:05:50,255 active_engine Active scan 43: 81.0% - Generating scan statistics
+INFO 2025-11-20 14:05:50,260 active_engine Vulnerability testing completed: 191 vulnerabilities found
+WARNING 2025-11-20 14:05:50,261 active_engine Progress would decrease from 81.0% to 74.25%, keeping current progress
+INFO 2025-11-20 14:05:50,361 active_engine Active scan 43: 81.0% - Running SQL injection tests
+INFO 2025-11-20 14:05:50,361 active_engine Starting SQL injection testing phase
+INFO 2025-11-20 14:05:50,363 active_engine Extracted 18 unique URLs from discovery results
+WARNING 2025-11-20 14:05:50,363 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-11-20 14:05:50,363 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-11-20 14:05:50,376 active_engine Testing 3 URLs with SQLMap (filtered for parameters)
+INFO 2025-11-20 14:05:50,376 active_engine Testing 1/3: https://student.riphahfsd.edu.pk/assets/css/bootstrap.css?v=7.0 with SQLMap
+INFO 2025-11-20 14:05:50,869 sqlmap_adapter Running SQLMap on URL: https://student.riphahfsd.edu.pk/assets/css/bootstrap.css?v=7.0
+WARNING 2025-11-20 14:06:20,870 sqlmap_adapter SQLMap scan timed out after 30s for https://student.riphahfsd.edu.pk/assets/css/bootstrap.css?v=7.0
+INFO 2025-11-20 14:06:20,870 active_engine Completed SQLMap test for https://student.riphahfsd.edu.pk/assets/css/bootstrap.css?v=7.0 - found 1 findings
+INFO 2025-11-20 14:06:20,870 active_engine Testing 2/3: https://student.riphahfsd.edu.pk/assets/css/animate.css?v=7.0 with SQLMap
+INFO 2025-11-20 14:06:21,197 sqlmap_adapter Running SQLMap on URL: https://student.riphahfsd.edu.pk/assets/css/animate.css?v=7.0
+WARNING 2025-11-20 14:06:51,199 sqlmap_adapter SQLMap scan timed out after 30s for https://student.riphahfsd.edu.pk/assets/css/animate.css?v=7.0
+INFO 2025-11-20 14:06:51,200 active_engine Completed SQLMap test for https://student.riphahfsd.edu.pk/assets/css/animate.css?v=7.0 - found 1 findings
+INFO 2025-11-20 14:06:51,200 active_engine Testing 3/3: https://student.riphahfsd.edu.pk/assets/css/login.css?v=7.0 with SQLMap
+INFO 2025-11-20 14:06:51,569 sqlmap_adapter Running SQLMap on URL: https://student.riphahfsd.edu.pk/assets/css/login.css?v=7.0
+WARNING 2025-11-20 14:07:21,571 sqlmap_adapter SQLMap scan timed out after 30s for https://student.riphahfsd.edu.pk/assets/css/login.css?v=7.0
+INFO 2025-11-20 14:07:21,572 active_engine Completed SQLMap test for https://student.riphahfsd.edu.pk/assets/css/login.css?v=7.0 - found 1 findings
+INFO 2025-11-20 14:07:21,572 active_engine SQLMap testing completed. Found 3 findings
+INFO 2025-11-20 14:07:21,572 active_engine SQL injection testing phase completed. Found 0 vulnerabilities
+INFO 2025-11-20 14:07:21,585 active_engine Active scan 43: 81.0% - Processing and saving results
+INFO 2025-11-20 14:07:21,586 active_engine Extracted 18 unique URLs from discovery results
+WARNING 2025-11-20 14:07:21,586 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-11-20 14:07:21,586 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-11-20 14:07:22,803 active_engine Extracted 18 unique URLs from discovery results
+WARNING 2025-11-20 14:07:22,803 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-11-20 14:07:22,803 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-11-20 14:07:22,808 active_engine Active scan results saved successfully: {'discovery_urls': 18, 'discovery_forms': 0, 'vulnerabilities_saved': 189, 'spider_success': True, 'ajax_spider_success': True, 'active_scan_success': True}
+INFO 2025-11-20 14:07:22,808 active_engine Stopping all ZAP scans before marking scan as complete...
+INFO 2025-11-20 14:07:22,808 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-11-20 14:07:22,808 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-11-20 14:07:22,808 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:23,820 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:23,820 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:23,820 zap_active_adapter 🔴 STEP 2: Stopping traditional spider (ID: 0)
+INFO 2025-11-20 14:07:23,824 zap_active_adapter ✅ Traditional spider 0 stop command sent
+INFO 2025-11-20 14:07:23,824 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-11-20 14:07:23,826 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-11-20 14:07:23,826 zap_active_adapter 🔴 STEP 4: Stopping active scan (ID: 0)
+INFO 2025-11-20 14:07:23,828 zap_active_adapter ✅ Active scan 0 stop command sent
+INFO 2025-11-20 14:07:23,828 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-11-20 14:07:23,829 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-11-20 14:07:23,829 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-11-20 14:07:23,829 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:24,839 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:24,839 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:24,839 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-11-20 14:07:24,839 active_engine ZAP scans stopped successfully
+INFO 2025-11-20 14:07:24,849 zap_active_adapter Cleaned up all scan contexts
+INFO 2025-11-20 14:07:24,855 active_engine Active scan 43 completed successfully
+WARNING 2025-11-20 14:07:24,856 active_engine Progress would decrease from 100.0% to 90.0%, keeping current progress
+INFO 2025-11-20 14:07:24,864 active_engine Active scan 43: 100.0% - Active scan completed
+INFO 2025-11-20 14:07:24,865 active_engine Finally block: Ensuring all ZAP scans are stopped...
+INFO 2025-11-20 14:07:24,865 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-11-20 14:07:24,865 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-11-20 14:07:24,865 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:25,876 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:25,876 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:25,876 zap_active_adapter 🔴 STEP 2: Stopping traditional spider (ID: 0)
+INFO 2025-11-20 14:07:25,878 zap_active_adapter ✅ Traditional spider 0 stop command sent
+INFO 2025-11-20 14:07:25,878 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-11-20 14:07:25,880 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-11-20 14:07:25,880 zap_active_adapter 🔴 STEP 4: Stopping active scan (ID: 0)
+INFO 2025-11-20 14:07:25,881 zap_active_adapter ✅ Active scan 0 stop command sent
+INFO 2025-11-20 14:07:25,881 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-11-20 14:07:25,883 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-11-20 14:07:25,883 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-11-20 14:07:25,883 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:26,893 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:26,894 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:26,894 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-11-20 14:07:26,894 active_engine Finally block: ZAP scans stopped successfully
+INFO 2025-11-20 14:07:26,894 scan_logger Stopping Docker log capture...
+INFO 2025-11-20 14:07:32,894 scan_logger Docker log capture stopped for scan 43
+INFO 2025-11-20 14:07:32,896 scan_logger Created log summary: /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/LOG_SUMMARY.txt
+INFO 2025-11-20 14:07:32,896 active_engine 📊 Scan logs saved: /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/LOG_SUMMARY.txt
+INFO 2025-11-20 14:07:32,897 scan_logger Saved scan metadata to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/scan_metadata.json
+INFO 2025-11-20 14:07:32,897 unified_engine Enhanced active phase completed successfully
+WARNING 2025-11-20 14:07:32,899 unified_engine Progress would decrease from 100.0% to 90.0%, keeping current progress
+INFO 2025-11-20 14:07:32,911 unified_engine Scan 43: 100.0% - Integrating and finalizing results
+INFO 2025-11-20 14:07:32,914 url_discovery_logger URL discoveries logged to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/url_discoveries_comprehensive_20251120_140732.json - 35 URLs discovered
+INFO 2025-11-20 14:07:32,915 url_discovery_logger URL list saved to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/discovered_urls_comprehensive_20251120_140732.txt
+INFO 2025-11-20 14:07:32,916 url_discovery_logger Scan summary logged to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_43/scan_summary_comprehensive_20251120_140732.json
+INFO 2025-11-20 14:07:32,916 unified_engine Comprehensive URL discoveries and scan summary logged to files
+INFO 2025-11-20 14:07:32,920 unified_engine Comprehensive scan integration completed for scan 43
+INFO 2025-11-20 14:07:32,921 unified_engine Stopping all running scans and cleaning up resources...
+INFO 2025-11-20 14:07:32,921 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-11-20 14:07:32,921 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-11-20 14:07:32,921 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-11-20 14:07:32,921 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:33,935 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:33,935 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:33,936 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-11-20 14:07:33,939 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-11-20 14:07:33,939 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-11-20 14:07:33,941 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-11-20 14:07:33,941 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-11-20 14:07:33,941 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:34,949 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:34,949 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:34,949 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-11-20 14:07:34,949 unified_engine ZAP scans stopped directly
+INFO 2025-11-20 14:07:34,958 unified_engine Scan 43 completed successfully
+INFO 2025-11-20 14:07:34,968 unified_engine Scan 43: 100.0% - Active scan with passive reconnaissance completed
+INFO 2025-11-20 14:07:34,968 unified_engine Active scan with passive reconnaissance completed for scan ID: 43
+INFO 2025-11-20 14:07:34,968 scan_tracker Unregistered scan 43 from tracker
+INFO 2025-11-20 14:07:34,968 unified_engine Finally block: Cleaning up scan 43...
+INFO 2025-11-20 14:07:34,969 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-11-20 14:07:34,969 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-11-20 14:07:34,969 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-11-20 14:07:34,969 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:35,982 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:35,982 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:35,982 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-11-20 14:07:35,984 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-11-20 14:07:35,985 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-11-20 14:07:35,986 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-11-20 14:07:35,986 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-11-20 14:07:35,986 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:07:36,993 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:07:36,993 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:07:36,993 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-11-20 14:07:36,993 unified_engine Finally block: ZAP scans stopped
+INFO 2025-11-20 14:07:36,993 unified_engine Finally block: Scan 43 unregistered from tracker
+INFO 2025-11-20 14:10:28,131 views ScanConfiguration create called with data: {'project': '19', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': '3', 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-20 14:10:28,134 views Creating scan configuration with data: {'project': '19', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': '3', 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-20 14:10:28,142 views Scan configuration created successfully: 44
+INFO 2025-11-20 14:10:28,151 views Creating scan with data: {'configuration': 44}
+INFO 2025-11-20 14:10:28,151 views Config ID from request: 44 (type: <class 'int'>)
+INFO 2025-11-20 14:10:28,151 views Converted config ID: 44
+INFO 2025-11-20 14:10:28,160 views Starting scan engine for scan 44
+INFO 2025-11-20 14:10:28,166 scan_tracker Registered scan 44 in tracker
+INFO 2025-11-20 14:10:28,166 views Scan 44 started asynchronously
+INFO 2025-11-20 14:10:28,166 views Attempting to return scan data for scan 44
+INFO 2025-11-20 14:10:28,166 views Using existing scan object, status: running
+INFO 2025-11-20 14:10:28,166 views Preparing full scan response for scan 44
+INFO 2025-11-20 14:10:28,167 views Full scan response prepared for scan 44
+INFO 2025-11-20 14:10:28,169 unified_engine Starting active scan with passive reconnaissance for scan ID: 44
+INFO 2025-11-20 14:10:28,185 unified_engine Scan 44: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-11-20 14:10:28,291 unified_engine Scan 44: 10.0% - Running passive reconnaissance phase
+INFO 2025-11-20 14:10:28,296 scanner Scan 44: 5.0% - Starting passive reconnaissance
+INFO 2025-11-20 14:10:28,306 unified_engine Scan 44: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-11-20 14:10:28,807 scanner Scan 44: 15.0% - Analyzing target URL
+INFO 2025-11-20 14:10:28,819 unified_engine Scan 44: 15.2% - Passive: Analyzing target URL
+INFO 2025-11-20 14:10:28,819 scanner Target analysis completed for https://rancherscafe.com/
+INFO 2025-11-20 14:10:29,119 scanner Scan 44: 25.0% - Performing DNS analysis
+INFO 2025-11-20 14:10:29,131 unified_engine Scan 44: 18.8% - Passive: Performing DNS analysis
+INFO 2025-11-20 14:10:30,670 scanner DNS analysis completed for rancherscafe.com
+INFO 2025-11-20 14:10:31,170 scanner Scan 44: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-11-20 14:10:31,185 unified_engine Scan 44: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-11-20 14:10:31,559 scanner SSL analysis completed for rancherscafe.com
+INFO 2025-11-20 14:10:31,960 scanner Scan 44: 55.0% - Detecting technologies
+INFO 2025-11-20 14:10:31,972 unified_engine Scan 44: 29.2% - Passive: Detecting technologies
+INFO 2025-11-20 14:10:33,035 scanner Technology detection completed for https://rancherscafe.com/
+INFO 2025-11-20 14:10:33,436 scanner Scan 44: 70.0% - Analyzing security headers
+INFO 2025-11-20 14:10:33,449 unified_engine Scan 44: 34.5% - Passive: Analyzing security headers
+INFO 2025-11-20 14:10:34,332 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-11-20 14:10:34,336 zap_adapter ZAP response status code: 200
+INFO 2025-11-20 14:10:34,336 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-11-20 14:10:41,474 scanner ZAP found 5 header-related issues
+INFO 2025-11-20 14:10:41,475 scanner Headers analysis completed for https://rancherscafe.com/
+INFO 2025-11-20 14:10:41,776 scanner Scan 44: 85.0% - Analyzing content for information disclosure
+INFO 2025-11-20 14:10:41,787 unified_engine Scan 44: 39.8% - Passive: Analyzing content for information disclosure
+INFO 2025-11-20 14:10:42,479 scanner Content analysis completed for https://rancherscafe.com/
+INFO 2025-11-20 14:10:42,880 scanner Scan 44: 95.0% - Analyzing cookies
+INFO 2025-11-20 14:10:42,891 unified_engine Scan 44: 43.2% - Passive: Analyzing cookies
+INFO 2025-11-20 14:10:43,515 scanner Cookie analysis completed for https://rancherscafe.com/
+INFO 2025-11-20 14:10:43,816 scanner Scan 44: 98.0% - Running enhanced discovery
+INFO 2025-11-20 14:10:43,826 unified_engine Scan 44: 44.3% - Passive: Running enhanced discovery
+INFO 2025-11-20 14:10:43,826 scanner Starting enhanced discovery for https://rancherscafe.com/
+INFO 2025-11-20 14:10:43,826 enhanced_discovery_adapter Starting comprehensive discovery for https://rancherscafe.com/
+INFO 2025-11-20 14:10:43,826 enhanced_discovery_adapter Starting subdomain discovery for rancherscafe.com
+ERROR 2025-11-20 14:10:43,827 enhanced_discovery_adapter Subdomain discovery failed for rancherscafe.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-11-20 14:10:43,827 enhanced_discovery_adapter Starting wayback URL discovery for rancherscafe.com
+ERROR 2025-11-20 14:10:43,827 enhanced_discovery_adapter Wayback URL discovery failed for rancherscafe.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-20 14:10:43,827 enhanced_discovery_adapter Starting directory discovery for https://rancherscafe.com/
+ERROR 2025-11-20 14:10:43,828 enhanced_discovery_adapter Directory discovery failed for https://rancherscafe.com/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-11-20 14:10:43,828 enhanced_discovery_adapter Starting API endpoint discovery for https://rancherscafe.com/
+INFO 2025-11-20 14:11:03,931 enhanced_discovery_adapter Starting wayback URL discovery for rancherscafe.com
+ERROR 2025-11-20 14:11:03,932 enhanced_discovery_adapter Wayback URL discovery failed for rancherscafe.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-20 14:11:03,932 enhanced_discovery_adapter Found 0 API endpoints for https://rancherscafe.com/
+INFO 2025-11-20 14:11:03,933 enhanced_discovery_adapter Comprehensive discovery completed for https://rancherscafe.com/
+INFO 2025-11-20 14:11:03,933 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 0, 'total_discoveries': 0}
+INFO 2025-11-20 14:11:03,933 scanner Enhanced discovery completed: 0 URLs discovered
+INFO 2025-11-20 14:11:03,933 scanner Enhanced discovery results stored: True
+INFO 2025-11-20 14:11:04,133 scanner Scan 44: 99.0% - Aggregating security findings
+INFO 2025-11-20 14:11:04,146 unified_engine Scan 44: 44.6% - Passive: Aggregating security findings
+INFO 2025-11-20 14:11:04,147 scanner Vulnerability aggregation completed: 18 findings
+INFO 2025-11-20 14:11:04,347 scanner Scan 44: 100.0% - Passive scan completed
+INFO 2025-11-20 14:11:04,359 unified_engine Scan 44: 45.0% - Passive: Passive scan completed
+INFO 2025-11-20 14:11:04,359 unified_engine Saving passive results with keys: ['target_info', 'dns_analysis', 'ssl_analysis', 'technology_detection', 'security_headers', 'content_analysis', 'cookie_analysis', 'enhanced_discovery', 'vulnerabilities', 'vulnerability_summary']
+INFO 2025-11-20 14:11:04,359 unified_engine Enhanced discovery in results: True
+INFO 2025-11-20 14:11:04,366 unified_engine Passive results saved successfully. Enhanced discovery: True
+INFO 2025-11-20 14:11:04,367 url_discovery_logger URL discoveries logged to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_44/url_discoveries_passive_20251120_141104.json - 0 URLs discovered
+INFO 2025-11-20 14:11:04,368 url_discovery_logger URL list saved to /home/hannan/IDM_Project/prototype-2/backend/logs/scan_44/discovered_urls_passive_20251120_141104.txt
+INFO 2025-11-20 14:11:04,368 unified_engine URL discoveries logged to files for passive scan
+INFO 2025-11-20 14:11:04,480 unified_engine Saved 2 new passive vulnerabilities (16 already existed)
+INFO 2025-11-20 14:11:04,493 unified_engine Scan 44: 45.0% - Running active vulnerability testing phase
+INFO 2025-11-20 14:11:04,493 unified_engine Starting enhanced active phase with passive discovery integration (Range: (45.0, 90.0))
+INFO 2025-11-20 14:11:04,493 scan_logger Initialized scan logger for scan 44 at /home/hannan/IDM_Project/prototype-2/backend/logs/scan_44
+INFO 2025-11-20 14:11:04,524 scan_logger Found 2 Docker containers to monitor: ['docker-containers-discovery-tools-1', 'docker-containers-zap-1']
+INFO 2025-11-20 14:11:04,524 scan_logger Started Docker log capture for: docker-containers-discovery-tools-1
+INFO 2025-11-20 14:11:04,525 scan_logger Started Docker log capture for: docker-containers-zap-1
+INFO 2025-11-20 14:11:04,525 active_engine 🔍 Started Docker log capture for scan 44
+INFO 2025-11-20 14:11:04,529 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-11-20 14:12:07,189 enhanced_discovery Enhanced discovery initialized for https://rancherscafe.com/
+INFO 2025-11-20 14:12:07,189 enhanced_discovery Available tools: ['subfinder']
+INFO 2025-11-20 14:12:07,192 zap_active_adapter Found 1 existing contexts
+INFO 2025-11-20 14:12:10,028 zap_active_adapter Created new ZAP session: scan_44_1763647927
+ERROR 2025-11-20 14:12:10,045 zap_active_adapter ZAP API request failed for core/action/clearSiteTree: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearSiteTree/?apikey=changeme123
+ERROR 2025-11-20 14:12:10,060 zap_active_adapter ZAP API request failed for core/action/clearStats: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearStats/?apikey=changeme123
+INFO 2025-11-20 14:12:10,066 zap_active_adapter ✅ Reset ZAP state with session: scan_44_1763647927
+INFO 2025-11-20 14:12:10,083 active_engine Active scan 44: 47.2% - Initializing active scan
+INFO 2025-11-20 14:12:10,092 active_engine Active scan 44: 49.5% - Validating target and ZAP connection
+INFO 2025-11-20 14:12:10,096 zap_active_adapter ZAP connection successful at http://localhost:8080
+INFO 2025-11-20 14:12:11,144 active_engine Prerequisites validation completed successfully
+INFO 2025-11-20 14:12:11,160 active_engine Active scan 44: 54.0% - Starting discovery phase
+INFO 2025-11-20 14:12:11,160 active_engine Starting enhanced discovery phase with passive discovery integration
+INFO 2025-11-20 14:12:11,172 active_engine Active scan 44: 54.0% - Loading enhanced discovery results from passive scan
+INFO 2025-11-20 14:12:11,173 active_engine Loaded 0 URLs from passive enhanced discovery
+INFO 2025-11-20 14:12:11,182 active_engine Active scan 44: 56.2% - Running enhanced discovery with multiple security tools
+INFO 2025-11-20 14:12:11,183 enhanced_discovery Starting enhanced discovery with multiple tools...
+INFO 2025-11-20 14:12:11,183 enhanced_discovery Starting comprehensive discovery...
+INFO 2025-11-20 14:12:11,183 enhanced_discovery Discovering subdomains with subfinder...
+INFO 2025-11-20 14:12:11,184 enhanced_discovery Using Docker subfinder
+INFO 2025-11-20 14:12:36,254 enhanced_discovery Found 28 subdomains
+INFO 2025-11-20 14:12:36,255 enhanced_discovery Analyzing for API endpoints...
+INFO 2025-11-20 14:12:45,868 enhanced_discovery Analyzing discovered URLs for forms...
+INFO 2025-11-20 14:12:45,869 enhanced_discovery Discovery completed: 56 URLs, 2 forms, 4 API endpoints
+ERROR 2025-11-20 14:12:45,872 zap_active_adapter ZAP API request failed for spider/view/results: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/view/results/?apikey=changeme123
+INFO 2025-11-20 14:12:45,875 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-11-20 14:12:45,876 enhanced_discovery Enhanced discovery completed: {}
+INFO 2025-11-20 14:12:45,926 active_engine Active scan 44: 58.5% - Integrating passive discovery results with ZAP
+INFO 2025-11-20 14:12:45,937 active_engine Active scan 44: 60.8% - Running ZAP traditional spider
+INFO 2025-11-20 14:12:45,937 zap_active_adapter Starting advanced spider scan
+INFO 2025-11-20 14:12:45,944 zap_active_adapter Spider started with ID: 0
+INFO 2025-11-20 14:12:49,953 zap_active_adapter Spider scan completed
+INFO 2025-11-20 14:12:49,955 zap_active_adapter Spider attack surface extraction: 0 URLs, 0 forms, 0 parameters
+INFO 2025-11-20 14:12:49,956 zap_active_adapter Spider completed. Found 0 URLs
+INFO 2025-11-20 14:12:49,969 active_engine Active scan 44: 63.0% - Running ZAP AJAX spider for modern web apps
+INFO 2025-11-20 14:12:49,969 zap_active_adapter Starting AJAX spider scan
+INFO 2025-11-20 14:12:49,975 zap_active_adapter AJAX spider started (max duration: 600s)
+INFO 2025-11-20 14:12:49,975 zap_active_adapter Monitoring AJAX spider (timeout: 660s)
+INFO 2025-11-20 14:12:59,991 zap_active_adapter AJAX spider running: 10s / 660s (1.5%)
+INFO 2025-11-20 14:13:10,008 zap_active_adapter AJAX spider running: 20s / 660s (3.0%)
+INFO 2025-11-20 14:13:20,027 zap_active_adapter AJAX spider running: 30s / 660s (4.6%)
+INFO 2025-11-20 14:13:24,037 zap_active_adapter AJAX spider completed normally
+INFO 2025-11-20 14:13:24,037 zap_active_adapter Stopping AJAX spider...
+INFO 2025-11-20 14:13:24,037 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:13:25,044 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:13:25,044 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:13:26,728 zap_active_adapter AJAX spider attack surface: 50 URLs, 0 AJAX requests, 31 JS files
+INFO 2025-11-20 14:13:26,729 zap_active_adapter AJAX spider completed. Found 50 additional URLs
+INFO 2025-11-20 14:13:26,729 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-20 14:13:27,738 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-20 14:13:27,738 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-20 14:13:27,754 active_engine Active scan 44: 65.2% - Enhanced discovery completed: 56 URLs, 2 forms, 4 API endpoints found
+INFO 2025-11-20 14:13:27,755 active_engine Enhanced discovery summary: {'total_urls': 56, 'total_endpoints': 11, 'total_forms': 2, 'total_subdomains': 28, 'total_technologies': 0, 'tools_used': ['subfinder'], 'discovery_time': 1763647965.8693223}
+INFO 2025-11-20 14:13:27,755 active_engine Passive discovery integration: 0 URLs loaded
+INFO 2025-11-20 14:13:27,766 active_engine Active scan 44: 65.2% - Starting active vulnerability testing
+INFO 2025-11-20 14:13:27,766 active_engine Starting active vulnerability testing phase
+INFO 2025-11-20 14:13:27,766 active_engine Extracted 0 total valid URLs for comprehensive vulnerability testing
+INFO 2025-11-20 14:13:27,766 active_engine No external URLs discovered, testing target URL only
+INFO 2025-11-20 14:13:27,766 zap_active_adapter Starting comprehensive active vulnerability scan
+INFO 2025-11-20 14:13:27,766 zap_active_adapter Enabling 20 ZAP scanners: 40018,40019,40020,40021,40022,40024,40027,40012,40014,40016,40017,40026,90020,90037,90019,90035,90036,90019,90017,90029
+INFO 2025-11-20 14:13:27,774 zap_active_adapter ✅ Successfully enabled ZAP vulnerability scanners
+INFO 2025-11-20 14:13:27,774 zap_active_adapter Disabling 2 ZAP scanners: 6,7
+INFO 2025-11-20 14:13:27,865 zap_active_adapter ✅ Configured SQL injection scanners with HIGH attack strength and LOW threshold
+INFO 2025-11-20 14:13:27,865 zap_active_adapter No discovered URLs provided, scanning target URL only
+INFO 2025-11-20 14:13:27,865 zap_active_adapter Starting standard active scan
+INFO 2025-11-20 14:13:27,872 zap_active_adapter Active scan started with ID: 0
+INFO 2025-11-20 14:13:27,889 active_engine Active scan 44: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 14:13:30,996 active_engine Active scan 44: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 14:13:34,012 active_engine Active scan 44: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 14:13:37,026 active_engine Active scan 44: 65.2% - ZAP active scan: 0%
+INFO 2025-11-20 14:13:40,042 active_engine Active scan 44: 65.5% - ZAP active scan: 2%
+INFO 2025-11-20 14:13:43,056 active_engine Active scan 44: 65.5% - ZAP active scan: 2%
+INFO 2025-11-20 14:13:46,070 active_engine Active scan 44: 65.7% - ZAP active scan: 3%
+INFO 2025-11-20 14:13:49,084 active_engine Active scan 44: 66.1% - ZAP active scan: 6%
+INFO 2025-11-20 14:13:52,098 active_engine Active scan 44: 66.1% - ZAP active scan: 6%
+INFO 2025-11-20 14:13:55,112 active_engine Active scan 44: 66.2% - ZAP active scan: 7%
+INFO 2025-11-20 14:13:58,115 zap_active_adapter Active vulnerability scan progress: 8% (running for 30s)
+INFO 2025-11-20 14:13:58,125 active_engine Active scan 44: 66.3% - ZAP active scan: 8%
+INFO 2025-11-20 14:14:01,141 active_engine Active scan 44: 66.3% - ZAP active scan: 8%
+INFO 2025-11-20 14:14:04,155 active_engine Active scan 44: 66.3% - ZAP active scan: 8%
+INFO 2025-11-20 14:14:07,171 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:10,187 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:13,201 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:16,216 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:19,231 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:22,245 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:25,260 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:28,262 zap_active_adapter Active vulnerability scan progress: 10% (running for 60s)
+INFO 2025-11-20 14:14:28,273 active_engine Active scan 44: 66.6% - ZAP active scan: 10%
+INFO 2025-11-20 14:14:31,288 active_engine Active scan 44: 66.7% - ZAP active scan: 11%
+INFO 2025-11-20 14:14:34,302 active_engine Active scan 44: 66.9% - ZAP active scan: 12%
+INFO 2025-11-20 14:14:37,317 active_engine Active scan 44: 67.0% - ZAP active scan: 13%
+INFO 2025-11-20 14:14:40,333 active_engine Active scan 44: 67.0% - ZAP active scan: 13%
+INFO 2025-11-20 14:14:43,348 active_engine Active scan 44: 67.0% - ZAP active scan: 13%
+INFO 2025-11-20 14:14:46,363 active_engine Active scan 44: 67.1% - ZAP active scan: 14%
+INFO 2025-11-20 14:14:49,377 active_engine Active scan 44: 67.3% - ZAP active scan: 15%
+INFO 2025-11-20 14:14:52,391 active_engine Active scan 44: 67.3% - ZAP active scan: 15%
+INFO 2025-11-20 14:14:55,405 active_engine Active scan 44: 67.3% - ZAP active scan: 15%
+INFO 2025-11-20 14:14:58,408 zap_active_adapter Active vulnerability scan progress: 15% (running for 91s)
+INFO 2025-11-20 14:14:58,419 active_engine Active scan 44: 67.3% - ZAP active scan: 15%
+INFO 2025-11-20 14:15:01,434 active_engine Active scan 44: 67.4% - ZAP active scan: 16%
+INFO 2025-11-20 14:15:04,448 active_engine Active scan 44: 67.5% - ZAP active scan: 17%
+INFO 2025-11-20 14:15:07,463 active_engine Active scan 44: 67.5% - ZAP active scan: 17%
+INFO 2025-11-20 14:15:10,477 active_engine Active scan 44: 67.7% - ZAP active scan: 18%
+INFO 2025-11-20 14:15:13,493 active_engine Active scan 44: 67.7% - ZAP active scan: 18%
+INFO 2025-11-20 14:15:16,510 active_engine Active scan 44: 67.8% - ZAP active scan: 19%
+INFO 2025-11-20 14:15:19,525 active_engine Active scan 44: 68.0% - ZAP active scan: 20%
+INFO 2025-11-20 14:15:22,539 active_engine Active scan 44: 68.0% - ZAP active scan: 20%
+INFO 2025-11-20 14:15:25,553 active_engine Active scan 44: 68.1% - ZAP active scan: 21%
+INFO 2025-11-20 14:15:28,556 zap_active_adapter Active vulnerability scan progress: 21% (running for 121s)
+INFO 2025-11-20 14:15:28,566 active_engine Active scan 44: 68.1% - ZAP active scan: 21%
+INFO 2025-11-20 14:15:31,580 active_engine Active scan 44: 68.2% - ZAP active scan: 22%
+INFO 2025-11-20 14:15:34,595 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:37,609 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:40,624 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:43,637 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:46,651 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:49,664 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:52,678 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:55,690 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:15:58,694 zap_active_adapter Active vulnerability scan progress: 23% (running for 151s)
+INFO 2025-11-20 14:15:58,705 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:01,720 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:04,733 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:07,747 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:10,761 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:13,776 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:16,789 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:19,803 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:22,818 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:25,830 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:28,833 zap_active_adapter Active vulnerability scan progress: 23% (running for 181s)
+INFO 2025-11-20 14:16:28,843 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:31,856 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:34,872 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:37,886 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:40,901 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:43,915 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:46,928 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:49,943 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:52,957 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:55,972 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:16:58,976 zap_active_adapter Active vulnerability scan progress: 23% (running for 211s)
+INFO 2025-11-20 14:16:58,987 active_engine Active scan 44: 68.4% - ZAP active scan: 23%
+INFO 2025-11-20 14:17:02,001 active_engine Active scan 44: 68.5% - ZAP active scan: 24%
+INFO 2025-11-20 14:17:05,016 active_engine Active scan 44: 68.6% - ZAP active scan: 25%
+INFO 2025-11-20 14:17:08,031 active_engine Active scan 44: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:17:11,046 active_engine Active scan 44: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:17:14,058 active_engine Active scan 44: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:17:17,072 active_engine Active scan 44: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:17:20,087 active_engine Active scan 44: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:17:23,101 active_engine Active scan 44: 68.8% - ZAP active scan: 26%
+INFO 2025-11-20 14:17:26,114 active_engine Active scan 44: 68.9% - ZAP active scan: 27%
+INFO 2025-11-20 14:17:29,117 zap_active_adapter Active vulnerability scan progress: 28% (running for 241s)
+INFO 2025-11-20 14:17:29,129 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:32,145 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:35,159 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:38,174 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:41,191 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:44,207 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:47,219 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:50,232 active_engine Active scan 44: 69.0% - ZAP active scan: 28%
+INFO 2025-11-20 14:17:53,243 active_engine Active scan 44: 69.2% - ZAP active scan: 29%
+INFO 2025-11-20 14:17:56,256 active_engine Active scan 44: 69.2% - ZAP active scan: 29%
+INFO 2025-11-20 14:17:59,258 zap_active_adapter Active vulnerability scan progress: 30% (running for 271s)
+INFO 2025-11-20 14:17:59,268 active_engine Active scan 44: 69.3% - ZAP active scan: 30%
+INFO 2025-11-20 14:18:02,281 active_engine Active scan 44: 69.3% - ZAP active scan: 30%
+INFO 2025-11-20 14:18:05,294 active_engine Active scan 44: 69.3% - ZAP active scan: 30%
+INFO 2025-11-20 14:18:08,305 active_engine Active scan 44: 69.3% - ZAP active scan: 30%
+INFO 2025-11-20 14:18:11,316 active_engine Active scan 44: 69.3% - ZAP active scan: 30%
+INFO 2025-11-20 14:18:14,327 active_engine Active scan 44: 69.4% - ZAP active scan: 31%
+INFO 2025-11-20 14:18:17,340 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:20,352 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:23,366 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:26,380 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:29,383 zap_active_adapter Active vulnerability scan progress: 32% (running for 302s)
+INFO 2025-11-20 14:18:29,392 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:32,407 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:35,423 active_engine Active scan 44: 69.6% - ZAP active scan: 32%
+INFO 2025-11-20 14:18:38,438 active_engine Active scan 44: 69.7% - ZAP active scan: 33%
+INFO 2025-11-20 14:18:41,453 active_engine Active scan 44: 69.8% - ZAP active scan: 34%
+INFO 2025-11-20 14:18:44,467 active_engine Active scan 44: 69.8% - ZAP active scan: 34%
+INFO 2025-11-20 14:18:47,485 active_engine Active scan 44: 69.8% - ZAP active scan: 34%
+INFO 2025-11-20 14:18:50,518 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:18:53,554 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:18:56,597 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:18:59,667 zap_active_adapter Active vulnerability scan progress: 35% (running for 332s)
+INFO 2025-11-20 14:18:59,805 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:04,237 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:09,476 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:12,714 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:16,402 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:19,476 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:23,050 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:26,395 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:30,017 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:33,063 zap_active_adapter Active vulnerability scan progress: 35% (running for 365s)
+INFO 2025-11-20 14:19:33,129 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:36,798 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:19:41,204 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:20:09,909 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:20:14,220 zap_active_adapter Active vulnerability scan progress: 35% (running for 406s)
+INFO 2025-11-20 14:20:18,416 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:20:42,096 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:20:46,270 zap_active_adapter Active vulnerability scan progress: 35% (running for 438s)
+INFO 2025-11-20 14:20:49,840 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:20:57,768 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:14,308 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:18,084 zap_active_adapter Active vulnerability scan progress: 35% (running for 470s)
+INFO 2025-11-20 14:21:19,291 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:23,203 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:27,014 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:31,479 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:37,714 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:46,494 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:21:50,160 zap_active_adapter Active vulnerability scan progress: 35% (running for 502s)
+INFO 2025-11-20 14:21:51,462 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:12,636 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:21,438 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:25,183 zap_active_adapter Active vulnerability scan progress: 35% (running for 537s)
+INFO 2025-11-20 14:22:26,190 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:30,352 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:33,964 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:37,147 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:42,715 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:52,109 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:22:55,675 zap_active_adapter Active vulnerability scan progress: 35% (running for 568s)
+INFO 2025-11-20 14:22:57,963 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:02,901 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:11,557 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:15,552 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:19,096 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:23,316 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:27,419 zap_active_adapter Active vulnerability scan progress: 35% (running for 600s)
+INFO 2025-11-20 14:23:32,451 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:35,899 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:44,545 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:51,696 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:55,895 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:23:58,923 zap_active_adapter Active vulnerability scan progress: 35% (running for 631s)
+INFO 2025-11-20 14:23:58,951 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:02,008 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:05,038 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:09,426 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:13,317 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:16,349 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:23,184 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:26,444 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:30,024 zap_active_adapter Active vulnerability scan progress: 35% (running for 662s)
+INFO 2025-11-20 14:24:31,432 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:34,482 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:37,529 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:40,772 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:47,017 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:50,614 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:24:57,426 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:00,531 zap_active_adapter Active vulnerability scan progress: 35% (running for 693s)
+INFO 2025-11-20 14:25:00,668 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:04,444 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:08,296 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:11,822 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:14,922 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:21,318 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:25,234 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:30,726 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:33,897 zap_active_adapter Active vulnerability scan progress: 35% (running for 726s)
+INFO 2025-11-20 14:25:33,963 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:37,493 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:25:41,119 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:03,766 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:07,874 zap_active_adapter Active vulnerability scan progress: 35% (running for 760s)
+INFO 2025-11-20 14:26:11,761 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:19,360 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:23,272 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:27,337 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:33,370 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:36,892 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:40,176 zap_active_adapter Active vulnerability scan progress: 35% (running for 792s)
+INFO 2025-11-20 14:26:40,597 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:44,472 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:49,140 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:52,239 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:26:55,540 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:00,778 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:08,556 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:14,650 zap_active_adapter Active vulnerability scan progress: 35% (running for 827s)
+INFO 2025-11-20 14:27:19,191 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:26,065 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:29,825 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:33,818 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:40,549 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:45,015 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:48,201 zap_active_adapter Active vulnerability scan progress: 35% (running for 860s)
+INFO 2025-11-20 14:27:48,409 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:51,556 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:54,682 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:27:57,781 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:01,647 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:05,495 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:10,686 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:15,233 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:19,937 zap_active_adapter Active vulnerability scan progress: 35% (running for 892s)
+INFO 2025-11-20 14:28:38,014 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:49,944 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:28:54,626 zap_active_adapter Active vulnerability scan progress: 35% (running for 927s)
+INFO 2025-11-20 14:29:04,701 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:29:48,281 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:30:30,860 zap_active_adapter Active vulnerability scan progress: 35% (running for 1023s)
+INFO 2025-11-20 14:30:48,104 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:01,383 zap_active_adapter Active vulnerability scan progress: 35% (running for 1053s)
+INFO 2025-11-20 14:31:08,072 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:11,547 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:14,979 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:20,256 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:30,832 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:34,608 zap_active_adapter Active vulnerability scan progress: 35% (running for 1087s)
+INFO 2025-11-20 14:31:35,765 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:41,359 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:47,450 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:31:56,647 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:05,446 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:11,904 zap_active_adapter Active vulnerability scan progress: 35% (running for 1124s)
+INFO 2025-11-20 14:32:16,388 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:21,585 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:25,560 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:32,768 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:41,735 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:32:47,086 zap_active_adapter Active vulnerability scan progress: 35% (running for 1159s)
+INFO 2025-11-20 14:33:01,092 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:33:30,501 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:33:34,856 zap_active_adapter Active vulnerability scan progress: 35% (running for 1207s)
+INFO 2025-11-20 14:33:39,493 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:34:05,690 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:34:09,857 zap_active_adapter Active vulnerability scan progress: 35% (running for 1242s)
+INFO 2025-11-20 14:34:13,792 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:34:47,418 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:34:58,518 zap_active_adapter Active vulnerability scan progress: 35% (running for 1291s)
+INFO 2025-11-20 14:35:29,749 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:36:05,171 zap_active_adapter Active vulnerability scan progress: 35% (running for 1357s)
+INFO 2025-11-20 14:36:57,663 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:37:37,199 zap_active_adapter Active vulnerability scan progress: 35% (running for 1449s)
+INFO 2025-11-20 14:38:24,633 active_engine Active scan 44: 70.0% - ZAP active scan: 35%
+INFO 2025-11-20 14:39:23,654 zap_active_adapter Active vulnerability scan progress: 36% (running for 1555s)
+INFO 2025-11-20 14:41:12,762 active_engine Active scan 44: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:42:38,162 zap_active_adapter Active vulnerability scan progress: 36% (running for 1750s)
+INFO 2025-11-20 14:44:33,530 active_engine Active scan 44: 70.1% - ZAP active scan: 36%
+INFO 2025-11-20 14:45:50,459 zap_active_adapter Active vulnerability scan progress: 37% (running for 1943s)
+INFO 2025-11-20 14:46:02,532 active_engine Active scan 44: 70.2% - ZAP active scan: 37%
+INFO 2025-11-20 14:46:38,275 active_engine Active scan 44: 70.2% - ZAP active scan: 37%
+INFO 2025-11-20 14:46:47,621 zap_active_adapter Active vulnerability scan progress: 38% (running for 2000s)
+INFO 2025-11-20 14:46:55,551 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:47:02,018 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:47:11,069 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:47:23,342 zap_active_adapter Active vulnerability scan progress: 38% (running for 2035s)
+INFO 2025-11-20 14:47:32,378 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:47:39,853 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:47:50,423 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:48:13,541 zap_active_adapter Active vulnerability scan progress: 38% (running for 2086s)
+INFO 2025-11-20 14:48:20,103 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:48:29,193 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:48:52,635 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:48:57,400 zap_active_adapter Active vulnerability scan progress: 38% (running for 2130s)
+INFO 2025-11-20 14:49:05,485 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:49:31,839 zap_active_adapter Active vulnerability scan progress: 38% (running for 2164s)
+INFO 2025-11-20 14:49:38,639 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:50:17,135 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:50:24,570 zap_active_adapter Active vulnerability scan progress: 38% (running for 2217s)
+INFO 2025-11-20 14:50:30,509 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:50:57,855 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:51:12,167 zap_active_adapter Active vulnerability scan progress: 38% (running for 2264s)
+INFO 2025-11-20 14:51:22,547 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:51:32,697 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:51:46,575 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:51:50,384 zap_active_adapter Active vulnerability scan progress: 38% (running for 2302s)
+INFO 2025-11-20 14:51:53,237 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:52:00,429 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:52:24,095 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:52:32,139 zap_active_adapter Active vulnerability scan progress: 38% (running for 2344s)
+INFO 2025-11-20 14:52:35,023 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:52:38,865 active_engine Active scan 44: 70.4% - ZAP active scan: 38%
+INFO 2025-11-20 14:52:42,066 active_engine Active scan 44: 70.8% - ZAP active scan: 41%
+INFO 2025-11-20 14:52:45,182 active_engine Active scan 44: 70.9% - ZAP active scan: 42%
+INFO 2025-11-20 14:52:48,545 active_engine Active scan 44: 70.9% - ZAP active scan: 42%
+INFO 2025-11-20 14:52:51,677 active_engine Active scan 44: 70.9% - ZAP active scan: 42%
+INFO 2025-11-20 14:52:55,157 active_engine Active scan 44: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:52:58,556 active_engine Active scan 44: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:53:01,969 active_engine Active scan 44: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:53:04,981 zap_active_adapter Active vulnerability scan progress: 43% (running for 2377s)
+INFO 2025-11-20 14:53:05,292 active_engine Active scan 44: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:53:08,307 active_engine Active scan 44: 71.1% - ZAP active scan: 43%
+INFO 2025-11-20 14:53:11,324 active_engine Active scan 44: 71.2% - ZAP active scan: 44%
+INFO 2025-11-20 14:53:14,338 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:17,355 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:20,372 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:23,388 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:26,403 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:29,419 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:32,435 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:35,438 zap_active_adapter Active vulnerability scan progress: 45% (running for 2408s)
+INFO 2025-11-20 14:53:35,448 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:38,462 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:41,477 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:44,493 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:47,509 active_engine Active scan 44: 71.3% - ZAP active scan: 45%
+INFO 2025-11-20 14:53:50,523 active_engine Active scan 44: 71.5% - ZAP active scan: 46%
+INFO 2025-11-20 14:53:53,537 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:53:56,552 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:53:59,566 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:02,579 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:05,582 zap_active_adapter Active vulnerability scan progress: 47% (running for 2438s)
+INFO 2025-11-20 14:54:05,593 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:08,607 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:11,620 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:14,634 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:17,648 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:20,676 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:23,690 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:26,705 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:29,718 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:32,733 active_engine Active scan 44: 71.6% - ZAP active scan: 47%
+INFO 2025-11-20 14:54:35,736 zap_active_adapter Active vulnerability scan progress: 49% (running for 2468s)
+INFO 2025-11-20 14:54:35,748 active_engine Active scan 44: 71.9% - ZAP active scan: 49%
+INFO 2025-11-20 14:54:38,762 active_engine Active scan 44: 71.9% - ZAP active scan: 49%
+INFO 2025-11-20 14:54:41,777 active_engine Active scan 44: 71.9% - ZAP active scan: 49%
+INFO 2025-11-20 14:54:44,791 active_engine Active scan 44: 72.0% - ZAP active scan: 50%
+INFO 2025-11-20 14:54:47,805 active_engine Active scan 44: 72.0% - ZAP active scan: 50%
+INFO 2025-11-20 14:54:50,820 active_engine Active scan 44: 72.1% - ZAP active scan: 51%
+INFO 2025-11-20 14:54:53,834 active_engine Active scan 44: 72.3% - ZAP active scan: 52%
+INFO 2025-11-20 14:54:56,848 active_engine Active scan 44: 72.3% - ZAP active scan: 52%
+INFO 2025-11-20 14:54:59,863 active_engine Active scan 44: 72.4% - ZAP active scan: 53%
+INFO 2025-11-20 14:55:02,877 active_engine Active scan 44: 72.4% - ZAP active scan: 53%
+INFO 2025-11-20 14:55:05,882 zap_active_adapter Active vulnerability scan progress: 54% (running for 2498s)
+INFO 2025-11-20 14:55:05,892 active_engine Active scan 44: 72.5% - ZAP active scan: 54%
+INFO 2025-11-20 14:55:08,905 active_engine Active scan 44: 72.8% - ZAP active scan: 56%
+INFO 2025-11-20 14:55:11,919 active_engine Active scan 44: 72.9% - ZAP active scan: 57%
+INFO 2025-11-20 14:55:14,935 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:17,947 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:20,961 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:23,975 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:26,990 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:30,004 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:33,017 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:36,020 zap_active_adapter Active vulnerability scan progress: 58% (running for 2528s)
+INFO 2025-11-20 14:55:36,031 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:39,046 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:42,060 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:45,074 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:48,088 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:51,102 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:54,117 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:55:57,130 active_engine Active scan 44: 73.1% - ZAP active scan: 58%
+INFO 2025-11-20 14:56:00,144 active_engine Active scan 44: 73.2% - ZAP active scan: 59%
+INFO 2025-11-20 14:56:03,156 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:06,159 zap_active_adapter Active vulnerability scan progress: 60% (running for 2558s)
+INFO 2025-11-20 14:56:06,171 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:09,185 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:12,199 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:15,213 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:18,228 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:21,242 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:24,257 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:27,271 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:30,286 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:33,300 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:36,304 zap_active_adapter Active vulnerability scan progress: 60% (running for 2588s)
+INFO 2025-11-20 14:56:36,315 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:39,328 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:42,343 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:45,354 active_engine Active scan 44: 73.3% - ZAP active scan: 60%
+INFO 2025-11-20 14:56:48,368 active_engine Active scan 44: 73.6% - ZAP active scan: 62%
+INFO 2025-11-20 14:56:51,382 active_engine Active scan 44: 73.6% - ZAP active scan: 62%
+INFO 2025-11-20 14:56:54,397 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:56:57,411 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:00,427 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:03,441 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:06,444 zap_active_adapter Active vulnerability scan progress: 63% (running for 2619s)
+INFO 2025-11-20 14:57:06,456 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:09,469 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:12,483 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:15,497 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:18,512 active_engine Active scan 44: 73.8% - ZAP active scan: 63%
+INFO 2025-11-20 14:57:21,527 active_engine Active scan 44: 73.9% - ZAP active scan: 64%
+INFO 2025-11-20 14:57:24,541 active_engine Active scan 44: 73.9% - ZAP active scan: 64%
+INFO 2025-11-20 14:57:27,557 active_engine Active scan 44: 74.0% - ZAP active scan: 65%
+INFO 2025-11-20 14:57:30,571 active_engine Active scan 44: 74.0% - ZAP active scan: 65%
+INFO 2025-11-20 14:57:33,586 active_engine Active scan 44: 74.2% - ZAP active scan: 66%
+INFO 2025-11-20 14:57:36,590 zap_active_adapter Active vulnerability scan progress: 67% (running for 2649s)
+INFO 2025-11-20 14:57:36,602 active_engine Active scan 44: 74.3% - ZAP active scan: 67%
+INFO 2025-11-20 14:57:39,614 active_engine Active scan 44: 74.3% - ZAP active scan: 67%
+INFO 2025-11-20 14:57:42,630 active_engine Active scan 44: 74.4% - ZAP active scan: 68%
+INFO 2025-11-20 14:57:45,643 active_engine Active scan 44: 74.6% - ZAP active scan: 69%
+INFO 2025-11-20 14:57:48,659 active_engine Active scan 44: 74.6% - ZAP active scan: 69%
+INFO 2025-11-20 14:57:51,675 active_engine Active scan 44: 74.6% - ZAP active scan: 69%
+INFO 2025-11-20 14:57:54,689 active_engine Active scan 44: 74.7% - ZAP active scan: 70%
+INFO 2025-11-20 14:57:57,705 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:00,720 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:03,736 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:06,739 zap_active_adapter Active vulnerability scan progress: 71% (running for 2679s)
+INFO 2025-11-20 14:58:06,749 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:09,764 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:12,781 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:15,796 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:18,811 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:21,826 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:24,841 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:27,856 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-20 14:58:30,873 active_engine Active scan 44: 74.8% - ZAP active scan: 71%

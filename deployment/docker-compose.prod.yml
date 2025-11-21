@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Django Backend
+  backend:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: security_scanner_backend
+    restart: always
+    volumes:
+      - ../backend:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - logs_volume:/app/logs
+    environment:
+      - DEBUG=False
+      - ALLOWED_HOSTS=*
+      - DATABASE_URL=postgres://scanner:scanner_password@db:5432/scanner_db
+      - ZAP_HOST=zap
+      - ZAP_PORT=8080
+      - ZAP_API_KEY=${ZAP_API_KEY:-changeme123}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - zap
+    networks:
+      - scanner_network
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: security_scanner_db
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=scanner_db
+      - POSTGRES_USER=scanner
+      - POSTGRES_PASSWORD=scanner_password
+    networks:
+      - scanner_network
+
+  # OWASP ZAP
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: security_scanner_zap
+    restart: always
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=${ZAP_API_KEY:-changeme123} -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=false
+    volumes:
+      - zap_data:/home/zap/.ZAP
+    ports:
+      - "8080:8080"
+    environment:
+      - ZAP_API_KEY=${ZAP_API_KEY:-changeme123}
+      - JAVA_OPTS=-Xmx512m  # Optimized for 1GB RAM instance
+    networks:
+      - scanner_network
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+  logs_volume:
+  zap_data:
+
+networks:
+  scanner_network:
+    driver: bridge

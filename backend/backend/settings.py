@@ -88,10 +88,10 @@ else:
     CORS_ALLOW_ALL_ORIGINS = False
 
 # CSRF trusted origins for frontend
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+
+# Trust Nginx SSL header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # REST Framework settings
 REST_FRAMEWORK = {

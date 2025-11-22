@@ -28,6 +28,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
   const [zapStatus, setZapStatus] = useState<any>(null);
   const [activeScanStats, setActiveScanStats] = useState<any>(null);
   const [currentPhase, setCurrentPhase] = useState<string>("");
+  const [pollingError, setPollingError] = useState<string | null>(null);
+  const [consecutiveFailures, setConsecutiveFailures] = useState<number>(0);
   
   // Keep a ref to the polling interval to properly clean it up
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -122,14 +124,14 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
     }
   }, [scanId, scanData]);
   
-  // Fetch initial scan data
+  // Fetch initial scan data with retry logic
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/login");
       return;
     }
     
-    const fetchScanData = async () => {
+    const fetchScanData = async (retryCount = 0) => {
       if (!scanId) return;
       try {
         // Use checkScanStatus to get scan data with project_info
@@ -137,6 +139,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         setScanData(scan);
         setScanStatus(scan.status);
         setProgress(scan.progress || 0);
+        setError(null); // Clear any previous errors
         
         // Set project name from project_info if available
         if (scan.project_info?.name) {
@@ -152,9 +155,21 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           }
         }
       } catch (err: any) {
-        setError(err.message || "Failed to load scan details");
+        console.error("Error fetching scan data:", err);
+        
+        // Retry up to 3 times for network errors
+        const isNetworkError = !err.response || err.code === 'ECONNABORTED' || err.message?.includes('timeout');
+        if (isNetworkError && retryCount < 3) {
+          console.log(`Retrying fetch scan data (attempt ${retryCount + 1}/3)...`);
+          setTimeout(() => fetchScanData(retryCount + 1), 2000 * (retryCount + 1)); // Exponential backoff
+          return;
+        }
+        
+        setError(err.message || "Failed to load scan details. The scan may still be running on the server.");
       } finally {
-        setLoading(false);
+        if (retryCount === 0) {
+          setLoading(false);
+        }
       }
     };
     
@@ -179,6 +194,10 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
       setPollCount(prev => prev + 1);
       const progressData = await getScanProgress(scanId);
       
+      // Reset consecutive failures on successful poll
+      setConsecutiveFailures(0);
+      setPollingError(null);
+      
       // Debug logging
       console.log('Poll progress update:', {
         scanId,
@@ -202,12 +221,12 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
       }
       
       // Fetch additional data for active scans
-      if (progressData.status === 'running') {
+      if (progressData.status === 'running' || progressData.status === 'in_progress') {
         fetchZAPStatus();
         fetchActiveScanStats();
       }
       
-      // If scan is completed or failed, prepare for redirect
+      // If scan is completed, prepare for redirect
       if (progressData.status === 'completed') {
         console.log('Scan completed, preparing for redirect');
         // Clear the polling interval
@@ -219,31 +238,74 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         // Start countdown for redirection
         setRedirectCountdown(3);
       }
-    } catch (err) {
-      console.warn("Error polling scan progress:", err);
       
-      // If we've failed to poll multiple times, show an error
-      if (pollCount > 5) {
-        setError("Unable to update scan progress. Please refresh the page.");
+      // Only show "failed" status if the backend actually reports it as failed
+      // Don't set error state here - let the UI handle it based on scanStatus
+      if (progressData.status === 'failed') {
+        console.log('Scan marked as failed by backend');
         // Clear the polling interval
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
         }
       }
+    } catch (err: any) {
+      const failures = consecutiveFailures + 1;
+      setConsecutiveFailures(failures);
+      
+      console.warn("Error polling scan progress:", err);
+      
+      // Check if it's a network/timeout error vs actual scan failure
+      const isNetworkError = !err.response || err.code === 'ECONNABORTED' || err.message?.includes('timeout');
+      
+      if (isNetworkError) {
+        // For network errors, show a warning but keep polling
+        setPollingError(`Connection issue (${failures} failed attempts). Scan may still be running on the server.`);
+        
+        // Only stop polling after 20 consecutive failures (20 seconds with 1s interval)
+        // This allows for temporary network issues
+        if (failures >= 20) {
+          setError("Unable to connect to the server. The scan may still be running. Please refresh the page to check the latest status.");
+          // Clear the polling interval
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+          }
+        }
+      } else {
+        // For other errors (like 404, 500), show error but don't assume scan failed
+        setPollingError(`Error fetching scan status (${failures} failed attempts).`);
+        
+        // Stop polling after 10 consecutive non-network errors
+        if (failures >= 10) {
+          setError("Unable to fetch scan status. Please refresh the page.");
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+          }
+        }
+      }
     }
-  }, [scanId, pollCount, projectName, fetchZAPStatus, fetchActiveScanStats]);
+  }, [scanId, consecutiveFailures, projectName, fetchZAPStatus, fetchActiveScanStats]);
   
   // Set up polling interval
   useEffect(() => {
-    if (scanStatus === 'running' || scanStatus === 'in_progress' || scanStatus === 'pending') {
+    // Continue polling if scan is running, in progress, pending, OR if we have polling errors
+    // (to recover from temporary network issues)
+    if (scanStatus === 'running' || scanStatus === 'in_progress' || scanStatus === 'pending' || 
+        (pollingError && consecutiveFailures < 20)) {
       // Clear any existing interval
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
       }
       
+      // Use exponential backoff for retries after failures
+      // Base interval: 1 second, but increase to 3 seconds after 5 failures, 5 seconds after 10 failures
+      const pollInterval = consecutiveFailures < 5 ? 1000 : 
+                          consecutiveFailures < 10 ? 3000 : 5000;
+      
       // Set new interval - poll more frequently for better real-time updates
-      pollingIntervalRef.current = setInterval(pollStatus, 1000); // Poll every 1 second for real-time updates
+      pollingIntervalRef.current = setInterval(pollStatus, pollInterval);
       
       // Clean up on unmount
       return () => {
@@ -252,8 +314,14 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           pollingIntervalRef.current = null;
         }
       };
+    } else {
+      // Stop polling if scan is completed, failed, or stopped
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
     }
-  }, [scanStatus, pollStatus]);
+  }, [scanStatus, pollStatus, pollingError, consecutiveFailures]);
   
   // Handle redirection countdown
   useEffect(() => {
@@ -411,6 +479,12 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                 <div className="w-6 h-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mr-3"></div>
                 <span className="text-lg font-medium text-blue-600">Scan in Progress</span>
               </div>
+              {pollingError && (
+                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-yellow-800 text-sm">{pollingError}</p>
+                  <p className="text-yellow-700 text-xs mt-1">The scan continues on the server. Status updates will resume when connection is restored.</p>
+                </div>
+              )}
               <p className="text-gray-600">
                 Your scan is running. This page will automatically update as the scan progresses.
               </p>
@@ -488,6 +562,27 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                   <p className="text-xs text-red-600 mt-1 whitespace-pre-wrap">{scanData.error_message}</p>
                 </div>
               )}
+              <button
+                onClick={async () => {
+                  try {
+                    const latestStatus = await checkScanStatus(scanId);
+                    setScanData(latestStatus);
+                    setScanStatus(latestStatus.status);
+                    setProgress(latestStatus.progress || 0);
+                    setError(null);
+                    // If scan is actually still running, restart polling
+                    if (latestStatus.status === 'running' || latestStatus.status === 'in_progress') {
+                      setConsecutiveFailures(0);
+                      setPollingError(null);
+                    }
+                  } catch (err: any) {
+                    setError(err.message || "Failed to refresh scan status");
+                  }
+                }}
+                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+              >
+                Refresh Status
+              </button>
             </div>
           )}
           
@@ -552,6 +647,30 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
             >
               Back to Scans
             </Link>
+            {(pollingError || error) && (
+              <button
+                onClick={async () => {
+                  try {
+                    setError(null);
+                    setPollingError(null);
+                    setConsecutiveFailures(0);
+                    const latestStatus = await checkScanStatus(scanId);
+                    setScanData(latestStatus);
+                    setScanStatus(latestStatus.status);
+                    setProgress(latestStatus.progress || 0);
+                    // If scan is still running, restart polling
+                    if (latestStatus.status === 'running' || latestStatus.status === 'in_progress' || latestStatus.status === 'pending') {
+                      // Polling will restart automatically via the useEffect
+                    }
+                  } catch (err: any) {
+                    setError(err.message || "Failed to refresh scan status");
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Refresh Status
+              </button>
+            )}
           </div>
         </div>
       </div>

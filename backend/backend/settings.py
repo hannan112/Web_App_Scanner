@@ -74,8 +74,15 @@ INSTALLED_APPS = [
 ]
 
 # Configure CORS
-# Configure CORS
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+# Parse CORS_ALLOWED_ORIGINS from environment variable, handling spaces and trimming
+cors_origins_str = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
+
+# Log CORS origins for debugging (only in development)
+if DEBUG:
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"CORS_ALLOWED_ORIGINS configured: {CORS_ALLOWED_ORIGINS}")
 
 # Allow credentials (cookies, authorization headers)
 CORS_ALLOW_CREDENTIALS = True
@@ -87,8 +94,13 @@ if DEBUG:
 else:
     CORS_ALLOW_ALL_ORIGINS = False
 
-# CSRF trusted origins for frontend
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+# CSRF trusted origins for frontend - parse and trim whitespace
+csrf_origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_str.split(",") if origin.strip()]
+
+# Log CSRF origins for debugging (only in development)
+if DEBUG:
+    logger.info(f"CSRF_TRUSTED_ORIGINS configured: {CSRF_TRUSTED_ORIGINS}")
 
 # Trust Nginx SSL header
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -336,7 +336,7 @@ class ActiveScanningEngine:
                     if result and result.get("Result") == "OK":
                         logger.debug(f"Successfully added URL to ZAP context: {url}")
                     else:
-                        logger.warning(f"Failed to add URL to ZAP context: {url}")
+                        logger.warning(f"Failed to add URL to ZAP context: {url}. Result: {result}")
                 except Exception as e:
                     logger.warning(f"Error adding URL {url} to ZAP context: {e}")
                     continue

@@ -28,6 +28,7 @@ gunicorn>=21.2.0  # For production deployment
 whitenoise>=6.5.0  # For static files serving
 django-filter>=23.5  # For filtering in DRF
 django-storages>=1.14.2  # For file storage
+docker>=6.1.0  # For controlling ZAP container
 
 # Machine Learning dependencies
 scikit-learn>=1.3.0

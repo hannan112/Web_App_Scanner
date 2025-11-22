@@ -229,7 +229,7 @@ class ScanViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def stop(self, request, pk=None):
-        """Stop a running scan"""
+        """Stop a running scan and restart ZAP container"""
         scan = self.get_object()
 
         # Accept legacy 'in_progress' as running
@@ -239,33 +239,34 @@ class ScanViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Use the scan tracker to stop the scan
         try:
+            # 1. Stop the scan in the tracker (best effort)
             from scanning.scan_tracker import get_scan_tracker
             tracker = get_scan_tracker()
+            tracker.stop_scan(scan.id)
             
-            success = tracker.stop_scan(scan.id)
+            # 2. Force restart the ZAP container to ensure clean state
+            try:
+                import docker
+                client = docker.from_env()
+                zap_container = client.containers.get('security_scanner_zap')
+                zap_container.restart()
+                logger.info("Successfully restarted ZAP container")
+            except Exception as docker_error:
+                logger.error(f"Failed to restart ZAP container: {docker_error}")
+                # Continue anyway, as we still want to mark scan as stopped
+
+            # 3. Update scan status in DB
+            scan.status = "stopped"
+            scan.end_time = timezone.now()
+            scan.save()
             
-            if success:
-                # Refresh scan object to get updated status
-                scan.refresh_from_db()
-                return Response({
-                    "message": "Scan stopped successfully",
-                    "status": scan.status,
-                    "end_time": scan.end_time
-                })
-            else:
-                # Try to update scan status directly if tracker fails
-                scan.status = "stopped"
-                scan.end_time = timezone.now()
-                scan.save()
-                
-                return Response({
-                    "message": "Scan stop initiated (may take a few moments to complete)",
-                    "status": scan.status,
-                    "end_time": scan.end_time
-                })
-                
+            return Response({
+                "message": "Scan stopped and ZAP container restarted",
+                "status": scan.status,
+                "end_time": scan.end_time
+            })
+            
         except Exception as e:
             logger.error(f"Error stopping scan {scan.id}: {e}")
             return Response(

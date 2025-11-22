@@ -791,6 +791,15 @@ class ActiveScanningEngine:
             )
 
             logger.info(f"Active scan {self.scan_id} completed successfully")
+            
+            # Send email notification
+            try:
+                from notifications.services import send_scan_completion_email
+                if self.scan.configuration and self.scan.configuration.project:
+                    user = self.scan.configuration.project.owner
+                    send_scan_completion_email(self.scan, user)
+            except Exception as e:
+                logger.warning(f"Failed to send completion email: {e}")
 
         except Exception as e:
             logger.error(f"Error completing scan: {e}")
@@ -833,6 +842,15 @@ class ActiveScanningEngine:
             )
             
             logger.error(f"Active scan {self.scan_id} failed: {error_message}")
+            
+            # Send email notification for failure
+            try:
+                from notifications.services import send_scan_completion_email
+                if self.scan.configuration and self.scan.configuration.project:
+                    user = self.scan.configuration.project.owner
+                    send_scan_completion_email(self.scan, user)
+            except Exception as e:
+                logger.warning(f"Failed to send failure email: {e}")
             
         except Exception as e:
             logger.error(f"Error failing scan: {e}")

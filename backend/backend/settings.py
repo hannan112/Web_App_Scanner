@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "projects",
     "scanning",
     "blog",
+    "notifications",
     # OAuth related
     "django.contrib.sites",
     "allauth",

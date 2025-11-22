@@ -294,7 +294,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         }
       }
     }
-  }, [scanId, consecutiveFailures, projectName, fetchZAPStatus, fetchActiveScanStats]);
+  }, [scanId, consecutiveFailures, projectName, fetchZAPStatus, fetchActiveScanStats, pollCount]);
 
   // Set up polling interval
   useEffect(() => {

@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/contexts/AuthContext";
-import ProfileDropdown from "@/components/layout/ProfileDropdown";
 import Navbar from "@/components/layout/Navbar";
 import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 import Footer from "@/components/layout/Footer";
 import { getBlogPosts, BlogPost } from "@/lib/api/blog";
 
 export default function BlogPage() {
-  const { isAuthenticated } = useAuth();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

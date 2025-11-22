@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
-import ProfileDropdown from "@/components/layout/ProfileDropdown";
 import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";

@@ -2,12 +2,9 @@
 'use client';
 
 import { ReactNode } from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import ProfileDropdown from '@/components/layout/ProfileDropdown';
 import Navbar from '@/components/layout/Navbar';
-import RunningScanIndicator from '@/components/layout/RunningScanIndicator';
 import WorldMapAnimation from '@/components/visuals/WorldMapAnimation';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {

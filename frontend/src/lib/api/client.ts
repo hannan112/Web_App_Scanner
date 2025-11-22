@@ -16,6 +16,8 @@ const apiClient = axios.create({
   },
   // Do not send cookies; use JWT Authorization header to avoid CSRF
   withCredentials: false,
+  // Set timeout to 30 seconds for production environments (Vercel to Digital Ocean)
+  timeout: 30000, // 30 seconds
 });
 
 // Add request interceptor with Django JWT token retrieval

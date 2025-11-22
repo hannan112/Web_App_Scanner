@@ -13,6 +13,7 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
       - logs_volume:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DEBUG=False
       - ALLOWED_HOSTS=*

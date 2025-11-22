@@ -239,11 +239,19 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         setRedirectCountdown(3);
       }
       
-      // Only show "failed" status if the backend actually reports it as failed
-      // Don't set error state here - let the UI handle it based on scanStatus
+      // Handle failed status
       if (progressData.status === 'failed') {
         console.log('Scan marked as failed by backend');
-        // Clear the polling interval
+        
+        // If status is "failed" but progress > 0 and no error message,
+        // it might be a stale status - continue checking for a bit
+        if (progressData.progress > 0 && !progressData.error_message && pollCount < 10) {
+          console.warn('Status shows failed but progress > 0 and no error message. Might be stale, continuing to check...');
+          // Continue polling to see if status updates (up to 10 polls)
+          return;
+        }
+        
+        // Clear the polling interval if we have a real failure
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
@@ -550,11 +558,13 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           
           {scanStatus === 'failed' && (
             <div className="text-center mb-6 p-4 bg-red-50 rounded-md">
-              <p className="text-red-600">
-                The scan failed to complete. This could be due to connectivity issues or problems with the target site.
+              <p className="text-red-600 font-medium">
+                The scan status shows as failed.
               </p>
               <p className="text-red-500 text-sm mt-2">
-                You can try running the scan again or contact support if the issue persists.
+                {scanData?.error_message 
+                  ? "This could be due to connectivity issues or problems with the target site."
+                  : "The scan may have encountered an error. Please refresh to check the latest status."}
               </p>
               {scanData?.error_message && (
                 <div className="mt-3 text-left p-3 bg-red-100 rounded-md overflow-auto max-h-32">
@@ -562,20 +572,47 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                   <p className="text-xs text-red-600 mt-1 whitespace-pre-wrap">{scanData.error_message}</p>
                 </div>
               )}
+              {!scanData?.error_message && (
+                <p className="text-yellow-600 text-sm mt-2">
+                  ⚠️ Note: If the scan is still running on the server, click "Refresh Status" to update.
+                </p>
+              )}
               <button
                 onClick={async () => {
                   try {
-                    const latestStatus = await checkScanStatus(scanId);
+                    setError(null);
+                    setPollingError(null);
+                    setConsecutiveFailures(0);
+                    
+                    // Use getScanProgress for more accurate status
+                    const latestStatus = await getScanProgress(scanId);
+                    console.log('Refresh button - Latest status:', latestStatus);
+                    
+                    // Update all state
                     setScanData(latestStatus);
                     setScanStatus(latestStatus.status);
                     setProgress(latestStatus.progress || 0);
-                    setError(null);
-                    // If scan is actually still running, restart polling
-                    if (latestStatus.status === 'running' || latestStatus.status === 'in_progress') {
-                      setConsecutiveFailures(0);
+                    
+                    // If scan is actually still running or pending, restart polling
+                    if (latestStatus.status === 'running' || latestStatus.status === 'in_progress' || latestStatus.status === 'pending') {
                       setPollingError(null);
+                      // Polling will restart automatically via useEffect
+                    } else if (latestStatus.status === 'completed') {
+                      // If completed, prepare for redirect
+                      setRedirectCountdown(3);
+                      // Stop polling
+                      if (pollingIntervalRef.current) {
+                        clearInterval(pollingIntervalRef.current);
+                        pollingIntervalRef.current = null;
+                      }
+                    } else if (latestStatus.status === 'failed' && latestStatus.progress > 0 && !latestStatus.error_message) {
+                      // If status is "failed" but progress > 0 and no error message, 
+                      // the status might be stale - try to continue polling
+                      console.warn('Status shows failed but progress > 0, might be stale. Continuing to check...');
+                      setPollingError('Status may be stale. Continuing to check...');
                     }
                   } catch (err: any) {
+                    console.error('Refresh error:', err);
                     setError(err.message || "Failed to refresh scan status");
                   }
                 }}
@@ -654,15 +691,33 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                     setError(null);
                     setPollingError(null);
                     setConsecutiveFailures(0);
-                    const latestStatus = await checkScanStatus(scanId);
+                    
+                    // Use getScanProgress for more accurate status
+                    const latestStatus = await getScanProgress(scanId);
+                    console.log('Refresh button (error state) - Latest status:', latestStatus);
+                    
                     setScanData(latestStatus);
                     setScanStatus(latestStatus.status);
                     setProgress(latestStatus.progress || 0);
-                    // If scan is still running, restart polling
+                    
+                    // If scan is still running or pending, restart polling
                     if (latestStatus.status === 'running' || latestStatus.status === 'in_progress' || latestStatus.status === 'pending') {
                       // Polling will restart automatically via the useEffect
+                    } else if (latestStatus.status === 'completed') {
+                      setRedirectCountdown(3);
+                      // Stop polling
+                      if (pollingIntervalRef.current) {
+                        clearInterval(pollingIntervalRef.current);
+                        pollingIntervalRef.current = null;
+                      }
+                    } else if (latestStatus.status === 'failed' && latestStatus.progress > 0 && !latestStatus.error_message) {
+                      // If status is "failed" but progress > 0 and no error message, 
+                      // the status might be stale - try to continue polling
+                      console.warn('Status shows failed but progress > 0, might be stale. Continuing to check...');
+                      setPollingError('Status may be stale. Continuing to check...');
                     }
                   } catch (err: any) {
+                    console.error('Refresh error:', err);
                     setError(err.message || "Failed to refresh scan status");
                   }
                 }}

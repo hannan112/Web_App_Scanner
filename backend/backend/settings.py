@@ -165,8 +165,16 @@ DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
+        conn_health_checks=True,
+        ssl_require=False,
     )
 }
+
+# Add SQLite specific options if using SQLite
+if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
+    DATABASES["default"]["OPTIONS"] = {
+        "timeout": 20,  # Increase timeout to 20 seconds to avoid "database is locked" errors
+    }
 
 
 # Password validation

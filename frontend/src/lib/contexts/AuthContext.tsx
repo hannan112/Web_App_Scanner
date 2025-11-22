@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuthStatus = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      
+
       if (!token) {
         setUser(null);
         setLoading(false);
@@ -81,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = await response.json();
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
-        
+
         await checkAuthStatus();
         return { success: true };
       } else {
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = await response.json();
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
-        
+
         await checkAuthStatus();
         return { success: true };
       } else {
@@ -147,7 +147,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Remove isRootPath logic; root/home should be public
       if (!user && isProtectedRoute) {
         // User not authenticated and trying to access protected route
-        router.push('/login');
+        const returnUrl = encodeURIComponent(currentPath);
+        router.push(`/login?returnUrl=${returnUrl}`);
       } else if (user && isAuthPage) {
         // User authenticated but on auth page (not home)
         router.push('/dashboard');

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import ProfileDropdown from "@/components/layout/ProfileDropdown";
+import Navbar from "@/components/layout/Navbar";
 import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 import Footer from "@/components/layout/Footer";
 import { getBlogPosts, BlogPost } from "@/lib/api/blog";
@@ -37,22 +38,7 @@ export default function BlogPage() {
       <WorldMapAnimation />
 
       {/* NAVBAR */}
-      <nav className="relative z-10 flex items-center justify-between py-5 px-8 shadow bg-white/80 backdrop-blur-md">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="text-2xl font-bold text-blue-700">Security Scanner</Link>
-          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium">Home</Link>
-          <Link href="/pricing" className="text-gray-700 hover:text-blue-700 font-medium">Pricing</Link>
-          <Link href="/blog" className="text-blue-700 font-medium">Blog</Link>
-          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium">Contact</Link>
-        </div>
-        <div>
-          {isAuthenticated ? (
-            <ProfileDropdown />
-          ) : (
-            <Link href="/login" className="px-5 py-2 border border-blue-700 text-blue-700 font-semibold rounded hover:bg-blue-50 transition">Sign In</Link>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="relative z-10 flex-grow py-10 px-4 flex flex-col items-center">
         <section className="max-w-3xl w-full">

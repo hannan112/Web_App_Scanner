@@ -730,17 +730,17 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {scanData && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">Scan Details</h3>
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6 mb-6">
+          <div className="px-6 py-4 border-b border-white/20">
+            <h3 className="text-lg font-medium text-slate-100">Scan Details</h3>
           </div>
           <div className="px-6 py-4">
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-gray-500">Project</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-400">Project</dt>
+                <dd className="mt-1 text-sm text-slate-100">
                   {scanData.project_id ? (
-                    <Link href={`/projects/${scanData.project_id}`} className="text-blue-600 hover:underline">
+                    <Link href={`/projects/${scanData.project_id}`} className="text-blue-400 hover:underline">
                       {displayProjectName}
                     </Link>
                   ) : (
@@ -750,8 +750,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-gray-500">Started</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-400">Started</dt>
+                <dd className="mt-1 text-sm text-slate-100">
                   {scanData.started_at
                     ? new Date(scanData.started_at).toLocaleString()
                     : scanData.created_at
@@ -761,8 +761,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-gray-500">Configuration</dt>
-                <dd className="mt-1 text-sm text-gray-900 capitalize">
+                <dt className="text-sm font-medium text-slate-400">Configuration</dt>
+                <dd className="mt-1 text-sm text-slate-100 capitalize">
                   {scanData.configuration_name
                     ? `${scanData.configuration_name} Scan`
                     : "Standard Scan"}
@@ -770,8 +770,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-gray-500">Status</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-400">Status</dt>
+                <dd className="mt-1 text-sm text-slate-100">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.className}`}>
                     {statusInfo.text}
                   </span>
@@ -780,8 +780,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
 
               {scanData.completed_at && (
                 <div className="col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">Completed</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-slate-400">Completed</dt>
+                  <dd className="mt-1 text-sm text-slate-100">
                     {new Date(scanData.completed_at).toLocaleString()}
                   </dd>
                 </div>

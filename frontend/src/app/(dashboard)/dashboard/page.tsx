@@ -18,7 +18,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!isAuthenticated) {
       router.push("/login");
       return;
@@ -65,58 +65,58 @@ export default function DashboardPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Debug component - remove after fixing the issue */}
-      
+
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Dashboard</h1>
 
       {/* Stats Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-2 text-gray-800">Total Projects</h2>
-          <p className="text-3xl font-bold text-blue-600">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-2 text-slate-900">Total Projects</h2>
+          <p className="text-3xl font-bold text-blue-700">
             {dashboardData?.total_projects || 0}
           </p>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-2 text-gray-800">New Projects (30 days)</h2>
+
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-2 text-slate-900">New Projects (30 days)</h2>
           <p className="text-3xl font-bold text-green-600">
             {dashboardData?.new_projects_last_month || 0}
           </p>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-2 text-gray-800">Actions</h2>
-          <Link href="/projects/new" className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-2 text-slate-900">Actions</h2>
+          <Link href="/projects/new" className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md">
             Create New Project
           </Link>
         </div>
       </div>
 
       {/* Recent Projects */}
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Recent Projects</h2>
-        
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-lg shadow-lg mb-8">
+        <h2 className="text-xl font-semibold mb-4 text-slate-900">Recent Projects</h2>
+
         {dashboardData?.recent_projects && dashboardData.recent_projects.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white" style={{ borderCollapse: 'collapse' }}>
+            <table className="min-w-full bg-transparent" style={{ borderCollapse: 'collapse' }}>
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Name</th>
-                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Target URL</th>
-                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Created</th>
-                  <th className="py-2 px-4 text-left text-gray-800 font-semibold">Actions</th>
+                <tr className="border-b border-slate-200">
+                  <th className="py-2 px-4 text-left text-slate-900 font-semibold">Name</th>
+                  <th className="py-2 px-4 text-left text-slate-900 font-semibold">Target URL</th>
+                  <th className="py-2 px-4 text-left text-slate-900 font-semibold">Created</th>
+                  <th className="py-2 px-4 text-left text-slate-900 font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {dashboardData.recent_projects.map((project) => (
-                  <tr key={project.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="py-2 px-4 text-gray-800">{project.name}</td>
+                  <tr key={project.id} className="border-b border-slate-200 hover:bg-white/20 transition-colors">
+                    <td className="py-2 px-4 text-slate-800">{project.name}</td>
                     <td className="py-2 px-4">
                       <a href={project.target_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                         {project.target_url}
                       </a>
                     </td>
-                    <td className="py-2 px-4 text-gray-800">
+                    <td className="py-2 px-4 text-slate-800">
                       {new Date(project.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-2 px-4">
@@ -130,10 +130,10 @@ export default function DashboardPage() {
             </table>
           </div>
         ) : (
-          <div className="bg-gray-50 p-6 text-center rounded">
-            <p className="text-gray-800 font-semibold text-xl mb-4">No Projects Found</p>
-            <p className="text-gray-600 mb-4">Create your first project to get started.</p>
-            <Link href="/projects/new" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <div className="bg-white/5 p-6 text-center rounded border border-white/10">
+            <p className="text-slate-900 font-semibold text-xl mb-4">No Projects Found</p>
+            <p className="text-slate-700 mb-4">Create your first project to get started.</p>
+            <Link href="/projects/new" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md">
               Create New Project
             </Link>
           </div>

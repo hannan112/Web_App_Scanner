@@ -381,13 +381,17 @@ const ScanResults: React.FC<ScanResultsProps> = ({
     return (
     <div className="space-y-8">
       {/* Scan Type Banner */}
-      <div className={`rounded-lg p-4 border ${isPassiveScan ? 'bg-blue-50 border-blue-200' : isActiveScan ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+      <div className={`rounded-lg p-4 border shadow-lg backdrop-blur-md ${
+        isPassiveScan ? 'bg-blue-50/80 border-blue-200/50' : 
+        isActiveScan ? 'bg-green-50/80 border-green-200/50' : 
+        'bg-white/10 border-white/20'
+      }`}>
         <div className="flex items-center justify-between">
           <div>
-            <h2 className={`text-lg font-semibold ${isPassiveScan ? 'text-blue-900' : isActiveScan ? 'text-green-900' : 'text-gray-900'}`}>
+            <h2 className={`text-lg font-semibold ${isPassiveScan ? 'text-blue-900' : isActiveScan ? 'text-green-900' : 'text-slate-900'}`}>
               {isPassiveScan ? 'Passive Reconnaissance Results' : isActiveScan ? 'Comprehensive Security Scan Results' : 'Scan Results'}
             </h2>
-            <p className={`text-sm mt-1 ${isPassiveScan ? 'text-blue-700' : isActiveScan ? 'text-green-700' : 'text-gray-700'}`}>
+            <p className={`text-sm mt-1 ${isPassiveScan ? 'text-blue-700' : isActiveScan ? 'text-green-700' : 'text-slate-700'}`}>
               {isPassiveScan
                 ? 'Showing passive reconnaissance data - information gathered without direct interaction'
                 : isActiveScan
@@ -396,10 +400,10 @@ const ScanResults: React.FC<ScanResultsProps> = ({
               }
             </p>
           </div>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-            isPassiveScan ? 'bg-blue-100 text-blue-800' :
-            isActiveScan ? 'bg-green-100 text-green-800' :
-            'bg-gray-100 text-gray-800'
+          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
+            isPassiveScan ? 'bg-blue-100/80 backdrop-blur-sm text-blue-800 border-blue-200/50' :
+            isActiveScan ? 'bg-green-100/80 backdrop-blur-sm text-green-800 border-green-200/50' :
+            'bg-gray-100/80 backdrop-blur-sm text-gray-800 border-gray-200/50'
           }`}>
             {effectiveScanType === 'active' ? 'ACTIVE SCAN' :
              effectiveScanType === 'passive' ? 'PASSIVE SCAN' :
@@ -412,7 +416,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
 
       {/* Warning for missing passive data in active scans */}
       {isActiveScan && !sanitizedPassiveReconData && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div className="bg-yellow-50/80 backdrop-blur-md border border-yellow-200/50 rounded-lg p-4 mb-6 shadow-lg">
           <div className="flex items-start">
             <svg className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -431,75 +435,75 @@ const ScanResults: React.FC<ScanResultsProps> = ({
       {/* Attack Surface Summary - Different layout for passive vs active */}
       {isActiveScan ? (
         // Active/Comprehensive Scan Layout - Combined view with all discoveries
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Complete Attack Surface Analysis</h2>
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6">
+          <h2 className="text-xl font-semibold text-slate-900 mb-6">Complete Attack Surface Analysis</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="text-center p-4 bg-green-50 rounded-lg hover:bg-green-100 cursor-pointer transition-colors" onClick={() => setShowUrlsModal(true)}>
+            <div className="text-center p-4 bg-green-50/80 backdrop-blur-sm rounded-lg hover:bg-green-100/80 cursor-pointer transition-colors border border-green-200/50" onClick={() => setShowUrlsModal(true)}>
               <div className="text-2xl font-bold text-green-600">{allUrls.length}</div>
-              <div className="text-sm text-gray-600">Total URLs</div>
-              <div className="text-xs text-gray-500 mt-1">From all sources</div>
+              <div className="text-sm text-slate-700">Total URLs</div>
+              <div className="text-xs text-slate-600 mt-1">From all sources</div>
             </div>
 
-            <div className="text-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 cursor-pointer transition-colors" onClick={() => setShowFormsModal(true)}>
+            <div className="text-center p-4 bg-blue-50/80 backdrop-blur-sm rounded-lg hover:bg-blue-100/80 cursor-pointer transition-colors border border-blue-200/50" onClick={() => setShowFormsModal(true)}>
               <div className="text-2xl font-bold text-blue-600">{allForms.length}</div>
-              <div className="text-sm text-gray-600">Forms Found</div>
-              <div className="text-xs text-gray-500 mt-1">Entry points</div>
+              <div className="text-sm text-slate-700">Forms Found</div>
+              <div className="text-xs text-slate-600 mt-1">Entry points</div>
             </div>
 
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
+            <div className="text-center p-4 bg-purple-50/80 backdrop-blur-sm rounded-lg border border-purple-200/50">
               <div className="text-2xl font-bold text-purple-600">
                 {(safeGetNestedValue(sanitizedPassiveReconData, 'enhanced_discovery.api_endpoints.count', 0) +
                   (sanitizedActiveReconData?.api_endpoints?.length || 0))}
               </div>
-              <div className="text-sm text-gray-600">API Endpoints</div>
-              <div className="text-xs text-gray-500 mt-1">Combined discovery</div>
+              <div className="text-sm text-slate-700">API Endpoints</div>
+              <div className="text-xs text-slate-600 mt-1">Combined discovery</div>
             </div>
 
-            <div className="text-center p-4 bg-yellow-50 rounded-lg">
+            <div className="text-center p-4 bg-yellow-50/80 backdrop-blur-sm rounded-lg border border-yellow-200/50">
               <div className="text-2xl font-bold text-yellow-600">
                 {safeGetNestedValue(sanitizedPassiveReconData, 'enhanced_discovery.summary.total_discoveries', 0)}
               </div>
-              <div className="text-sm text-gray-600">Total Assets</div>
-              <div className="text-xs text-gray-500 mt-1">All discoveries</div>
+              <div className="text-sm text-slate-700">Total Assets</div>
+              <div className="text-xs text-slate-600 mt-1">All discoveries</div>
             </div>
           </div>
 
           {/* Unified Discovery Results for Active Scans */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-medium text-gray-800">Unified Discovery Results</h3>
-              <span className="text-sm text-gray-500">
+              <h3 className="text-lg font-medium text-slate-800">Unified Discovery Results</h3>
+              <span className="text-sm text-slate-600">
                 Combined from passive reconnaissance, active crawling, and enhanced discovery
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="bg-white p-3 rounded border">
-                <div className="text-sm font-medium text-gray-700 mb-2">All URLs ({allUrls.length})</div>
-                <div className="text-xs text-gray-600 space-y-1 max-h-20 overflow-y-auto">
+              <div className="bg-white/50 backdrop-blur-sm p-3 rounded border border-white/20">
+                <div className="text-sm font-medium text-slate-700 mb-2">All URLs ({allUrls.length})</div>
+                <div className="text-xs text-slate-600 space-y-1 max-h-20 overflow-y-auto">
                   {allUrls.slice(0, 3).map((url, idx) => (
                     <div key={idx} className="truncate">{url}</div>
                   ))}
                   {allUrls.length > 3 && <div className="text-blue-600">+{allUrls.length - 3} more...</div>}
                 </div>
-                <div className="text-xs text-gray-500 mt-1">Passive + Active + Enhanced</div>
+                <div className="text-xs text-slate-600 mt-1">Passive + Active + Enhanced</div>
               </div>
 
-              <div className="bg-white p-3 rounded border">
-                <div className="text-sm font-medium text-gray-700 mb-2">Forms & Entry Points ({allForms.length})</div>
-                <div className="text-xs text-gray-600 space-y-1 max-h-20 overflow-y-auto">
+              <div className="bg-white/50 backdrop-blur-sm p-3 rounded border border-white/20">
+                <div className="text-sm font-medium text-slate-700 mb-2">Forms & Entry Points ({allForms.length})</div>
+                <div className="text-xs text-slate-600 space-y-1 max-h-20 overflow-y-auto">
                   {allForms.slice(0, 3).map((form: any, idx: number) => (
                     <div key={idx} className="truncate">{form.action || form.url || 'Form'}</div>
                   ))}
                   {allForms.length > 3 && <div className="text-blue-600">+{allForms.length - 3} more...</div>}
                 </div>
-                <div className="text-xs text-gray-500 mt-1">Discovered during crawling</div>
+                <div className="text-xs text-slate-600 mt-1">Discovered during crawling</div>
               </div>
 
-              <div className="bg-white p-3 rounded border">
-                <div className="text-sm font-medium text-gray-700 mb-2">Technologies & Assets</div>
-                <div className="text-xs text-gray-600 space-y-1 max-h-20 overflow-y-auto">
+              <div className="bg-white/50 backdrop-blur-sm p-3 rounded border border-white/20">
+                <div className="text-sm font-medium text-slate-700 mb-2">Technologies & Assets</div>
+                <div className="text-xs text-slate-600 space-y-1 max-h-20 overflow-y-auto">
                   {(Array.isArray(safeGetNestedValue(sanitizedPassiveReconData, 'technologies.files', [])) ? safeGetNestedValue(sanitizedPassiveReconData, 'technologies.files', []) : []).slice(0, 3).map((asset: string, idx: number) => (
                     <div key={idx} className="truncate">{asset}</div>
                   ))}
@@ -507,7 +511,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                     <div className="text-blue-600">+{(safeGetNestedValue(sanitizedPassiveReconData, 'technologies.files', []) || []).length - 3} more...</div>
                   }
                 </div>
-                <div className="text-xs text-gray-500 mt-1">CSS, JS, and other assets</div>
+                <div className="text-xs text-slate-600 mt-1">CSS, JS, and other assets</div>
               </div>
             </div>
           </div>
@@ -516,8 +520,8 @@ const ScanResults: React.FC<ScanResultsProps> = ({
         // Passive Scan Layout - New structure as requested
         <div className="space-y-6">
           {/* Analytics and Statistics Section */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Scan Analytics & Statistics</h2>
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-slate-900 mb-6">Scan Analytics & Statistics</h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Vulnerability Distribution Chart */}

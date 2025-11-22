@@ -28,20 +28,51 @@ interface ApiError {
 const handleApiError = (error: unknown) => {
   console.error('API Error:', error);
   
-  const err = error as ApiError;
-  if (err.response?.data?.detail) {
-    return new Error(err.response.data.detail);
+  const err = error as any;
+  
+  // Handle axios error response
+  if (err.response?.data) {
+    const data = err.response.data;
+    
+    // Check for field-specific validation errors (Django serializer format)
+    if (typeof data === 'object' && !data.detail && !data.message) {
+      // Extract first error from validation errors object
+      const errorKeys = Object.keys(data);
+      if (errorKeys.length > 0) {
+        const firstKey = errorKeys[0];
+        const firstError = data[firstKey];
+        if (Array.isArray(firstError) && firstError.length > 0) {
+          return new Error(`${firstKey}: ${firstError[0]}`);
+        } else if (typeof firstError === 'string') {
+          return new Error(`${firstKey}: ${firstError}`);
+        }
+      }
+    }
+    
+    // Check for detail or message fields
+    if (data.detail) {
+      return new Error(data.detail);
+    }
+    
+    if (data.message) {
+      return new Error(data.message);
+    }
+    
+    // If it's a string, use it directly
+    if (typeof data === 'string') {
+      return new Error(data);
+    }
   }
   
-  if (err.response?.data?.message) {
-    return new Error(err.response.data.message);
+  // Handle network errors
+  if (err.message && typeof err.message === 'string') {
+    if (err.message.includes('Network Error') || err.message.includes('timeout')) {
+      return new Error('Network error. Please check your connection and try again.');
+    }
+    return new Error(err.message);
   }
   
-  if ((error as any).message && typeof (error as any).message === 'string') {
-    return new Error((error as any).message);
-  }
-  
-  return new Error('An unknown error occurred');
+  return new Error('An unknown error occurred. Please try again.');
 };
 
 export const login = async (credentials: UserCredentials) => {

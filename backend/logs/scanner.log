@@ -62160,3 +62160,89 @@ INFO 2025-11-20 14:58:21,826 active_engine Active scan 44: 74.8% - ZAP active sc
 INFO 2025-11-20 14:58:24,841 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
 INFO 2025-11-20 14:58:27,856 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
 INFO 2025-11-20 14:58:30,873 active_engine Active scan 44: 74.8% - ZAP active scan: 71%
+INFO 2025-11-22 15:01:00,346 views ScanConfiguration create called with data: {'project': '20', 'scan_type': 'passive', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-22 15:01:00,352 views Creating scan configuration with data: {'project': '20', 'scan_type': 'passive', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-11-22 15:01:00,358 views Scan configuration created successfully: 45
+INFO 2025-11-22 15:01:00,405 views Creating scan with data: {'configuration': 45}
+INFO 2025-11-22 15:01:00,405 views Config ID from request: 45 (type: <class 'int'>)
+INFO 2025-11-22 15:01:00,405 views Converted config ID: 45
+INFO 2025-11-22 15:01:00,414 views Starting scan engine for scan 45
+INFO 2025-11-22 15:01:00,419 scan_tracker Registered scan 45 in tracker
+INFO 2025-11-22 15:01:00,419 views Scan 45 started asynchronously
+INFO 2025-11-22 15:01:00,420 views Attempting to return scan data for scan 45
+INFO 2025-11-22 15:01:00,420 views Using existing scan object, status: running
+INFO 2025-11-22 15:01:00,420 views Preparing full scan response for scan 45
+INFO 2025-11-22 15:01:00,421 views Full scan response prepared for scan 45
+INFO 2025-11-22 15:01:00,423 unified_engine Starting passive scan for scan ID: 45
+INFO 2025-11-22 15:01:00,780 scanner Scan 45: 5.0% - Starting passive reconnaissance
+INFO 2025-11-22 15:01:00,791 engine Scan 45: 5.0% - Starting passive reconnaissance
+INFO 2025-11-22 15:01:01,291 scanner Scan 45: 15.0% - Analyzing target URL
+INFO 2025-11-22 15:01:01,303 engine Scan 45: 15.0% - Analyzing target URL
+INFO 2025-11-22 15:01:01,303 scanner Target analysis completed for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:01,604 scanner Scan 45: 25.0% - Performing DNS analysis
+INFO 2025-11-22 15:01:01,613 engine Scan 45: 25.0% - Performing DNS analysis
+INFO 2025-11-22 15:01:03,520 scanner DNS analysis completed for www.infinitywaveinc.com
+INFO 2025-11-22 15:01:04,021 scanner Scan 45: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-11-22 15:01:04,032 engine Scan 45: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-11-22 15:01:04,261 scanner SSL analysis completed for www.infinitywaveinc.com
+INFO 2025-11-22 15:01:04,662 scanner Scan 45: 55.0% - Detecting technologies
+INFO 2025-11-22 15:01:04,673 engine Scan 45: 55.0% - Detecting technologies
+INFO 2025-11-22 15:01:04,846 scanner Technology detection completed for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:05,247 scanner Scan 45: 70.0% - Analyzing security headers
+INFO 2025-11-22 15:01:05,258 engine Scan 45: 70.0% - Analyzing security headers
+INFO 2025-11-22 15:01:05,442 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-11-22 15:01:05,445 zap_adapter ZAP response status code: 200
+INFO 2025-11-22 15:01:05,445 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-11-22 15:01:10,701 scanner ZAP found 3 header-related issues
+INFO 2025-11-22 15:01:10,702 scanner Headers analysis completed for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:11,003 scanner Scan 45: 85.0% - Analyzing content for information disclosure
+INFO 2025-11-22 15:01:11,014 engine Scan 45: 85.0% - Analyzing content for information disclosure
+INFO 2025-11-22 15:01:12,190 scanner Content analysis completed for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:12,592 scanner Scan 45: 95.0% - Analyzing cookies
+INFO 2025-11-22 15:01:12,603 engine Scan 45: 95.0% - Analyzing cookies
+INFO 2025-11-22 15:01:12,771 scanner Cookie analysis completed for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:13,072 scanner Scan 45: 98.0% - Running enhanced discovery
+INFO 2025-11-22 15:01:13,107 engine Scan 45: 98.0% - Running enhanced discovery
+INFO 2025-11-22 15:01:13,108 scanner Starting enhanced discovery for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:13,108 enhanced_discovery_adapter Starting comprehensive discovery for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:13,108 enhanced_discovery_adapter Starting subdomain discovery for www.infinitywaveinc.com
+ERROR 2025-11-22 15:01:13,109 enhanced_discovery_adapter Subdomain discovery failed for www.infinitywaveinc.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-11-22 15:01:13,109 enhanced_discovery_adapter Starting wayback URL discovery for www.infinitywaveinc.com
+ERROR 2025-11-22 15:01:13,110 enhanced_discovery_adapter Wayback URL discovery failed for www.infinitywaveinc.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-22 15:01:13,110 enhanced_discovery_adapter Starting directory discovery for https://www.infinitywaveinc.com
+ERROR 2025-11-22 15:01:13,111 enhanced_discovery_adapter Directory discovery failed for https://www.infinitywaveinc.com: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-11-22 15:01:13,111 enhanced_discovery_adapter Starting API endpoint discovery for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:15,604 enhanced_discovery_adapter Starting wayback URL discovery for www.infinitywaveinc.com
+ERROR 2025-11-22 15:01:15,605 enhanced_discovery_adapter Wayback URL discovery failed for www.infinitywaveinc.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-11-22 15:01:15,605 enhanced_discovery_adapter Found 16 API endpoints for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:15,605 enhanced_discovery_adapter Comprehensive discovery completed for https://www.infinitywaveinc.com
+INFO 2025-11-22 15:01:15,606 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 16, 'total_discoveries': 16}
+INFO 2025-11-22 15:01:15,606 scanner Enhanced discovery completed: 16 URLs discovered
+INFO 2025-11-22 15:01:15,606 scanner Enhanced discovery results stored: True
+INFO 2025-11-22 15:01:15,806 scanner Scan 45: 99.0% - Aggregating security findings
+INFO 2025-11-22 15:01:15,816 engine Scan 45: 99.0% - Aggregating security findings
+INFO 2025-11-22 15:01:15,816 scanner Vulnerability aggregation completed: 13 findings
+INFO 2025-11-22 15:01:16,016 scanner Scan 45: 100.0% - Passive scan completed
+INFO 2025-11-22 15:01:16,027 engine Scan 45: 100.0% - Passive scan completed
+INFO 2025-11-22 15:01:16,053 engine Scan 45 completed successfully with comprehensive results saved
+INFO 2025-11-22 15:01:16,053 engine Results summary: {'dns_records': True, 'ssl_analysis': True, 'technologies': True, 'security_headers': True, 'content_analysis': True, 'cookie_analysis': True, 'vulnerabilities': 13, 'total_findings': 13}
+INFO 2025-11-22 15:01:16,053 unified_engine Passive scan completed successfully for scan ID: 45
+INFO 2025-11-22 15:01:16,053 scan_tracker Unregistered scan 45 from tracker
+INFO 2025-11-22 15:01:16,053 unified_engine Finally block: Cleaning up scan 45...
+INFO 2025-11-22 15:01:16,055 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-11-22 15:01:16,055 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-11-22 15:01:16,055 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-11-22 15:01:16,055 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-22 15:01:17,068 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-22 15:01:17,068 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-22 15:01:17,068 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-11-22 15:01:17,071 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-11-22 15:01:17,071 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-11-22 15:01:17,072 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-11-22 15:01:17,073 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-11-22 15:01:17,073 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-11-22 15:01:18,091 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-11-22 15:01:18,091 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-11-22 15:01:18,091 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-11-22 15:01:18,091 unified_engine Finally block: ZAP scans stopped
+INFO 2025-11-22 15:01:18,091 unified_engine Finally block: Scan 45 unregistered from tracker

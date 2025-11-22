@@ -16,7 +16,7 @@ import { Project, ScanConfig } from "@/types/project";
 export default function NewScanPage() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
   const router = useRouter();
-  
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [customConfigs, setCustomConfigs] = useState({
@@ -24,24 +24,24 @@ export default function NewScanPage() {
     min_confidence: 0.7,
     user_agent: "",
     request_timeout: 30,
-    
+
     // Passive scan tools
     use_sslyze: true,
     use_nuclei: true,
     use_wappalyzer: true,
     use_zap_passive: true,
-    
+
     // Active scan settings
     use_zap_active: true,
     enable_spider: true,
     enable_ajax_spider: true,
     max_spider_depth: 3,
     max_spider_duration: 10, // 10 minutes
-    
+
     // ZAP Active Scan Configuration
     zap_attack_strength: "MEDIUM" as 'LOW' | 'MEDIUM' | 'HIGH' | 'INSANE',
     zap_active_scan_policy: "Default Policy",
-    
+
     // Vulnerability testing categories
     test_sql_injection: true,
     test_xss: true,
@@ -53,19 +53,19 @@ export default function NewScanPage() {
     test_path_traversal: false,
     test_command_injection: true,
     test_xxe: true,
-    
+
     // SQL Injection testing tools
     use_sqlmap: true,
     use_nosqlmap: false,
     sqlmap_risk_level: 2,
     sqlmap_level: 2,
     sqlmap_timeout: 300,
-    
+
     // Rate limiting and safety
     max_concurrent_requests: 5,
     request_delay_ms: 100,
     scan_timeout_minutes: 60,
-    
+
     // Enhanced discovery settings
     use_enhanced_discovery: true,
     discovery_timeout: 30,
@@ -73,15 +73,15 @@ export default function NewScanPage() {
     max_wayback_urls: 200,
     max_directories: 50,
   });
-  
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Check if user is authenticated
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!isAuthenticated) {
       router.push("/login");
     }
@@ -91,11 +91,11 @@ export default function NewScanPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       if (authLoading || !isAuthenticated) return;
-      
+
       try {
         const projectsData = await getProjects();
         setProjects(projectsData);
-        
+
         if (projectsData.length > 0) {
           setSelectedProject(String(projectsData[0].id));
           // Always use default configuration, don't fetch saved ones
@@ -106,7 +106,7 @@ export default function NewScanPage() {
         setLoading(false);
       }
     };
-    
+
     fetchProjects();
   }, [isAuthenticated, authLoading]);
 
@@ -119,17 +119,17 @@ export default function NewScanPage() {
   // Handle custom config changes
   const handleCustomConfigChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    
+
     setCustomConfigs(prev => ({
       ...prev,
-      [name]: type === 'checkbox' 
-        ? (e.target as HTMLInputElement).checked 
-        : type === 'number' 
-          ? parseFloat(value) 
+      [name]: type === 'checkbox'
+        ? (e.target as HTMLInputElement).checked
+        : type === 'number'
+          ? parseFloat(value)
           : value
     }));
   };
-  
+
   // Get scan type description
   const getScanTypeDescription = (scanType: string) => {
     switch (scanType) {
@@ -143,7 +143,7 @@ export default function NewScanPage() {
         return '';
     }
   };
-  
+
   // Check if active scanning features are selected
   const isActiveScanning = customConfigs.scan_type === 'active' || customConfigs.scan_type === 'comprehensive';
 
@@ -153,19 +153,19 @@ export default function NewScanPage() {
       setError("Please select a project to scan");
       return;
     }
-    
+
     setSubmitting(true);
     setError(null);
-    
+
     try {
       // Create a default configuration first
       try {
-        
+
         const configData = {
           project: selectedProject,
           ...customConfigs
         };
-        
+
         console.log("Final config data being sent:", configData);
         console.log("Active scanning fields:", {
           use_zap_active: configData.use_zap_active,
@@ -174,17 +174,17 @@ export default function NewScanPage() {
           max_spider_depth: configData.max_spider_depth,
           test_sql_injection: configData.test_sql_injection
         });
-        
+
         // Call an API function to create configuration
         const createdConfig = await createScanConfiguration(configData);
         const configId = createdConfig.id;
         console.log("Created configuration:", createdConfig);
-        
+
         // Now create the scan with the project ID and config ID
         console.log(`Creating scan for project ${selectedProject} with config ${configId}`);
         const scan = await createScan(selectedProject, configId);
         console.log("Created scan:", scan);
-        
+
         // Redirect to scan status page
         router.push(`/scans/${scan.id}/status`);
       } catch (configErr: unknown) {
@@ -209,12 +209,12 @@ export default function NewScanPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <PageTitle 
-        title="Start New Security Scan" 
-        subtitle="Configure and run a security scan for your project" 
+      <PageTitle
+        title="Start New Security Scan"
+        subtitle="Configure and run a security scan for your project"
       />
 
-      <div className="bg-white p-6 rounded-lg shadow mb-6">
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6 mb-6">
         {error && (
           <div className="p-3 mb-4 text-sm text-red-600 bg-red-100 rounded">
             {error}
@@ -224,14 +224,14 @@ export default function NewScanPage() {
         <div className="space-y-6">
           {/* Project Selection */}
           <div>
-            <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="project" className="block text-sm font-medium text-slate-700 mb-1">
               Select Project
             </label>
             <select
               id="project"
               value={selectedProject}
               onChange={handleProjectChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white/50 text-slate-900"
               disabled={projects.length === 0}
             >
               {projects.length === 0 ? (
@@ -244,7 +244,7 @@ export default function NewScanPage() {
                 ))
               )}
             </select>
-            
+
             {projects.length === 0 && (
               <p className="mt-1 text-sm text-red-600">
                 You need to create a project before you can start a scan.{" "}
@@ -258,23 +258,23 @@ export default function NewScanPage() {
           {/* Scan Type Selection */}
           <div>
             <div className="mb-4">
-              <h2 className="text-lg font-medium text-gray-900">Security Scan Configuration</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="text-lg font-medium text-slate-900">Security Scan Configuration</h2>
+              <p className="text-sm text-slate-600">
                 Configure your security scan settings. Choose from passive, active, or comprehensive scanning modes.
               </p>
             </div>
-            
+
             {/* ZAP Status for Active Scans */}
             {isActiveScanning && (
               <div className="mb-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">ZAP Service Status</h3>
+                <h3 className="text-sm font-medium text-slate-700 mb-2">ZAP Service Status</h3>
                 <ZAPStatus showDetails={true} autoRefresh={true} refreshInterval={15000} />
               </div>
             )}
-            
+
             <div className="space-y-4">
               <div>
-                <label htmlFor="scan_type" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="scan_type" className="block text-sm font-medium text-slate-700 mb-2">
                   Scan Type
                 </label>
                 <select
@@ -282,7 +282,7 @@ export default function NewScanPage() {
                   name="scan_type"
                   value={customConfigs.scan_type}
                   onChange={handleCustomConfigChange}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white/50 text-slate-900"
                 >
                   <option value="passive">Passive - Information Gathering</option>
                   <option value="active">Active - Vulnerability Testing</option>
@@ -291,7 +291,7 @@ export default function NewScanPage() {
                 <p className="mt-2 text-sm text-gray-600">
                   {getScanTypeDescription(customConfigs.scan_type)}
                 </p>
-                
+
                 {/* Scan type specific warnings */}
                 {customConfigs.scan_type === 'passive' && (
                   <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
@@ -301,7 +301,7 @@ export default function NewScanPage() {
                     </p>
                   </div>
                 )}
-                
+
                 {customConfigs.scan_type === 'active' && (
                   <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                     <p className="text-sm text-yellow-800">
@@ -310,7 +310,7 @@ export default function NewScanPage() {
                     </p>
                   </div>
                 )}
-                
+
                 {customConfigs.scan_type === 'comprehensive' && (
                   <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-md">
                     <p className="text-sm text-orange-800">
@@ -320,11 +320,11 @@ export default function NewScanPage() {
                   </div>
                 )}
               </div>
-                
+
               {/* General Configuration */}
               <div className="space-y-4">
                 <h3 className="text-md font-medium text-gray-900">General Configuration</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="min_confidence" className="block text-sm font-medium text-gray-700 mb-1">
@@ -345,7 +345,7 @@ export default function NewScanPage() {
                       Minimum confidence level for findings (0.1-1.0)
                     </p>
                   </div>
-                  
+
                   <div>
                     <label htmlFor="request_timeout" className="block text-sm font-medium text-gray-700 mb-1">
                       Request Timeout (seconds)
@@ -402,7 +402,7 @@ export default function NewScanPage() {
                       SSLyze - SSL/TLS analysis
                     </label>
                   </div>
-                  
+
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -416,7 +416,7 @@ export default function NewScanPage() {
                       Nuclei - Template-based scanning
                     </label>
                   </div>
-                  
+
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -430,7 +430,7 @@ export default function NewScanPage() {
                       Wappalyzer - Technology detection
                     </label>
                   </div>
-                  
+
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -446,13 +446,13 @@ export default function NewScanPage() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Active Scan Configuration */}
               {isActiveScanning && (
                 <>
                   <div className="space-y-4">
                     <h3 className="text-md font-medium text-gray-900">Active Scanning Configuration</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="zap_attack_strength" className="block text-sm font-medium text-gray-700 mb-1">
@@ -474,7 +474,7 @@ export default function NewScanPage() {
                           Higher strength = more thorough but slower
                         </p>
                       </div>
-                      
+
                       <div>
                         <label htmlFor="max_spider_depth" className="block text-sm font-medium text-gray-700 mb-1">
                           Spider Depth
@@ -494,7 +494,7 @@ export default function NewScanPage() {
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="max_spider_duration" className="block text-sm font-medium text-gray-700 mb-1">
@@ -514,7 +514,7 @@ export default function NewScanPage() {
                           Maximum time for spidering
                         </p>
                       </div>
-                      
+
                       <div>
                         <label htmlFor="scan_timeout_minutes" className="block text-sm font-medium text-gray-700 mb-1">
                           Scan Timeout (minutes)
@@ -534,7 +534,7 @@ export default function NewScanPage() {
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center">
                         <input
@@ -549,7 +549,7 @@ export default function NewScanPage() {
                           Enable Traditional Spider
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -565,7 +565,7 @@ export default function NewScanPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-md font-medium text-gray-900">Vulnerability Testing Categories</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -582,7 +582,7 @@ export default function NewScanPage() {
                           SQL Injection
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -596,7 +596,7 @@ export default function NewScanPage() {
                           Cross-Site Scripting
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -610,7 +610,7 @@ export default function NewScanPage() {
                           CSRF
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -624,7 +624,7 @@ export default function NewScanPage() {
                           Authentication
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -638,7 +638,7 @@ export default function NewScanPage() {
                           Authorization
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -652,7 +652,7 @@ export default function NewScanPage() {
                           Session Management
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -666,7 +666,7 @@ export default function NewScanPage() {
                           Command Injection
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -682,7 +682,7 @@ export default function NewScanPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* SQL Injection Testing Tools Configuration */}
                   {customConfigs.test_sql_injection && (
                     <div className="space-y-4">
@@ -690,7 +690,7 @@ export default function NewScanPage() {
                       <p className="text-sm text-gray-600">
                         Configure specialized tools for SQL injection testing. These tools are automatically enabled for active scans.
                       </p>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex items-center">
                           <input
@@ -706,9 +706,9 @@ export default function NewScanPage() {
                             SQLMap (Traditional SQL) <span className="text-green-600 font-medium">✓ Required</span>
                           </label>
                         </div>
-                        
+
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                           <label htmlFor="sqlmap_risk_level" className="block text-sm font-medium text-gray-700 mb-1">
@@ -729,7 +729,7 @@ export default function NewScanPage() {
                             Higher risk = more thorough testing
                           </p>
                         </div>
-                        
+
                         <div>
                           <label htmlFor="sqlmap_level" className="block text-sm font-medium text-gray-700 mb-1">
                             SQLMap Level
@@ -751,7 +751,7 @@ export default function NewScanPage() {
                             Higher level = more payloads tested
                           </p>
                         </div>
-                        
+
                         <div>
                           <label htmlFor="sqlmap_timeout" className="block text-sm font-medium text-gray-700 mb-1">
                             SQLMap Timeout (seconds)
@@ -773,7 +773,7 @@ export default function NewScanPage() {
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-md font-medium text-gray-900">Rate Limiting & Safety</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -795,7 +795,7 @@ export default function NewScanPage() {
                           Number of concurrent requests (1-20)
                         </p>
                       </div>
-                      
+
                       <div>
                         <label htmlFor="request_delay_ms" className="block text-sm font-medium text-gray-700 mb-1">
                           Request Delay (ms)
@@ -818,14 +818,14 @@ export default function NewScanPage() {
                   </div>
                 </>
               )}
-              
+
               {/* Enhanced Discovery Configuration */}
               <div className="space-y-4">
                 <h3 className="text-md font-medium text-gray-900">Enhanced Discovery</h3>
                 <p className="text-sm text-gray-600">
                   Advanced reconnaissance using external tools to discover subdomains, historical URLs, directories, and API endpoints.
                 </p>
-                
+
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -839,7 +839,7 @@ export default function NewScanPage() {
                     Enable Enhanced Discovery
                   </label>
                 </div>
-                
+
                 {customConfigs.use_enhanced_discovery && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-6">
                     <div>
@@ -860,7 +860,7 @@ export default function NewScanPage() {
                         Timeout for each discovery tool (10-300s)
                       </p>
                     </div>
-                    
+
                     <div>
                       <label htmlFor="max_subdomains" className="block text-sm font-medium text-gray-700 mb-1">
                         Max Subdomains
@@ -879,7 +879,7 @@ export default function NewScanPage() {
                         Maximum subdomains to discover (10-1000)
                       </p>
                     </div>
-                    
+
                     <div>
                       <label htmlFor="max_wayback_urls" className="block text-sm font-medium text-gray-700 mb-1">
                         Max Wayback URLs
@@ -898,7 +898,7 @@ export default function NewScanPage() {
                         Maximum historical URLs to fetch (10-1000)
                       </p>
                     </div>
-                    
+
                     <div>
                       <label htmlFor="max_directories" className="block text-sm font-medium text-gray-700 mb-1">
                         Max Directories
@@ -922,16 +922,16 @@ export default function NewScanPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex items-center justify-between pt-4">
-            <Link 
+            <Link
               href="/scans"
               className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
             >
               Cancel
             </Link>
-            
+
             <button
               onClick={handleStartScan}
               disabled={submitting || !selectedProject}

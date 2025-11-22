@@ -1,26 +1,7 @@
 "use client";
 
-import { Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { Scan, Project } from '@/types/project';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import Link from 'next/link';
 
 interface ScanBarChartProps {
   scans: Scan[];
@@ -28,183 +9,42 @@ interface ScanBarChartProps {
 }
 
 export default function ScanBarChart({ scans, projectsData }: ScanBarChartProps) {
-  // Group scans by project and sort by project name for consistent alignment
+  // Group scans by project and sort by project name
   const projectScanData = projectsData
     .map(project => {
-      const projectScans = scans.filter(scan => 
+      const projectScans = scans.filter(scan =>
         scan.project_id?.toString() === project.id.toString()
       );
-      
+
+      const total = projectScans.length;
+      const completed = projectScans.filter(scan => scan.status === 'completed').length;
+      const inProgress = projectScans.filter(scan => scan.status === 'in_progress' || scan.status === 'pending').length;
+      const failed = projectScans.filter(scan => scan.status === 'failed').length;
+      const stopped = projectScans.filter(scan => scan.status === 'stopped').length;
+
       return {
         projectName: project.name,
         projectId: project.id,
-        totalScans: projectScans.length,
-        completedScans: projectScans.filter(scan => scan.status === 'completed').length,
-        inProgressScans: projectScans.filter(scan => 
-          scan.status === 'in_progress'
-        ).length,
-        failedScans: projectScans.filter(scan => scan.status === 'failed').length,
+        total,
+        completed,
+        inProgress,
+        failed,
+        stopped,
+        // Calculate percentages for the health bar
+        completedPct: total > 0 ? (completed / total) * 100 : 0,
+        inProgressPct: total > 0 ? (inProgress / total) * 100 : 0,
+        failedPct: total > 0 ? (failed / total) * 100 : 0,
+        stoppedPct: total > 0 ? (stopped / total) * 100 : 0,
       };
     })
-    .filter(project => project.totalScans > 0) // Only show projects with scans
-    .sort((a, b) => a.projectName.localeCompare(b.projectName)); // Sort alphabetically for consistent alignment
-
-  // Prepare chart data with smooth styling
-  const chartData = {
-    labels: projectScanData.map(project => project.projectName),
-    datasets: [
-      {
-        label: 'Completed',
-        data: projectScanData.map(project => project.completedScans),
-        backgroundColor: 'rgba(34, 197, 94, 0.7)',
-        borderColor: 'rgba(34, 197, 94, 1)',
-        borderWidth: 2,
-        borderRadius: 6,
-        borderSkipped: false,
-        tension: 0.1,
-      },
-      {
-        label: 'In Progress',
-        data: projectScanData.map(project => project.inProgressScans),
-        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-        borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 2,
-        borderRadius: 6,
-        borderSkipped: false,
-        tension: 0.1,
-      },
-      {
-        label: 'Failed',
-        data: projectScanData.map(project => project.failedScans),
-        backgroundColor: 'rgba(239, 68, 68, 0.7)',
-        borderColor: 'rgba(239, 68, 68, 1)',
-        borderWidth: 2,
-        borderRadius: 6,
-        borderSkipped: false,
-        tension: 0.1,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      mode: 'index' as const,
-      intersect: false,
-    },
-    plugins: {
-      legend: {
-        position: 'top' as const,
-        labels: {
-          usePointStyle: true,
-          padding: 20,
-          font: {
-            size: 12,
-            weight: 'normal' as const,
-          },
-        },
-      },
-      title: {
-        display: true,
-        text: 'Scans by Project and Status',
-        font: {
-          size: 18,
-          weight: 'bold' as const,
-        },
-        padding: {
-          bottom: 20,
-        },
-      },
-      tooltip: {
-        mode: 'index' as const,
-        intersect: false,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: 'white',
-        bodyColor: 'white',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        borderWidth: 1,
-        cornerRadius: 8,
-        displayColors: true,
-        padding: 12,
-        titleFont: {
-          size: 13,
-          weight: 'bold' as const,
-        },
-        bodyFont: {
-          size: 12,
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: false,
-        grid: {
-          display: false,
-        },
-        ticks: {
-          font: {
-            size: 11,
-            weight: 'normal' as const,
-          },
-          color: '#6B7280',
-          maxRotation: 45,
-          minRotation: 0,
-        },
-        title: {
-          display: true,
-          text: 'Projects',
-          font: {
-            size: 13,
-            weight: 'bold' as const,
-          },
-          color: '#374151',
-          padding: {
-            top: 10,
-          },
-        },
-      },
-      y: {
-        stacked: false,
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(0, 0, 0, 0.05)',
-          drawBorder: false,
-        },
-        ticks: {
-          stepSize: 1,
-          font: {
-            size: 11,
-            weight: 'normal' as const,
-          },
-          color: '#6B7280',
-          padding: 8,
-        },
-        title: {
-          display: true,
-          text: 'Number of Scans',
-          font: {
-            size: 13,
-            weight: 'bold' as const,
-          },
-          color: '#374151',
-          padding: {
-            bottom: 10,
-          },
-        },
-      },
-    },
-    animation: {
-      duration: 1000,
-      easing: 'easeInOutQuart' as const,
-    },
-  };
+    .filter(project => project.total > 0) // Only show projects with scans
+    .sort((a, b) => a.projectName.localeCompare(b.projectName));
 
   if (projectScanData.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Scan Statistics by Project</h3>
-        <div className="text-center text-gray-500 py-8">
+      <div className="bg-white/5 backdrop-blur-md border border-white/20 p-6 rounded-lg shadow-lg">
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Project Health Overview</h3>
+        <div className="text-center text-slate-500 py-8">
           No scan data available to display
         </div>
       </div>
@@ -212,31 +52,96 @@ export default function ScanBarChart({ scans, projectsData }: ScanBarChartProps)
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
-      <h3 className="text-lg font-semibold text-gray-800 mb-6">Scan Statistics by Project</h3>
-      <div className="h-96 relative">
-        <Bar data={chartData} options={options} />
+    <div className="bg-white/5 backdrop-blur-md border border-white/20 rounded-lg shadow-lg overflow-hidden">
+      <div className="p-6 border-b border-white/10">
+        <h3 className="text-lg font-semibold text-slate-900">Project Health Overview</h3>
       </div>
-      
-      {/* Summary statistics */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-green-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">
-            {projectScanData.reduce((sum, project) => sum + project.completedScans, 0)}
-          </div>
-          <div className="text-sm text-green-700">Total Completed</div>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-transparent">
+          <thead>
+            <tr className="bg-white/5 border-b border-white/10">
+              <th className="py-3 px-6 text-left text-xs font-medium text-slate-900 uppercase tracking-wider">Project</th>
+              <th className="py-3 px-6 text-left text-xs font-medium text-slate-900 uppercase tracking-wider w-1/3">Scan Distribution</th>
+              <th className="py-3 px-6 text-center text-xs font-medium text-slate-900 uppercase tracking-wider">Active</th>
+              <th className="py-3 px-6 text-center text-xs font-medium text-slate-900 uppercase tracking-wider">Completed</th>
+              <th className="py-3 px-6 text-center text-xs font-medium text-slate-900 uppercase tracking-wider">Total</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/10">
+            {projectScanData.map((project) => (
+              <tr key={project.projectId} className="hover:bg-white/10 transition-colors">
+                <td className="py-4 px-6 whitespace-nowrap">
+                  <Link href={`/projects/${project.projectId}`} className="text-sm font-medium text-blue-600 hover:underline">
+                    {project.projectName}
+                  </Link>
+                </td>
+                <td className="py-4 px-6 align-middle">
+                  <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden flex">
+                    {project.completedPct > 0 && (
+                      <div
+                        className="h-full bg-green-500"
+                        style={{ width: `${project.completedPct}%` }}
+                        title={`${project.completed} Completed`}
+                      />
+                    )}
+                    {project.inProgressPct > 0 && (
+                      <div
+                        className="h-full bg-blue-500"
+                        style={{ width: `${project.inProgressPct}%` }}
+                        title={`${project.inProgress} In Progress`}
+                      />
+                    )}
+                    {project.failedPct > 0 && (
+                      <div
+                        className="h-full bg-red-500"
+                        style={{ width: `${project.failedPct}%` }}
+                        title={`${project.failed} Failed`}
+                      />
+                    )}
+                    {project.stoppedPct > 0 && (
+                      <div
+                        className="h-full bg-orange-400"
+                        style={{ width: `${project.stoppedPct}%` }}
+                        title={`${project.stopped} Stopped`}
+                      />
+                    )}
+                  </div>
+                </td>
+                <td className="py-4 px-6 text-center whitespace-nowrap">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${project.inProgress > 0 ? 'bg-blue-100 text-blue-800' : 'text-slate-500'}`}>
+                    {project.inProgress}
+                  </span>
+                </td>
+                <td className="py-4 px-6 text-center whitespace-nowrap text-sm text-slate-700">
+                  {project.completed}
+                </td>
+                <td className="py-4 px-6 text-center whitespace-nowrap text-sm font-medium text-slate-900">
+                  {project.total}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Legend */}
+      <div className="bg-white/5 p-4 border-t border-white/10 flex justify-center space-x-6 text-xs text-slate-600">
+        <div className="flex items-center">
+          <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+          Completed
         </div>
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">
-            {projectScanData.reduce((sum, project) => sum + project.inProgressScans, 0)}
-          </div>
-          <div className="text-sm text-blue-700">In Progress</div>
+        <div className="flex items-center">
+          <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+          In Progress
         </div>
-        <div className="bg-red-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-red-600">
-            {projectScanData.reduce((sum, project) => sum + project.failedScans, 0)}
-          </div>
-          <div className="text-sm text-red-700">Failed</div>
+        <div className="flex items-center">
+          <span className="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+          Failed
+        </div>
+        <div className="flex items-center">
+          <span className="w-3 h-3 bg-orange-400 rounded-full mr-2"></span>
+          Stopped
         </div>
       </div>
     </div>

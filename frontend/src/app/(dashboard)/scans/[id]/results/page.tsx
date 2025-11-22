@@ -158,17 +158,17 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
   if (error) {
     return (
       <div className="p-6 max-w-4xl mx-auto">
-        <div className="p-3 mb-4 text-sm text-red-600 bg-red-100 rounded">
+        <div className="p-3 mb-4 text-sm text-red-600 bg-red-100/80 backdrop-blur-sm rounded border border-red-200">
           Error: {error}
         </div>
         <div className="flex space-x-4">
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-md"
           >
             Retry
           </button>
-          <Link href="/scans" className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+          <Link href="/scans" className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 shadow-md">
             Back to Scans
           </Link>
         </div>
@@ -188,16 +188,16 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
       />
 
       {/* Data Export Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-6">
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">Export Scan Summary</h2>
-            <p className="text-sm text-gray-600">
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Export Scan Summary</h2>
+            <p className="text-sm text-slate-700">
               Download optimized scan results and key security findings.
               Raw data storage has been optimized to save disk space.
             </p>
           </div>
-          <svg className="w-8 h-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-8 h-8 text-blue-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
@@ -205,7 +205,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => handleDownload('vulnerabilities')}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 shadow-md"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -215,7 +215,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
 
           <button
             onClick={() => handleDownload('attack_surface')}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 shadow-md"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9m0 9c-5 0-9-4-9-9s4-9 9-9" />
@@ -225,7 +225,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
 
           <button
             onClick={() => handleDownload('raw_findings')}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 shadow-md"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -239,7 +239,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
         <button
           onClick={handleGenerateReport}
           disabled={isGeneratingReport}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center shadow-md"
         >
           {isGeneratingReport ? (
             <>
@@ -262,7 +262,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
         {projectData && (
           <Link
             href={`/projects/${projectData.id}/scans/new`}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center"
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center shadow-md"
           >
             <svg className="w-4 h-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
@@ -271,7 +271,7 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
           </Link>
         )}
 
-        <Link href="/scans" className="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">
+        <Link href="/scans" className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 shadow-md">
           Back to Scans
         </Link>
       </div>

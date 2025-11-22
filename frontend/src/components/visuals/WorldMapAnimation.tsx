@@ -65,7 +65,7 @@ export default function WorldMapAnimation() {
   useEffect(() => {
     particlesRef.current = Array.from({ length: 18 }).map(() => {
       const [from, to] = randomPair();
-      return { from, to, t: Math.random(), speed: 0.003 + Math.random() * 0.005 };
+      return { from, to, t: Math.random(), speed: 0.0005 + Math.random() * 0.001 };
     });
   }, []);
 
@@ -144,7 +144,7 @@ export default function WorldMapAnimation() {
             p.to = nt;
           }
           p.t = 0;
-          p.speed = 0.003 + Math.random() * 0.005;
+          p.speed = 0.0005 + Math.random() * 0.001;
         }
 
         const a = toPx(p.from);

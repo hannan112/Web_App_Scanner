@@ -19,7 +19,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!isAuthenticated) {
       router.push("/login");
       return;
@@ -83,22 +83,22 @@ export default function ProjectsPage() {
       </div>
 
       {projects.length > 0 ? (
-        <div className="bg-white rounded-lg shadow overflow-visible">
-          <table className="min-w-full bg-white" style={{ borderCollapse: 'collapse' }}>
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg overflow-visible p-6">
+          <table className="min-w-full bg-transparent" style={{ borderCollapse: 'collapse' }}>
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Name</th>
-                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Target URL</th>
-                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Created</th>
-                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Scans</th>
-                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Last Scan</th>
-                <th className="py-2 px-4 text-left text-gray-800 font-semibold">Actions</th>
+              <tr className="border-b border-slate-200">
+                <th className="py-2 px-4 text-left text-slate-900 font-semibold">Name</th>
+                <th className="py-2 px-4 text-left text-slate-900 font-semibold">Target URL</th>
+                <th className="py-2 px-4 text-left text-slate-900 font-semibold">Created</th>
+                <th className="py-2 px-4 text-left text-slate-900 font-semibold">Scans</th>
+                <th className="py-2 px-4 text-left text-slate-900 font-semibold">Last Scan</th>
+                <th className="py-2 px-4 text-left text-slate-900 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {projects.map((project) => (
-                <tr key={project.id} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="py-2 px-4 text-gray-800">
+                <tr key={project.id} className="border-b border-slate-200 hover:bg-white/20 transition-colors">
+                  <td className="py-2 px-4 text-slate-800">
                     <Link href={`/projects/${project.id}`} className="text-blue-600 hover:underline font-medium">
                       {project.name}
                     </Link>
@@ -108,15 +108,15 @@ export default function ProjectsPage() {
                       {project.target_url}
                     </a>
                   </td>
-                  <td className="py-2 px-4 text-gray-800">
+                  <td className="py-2 px-4 text-slate-800">
                     {new Date(project.created_at).toLocaleDateString()}
                   </td>
-                  <td className="py-2 px-4 text-gray-800">
+                  <td className="py-2 px-4 text-slate-800">
                     {project.scan_count || 0}
                   </td>
-                  <td className="py-2 px-4 text-gray-800">
-                    {project.last_scan_date 
-                      ? new Date(project.last_scan_date).toLocaleDateString() 
+                  <td className="py-2 px-4 text-slate-800">
+                    {project.last_scan_date
+                      ? new Date(project.last_scan_date).toLocaleDateString()
                       : 'Never'}
                   </td>
                   <td className="py-2 px-4">
@@ -137,7 +137,7 @@ export default function ProjectsPage() {
                       </button>
                       {deleteConfirm === project.id && (
                         <div className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
-                          <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby={`menu-button-${project.id}`}> 
+                          <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby={`menu-button-${project.id}`}>
                             <Link href={`/projects/${project.id}`} className="block px-4 py-2 text-sm text-blue-700 hover:bg-gray-100" role="menuitem">View</Link>
                             <Link href={`/projects/${project.id}/edit`} className="block px-4 py-2 text-sm text-green-700 hover:bg-gray-100" role="menuitem">Edit</Link>
                             <button onClick={() => handleDelete(project.id)} className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100" role="menuitem">Delete</button>
@@ -152,10 +152,10 @@ export default function ProjectsPage() {
           </table>
         </div>
       ) : (
-        <div className="bg-white p-8 rounded-lg shadow text-center">
-          <h2 className="text-xl font-semibold mb-4">No Projects Found</h2>
-          <p className="text-gray-600 mb-6">You haven't created any projects yet. Create your first project to get started.</p>
-          <Link href="/projects/new" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-xl font-semibold mb-4 text-slate-900">No Projects Found</h2>
+          <p className="text-slate-700 mb-6">You haven't created any projects yet. Create your first project to get started.</p>
+          <Link href="/projects/new" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md">
             Create New Project
           </Link>
         </div>

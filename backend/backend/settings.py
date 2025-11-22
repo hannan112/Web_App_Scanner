@@ -161,14 +161,25 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        conn_health_checks=True,
-        ssl_require=False,
-    )
-}
+# Check if we should force SQLite (useful for local dev if DATABASE_URL is set but we want SQLite)
+USE_SQLITE = os.environ.get("USE_SQLITE") == "True"
+
+if USE_SQLITE:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=False,
+        )
+    }
 
 # Add SQLite specific options if using SQLite
 if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":

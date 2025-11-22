@@ -57,7 +57,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
   useEffect(() => {
     if (authLoading || !projectId) return;
-    
+
     if (!isAuthenticated) {
       router.push("/login");
       return;
@@ -113,12 +113,12 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   if (error) {
     return (
       <div className="p-4">
-        <div className="p-3 mb-4 text-sm text-red-600 bg-red-100 rounded">
+        <div className="p-3 mb-4 text-sm text-red-600 bg-red-100/80 backdrop-blur-sm rounded border border-red-200">
           Error: {error}
         </div>
         <button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-md"
         >
           Retry
         </button>
@@ -129,10 +129,10 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   if (!projectStats) {
     return (
       <div className="p-4">
-        <div className="p-3 mb-4 text-sm text-orange-600 bg-orange-100 rounded">
+        <div className="p-3 mb-4 text-sm text-orange-600 bg-orange-100/80 backdrop-blur-sm rounded border border-orange-200">
           Project not found
         </div>
-        <Link href="/projects" className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+        <Link href="/projects" className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-md">
           Back to Projects
         </Link>
       </div>
@@ -144,73 +144,74 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Project Header */}
-      <div className="bg-white text-gray-800 p-6 rounded-lg shadow mb-6">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-2xl font-bold">{project.name}</h1>
-            <a 
-              href={project.target_url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              {project.target_url}
-            </a>
-            {project.description && (
-              <p className="mt-2 text-gray-600">{project.description}</p>
-            )}
-            <p className="mt-2 text-sm text-gray-500">
-              Created: {new Date(project.created_at).toLocaleString()}
-            </p>
-          </div>
-          
-          <div className="flex space-x-2">
-            <Link 
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-lg overflow-hidden mb-8">
+        <div className="px-6 py-4 border-b border-white/10 flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-slate-900">Project Details</h2>
+          <div className="space-x-2">
+            <Link
               href={`/projects/${project.id}/edit`}
-              className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm shadow-md"
             >
               Edit
             </Link>
-            <Link 
-              href={`/projects/${project.id}/scans/new`}
-              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              New Scan
-            </Link>
           </div>
+        </div>
+        <div className="p-6">
+          <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+            <div>
+              <dt className="text-sm font-medium text-slate-700">Project Name</dt>
+              <dd className="mt-1 text-lg text-slate-900">{project.name}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-slate-700">Target URL</dt>
+              <dd className="mt-1 text-lg text-blue-600">
+                <a href={project.target_url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  {project.target_url}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-slate-700">Description</dt>
+              <dd className="mt-1 text-base text-slate-800">{project.description || "No description provided"}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-slate-700">Created At</dt>
+              <dd className="mt-1 text-base text-slate-800">{new Date(project.created_at).toLocaleString()}</dd>
+            </div>
+          </dl>
         </div>
       </div>
 
       {/* Scan Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Consolidated Scan Information */}
-        <div className="bg-white text-gray-800 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Scan Overview</h2>
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg p-6 rounded-lg">
+          <h2 className="text-lg font-semibold mb-4 text-slate-900">Scan Overview</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
               <p className="text-3xl font-bold text-blue-600">{scan_stats.total_scans}</p>
-              <p className="text-sm text-gray-600">Total Scans</p>
+              <p className="text-sm text-slate-700">Total Scans</p>
             </div>
             <div className="text-center">
               <p className="text-3xl font-bold text-green-600">{Object.keys(scan_stats.scan_counts_by_type).length}</p>
-              <p className="text-sm text-gray-600">Scan Types</p>
+              <p className="text-sm text-slate-700">Scan Types</p>
             </div>
           </div>
           {Object.keys(scan_stats.scan_counts_by_type).length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">Scan Types Breakdown</h3>
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <h3 className="text-sm font-semibold text-slate-800 mb-2">Scan Types Breakdown</h3>
               <div className="space-y-2">
                 {Object.entries(scan_stats.scan_counts_by_type).map(([type, count]) => (
                   <div key={type} className="flex justify-between items-center">
-                    <span className="capitalize text-sm">{type}</span>
+                    <span className="capitalize text-sm text-slate-700">{type}</span>
                     <div className="flex items-center">
-                      <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
+                      <div className="w-16 bg-white/20 rounded-full h-2 mr-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
                           style={{ width: `${(Number(count) / scan_stats.total_scans) * 100}%` }}
                         ></div>
                       </div>
-                      <span className="font-semibold text-sm">{String(count)}</span>
+                      <span className="font-semibold text-sm text-slate-900">{String(count)}</span>
                     </div>
                   </div>
                 ))}
@@ -220,27 +221,27 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
         </div>
 
         {/* Enhanced Last Scan with Analytics */}
-        <div className="bg-white text-gray-800 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Last Scan Analytics</h2>
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg p-6 rounded-lg">
+          <h2 className="text-lg font-semibold mb-4 text-slate-900">Last Scan Analytics</h2>
           {lastScanMeta ? (
             <div className="space-y-4">
               {/* Scan Details */}
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Type</span>
-                  <span className="font-semibold capitalize">{lastScanMeta.scan_type || lastScanMeta.configuration?.scan_type || 'Unknown'}</span>
+                  <span className="text-slate-700">Type</span>
+                  <span className="font-semibold capitalize text-slate-900">{lastScanMeta.scan_type || lastScanMeta.configuration?.scan_type || 'Unknown'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Status</span>
-                  <span className="font-semibold capitalize">{lastScanMeta.status || 'Unknown'}</span>
+                  <span className="text-slate-700">Status</span>
+                  <span className="font-semibold capitalize text-slate-900">{lastScanMeta.status || 'Unknown'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Started</span>
-                  <span className="font-semibold">{lastScanMeta.start_time ? new Date(lastScanMeta.start_time).toLocaleString() : '-'}</span>
+                  <span className="text-slate-700">Started</span>
+                  <span className="font-semibold text-slate-800">{lastScanMeta.start_time ? new Date(lastScanMeta.start_time).toLocaleString() : '-'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Duration</span>
-                  <span className="font-semibold">{
+                  <span className="text-slate-700">Duration</span>
+                  <span className="font-semibold text-slate-800">{
                     lastScanMeta.end_time && lastScanMeta.start_time
                       ? formatDuration(new Date(lastScanMeta.end_time).getTime() - new Date(lastScanMeta.start_time).getTime())
                       : (lastScanMeta.status === 'running' ? 'In progress' : '-')
@@ -250,12 +251,12 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
               {/* Vulnerability Analytics */}
               {lastScanSummary ? (
-                <div className="pt-4 border-t border-gray-100">
+                <div className="pt-4 border-t border-white/10">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-gray-600">Total Vulnerabilities</span>
-                    <span className="font-semibold text-lg">{lastScanSummary.total_vulnerabilities}</span>
+                    <span className="text-slate-700">Total Vulnerabilities</span>
+                    <span className="font-semibold text-lg text-slate-900">{lastScanSummary.total_vulnerabilities}</span>
                   </div>
-                  
+
                   {/* Vulnerability Severity Chart */}
                   <div className="h-48">
                     <Doughnut
@@ -277,7 +278,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
                             '#6B7280'  // Gray for Info
                           ],
                           borderWidth: 2,
-                          borderColor: '#ffffff'
+                          borderColor: '#1e293b' // Darker background for borders
                         }]
                       }}
                       options={{
@@ -291,12 +292,13 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
                               padding: 20,
                               font: {
                                 size: 12
-                              }
+                              },
+                              color: '#475569' // Darker gray for legend text
                             }
                           },
                           tooltip: {
                             callbacks: {
-                              label: function(context) {
+                              label: function (context) {
                                 const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
                                 const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : '0';
                                 return `${context.label}: ${context.parsed} (${percentage}%)`;
@@ -310,83 +312,101 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
                   {/* Vulnerability Counts */}
                   <div className="grid grid-cols-2 gap-2 text-xs mt-3">
-                    <div className="flex justify-between text-red-600">
+                    <div className="flex justify-between text-red-400">
                       <span>Critical</span>
                       <span className="font-semibold">{lastScanSummary.critical_count}</span>
                     </div>
-                    <div className="flex justify-between text-orange-600">
+                    <div className="flex justify-between text-orange-400">
                       <span>High</span>
                       <span className="font-semibold">{lastScanSummary.high_count}</span>
                     </div>
-                    <div className="flex justify-between text-yellow-600">
+                    <div className="flex justify-between text-yellow-400">
                       <span>Medium</span>
                       <span className="font-semibold">{lastScanSummary.medium_count}</span>
                     </div>
-                    <div className="flex justify-between text-blue-600">
+                    <div className="flex justify-between text-blue-400">
                       <span>Low</span>
                       <span className="font-semibold">{lastScanSummary.low_count}</span>
                     </div>
-                    <div className="flex justify-between text-gray-600 col-span-2">
+                    <div className="flex justify-between text-slate-400 col-span-2">
                       <span>Info</span>
                       <span className="font-semibold">{lastScanSummary.info_count}</span>
                     </div>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-500 italic mt-2">Summary unavailable</p>
+                <p className="text-slate-600 italic mt-2">Summary unavailable</p>
               )}
-              
-              <div className="pt-2 border-t border-gray-100">
+
+              <div className="pt-2 border-t border-white/10">
                 <Link href={`/projects/${project.id}/scans/${lastScanMeta.id}`} className="text-blue-600 hover:underline text-sm">View last scan</Link>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500 italic">No scans yet</p>
+            <p className="text-slate-600 italic">No scans yet</p>
           )}
         </div>
       </div>
 
       {/* Recent Scans */}
-      <div className="bg-white  text-gray-800 p-6 rounded-lg shadow mb-6">
-        <h2 className="text-xl font-semibold mb-4">Recent Scans</h2>
-        
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-slate-900">Scan History</h2>
+          <Link
+            href={`/projects/${project.id}/scans/new`}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md"
+          >
+            Start New Scan
+          </Link>
+        </div>
+
         {scan_stats.recent_scans && scan_stats.recent_scans.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="py-2 px-4 text-left">Type</th>
-                  <th className="py-2 px-4 text-left">Status</th>
-                  <th className="py-2 px-4 text-left">Started</th>
-                  <th className="py-2 px-4 text-left">Duration</th>
-                  <th className="py-2 px-4 text-left">Actions</th>
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-lg overflow-hidden">
+            <table className="min-w-full bg-transparent">
+              <thead className="bg-white/5">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                    Started
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                    Duration
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/10">
                 {scan_stats.recent_scans.map((scan: any) => (
-                  <tr key={scan.id} className="border-t">
+                  <tr key={scan.id} className="hover:bg-white/10 transition-colors">
                     <td className="py-2 px-4">
-                      <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 capitalize">
+                      <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-indigo-100/80 backdrop-blur-sm text-indigo-800 capitalize border border-indigo-200/50">
                         {scan.scan_type || scan.configuration?.scan_type || 'Unknown'}
                       </span>
                     </td>
                     <td className="py-2 px-4">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        scan.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        scan.status === 'running' ? 'bg-blue-100 text-blue-800' :
-                        scan.status === 'failed' ? 'bg-red-100 text-red-800' :
-                        scan.status === 'stopped' ? 'bg-orange-100 text-orange-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span className={`px-2 py-1 rounded text-xs font-medium border ${
+                        scan.status === 'completed' ? 'bg-green-100/80 backdrop-blur-sm text-green-800 border-green-200/50' :
+                        scan.status === 'running' ? 'bg-blue-100/80 backdrop-blur-sm text-blue-800 border-blue-200/50' :
+                          scan.status === 'failed' ? 'bg-red-100/80 backdrop-blur-sm text-red-800 border-red-200/50' :
+                            scan.status === 'stopped' ? 'bg-orange-100/80 backdrop-blur-sm text-orange-800 border-orange-200/50' :
+                              'bg-gray-100/80 backdrop-blur-sm text-gray-800 border-gray-200/50'
+                        }`}>
                         {scan.status}
                       </span>
                     </td>
-                    <td className="py-2 px-4 text-gray-600">
+                    <td className="py-2 px-4 text-slate-700">
                       {new Date(scan.start_time).toLocaleString()}
                     </td>
-                    <td className="py-2 px-4 text-gray-600">
-                      {scan.end_time ? 
-                        formatDuration(new Date(scan.end_time).getTime() - new Date(scan.start_time).getTime()) : 
+                    <td className="py-2 px-4 text-slate-700">
+                      {scan.end_time ?
+                        formatDuration(new Date(scan.end_time).getTime() - new Date(scan.start_time).getTime()) :
                         scan.status === 'running' ? 'In progress' : '-'}
                     </td>
                     <td className="py-2 px-4">
@@ -400,9 +420,9 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
             </table>
           </div>
         ) : (
-          <div className="bg-gray-50 p-6 text-center rounded">
-            <p className="text-gray-600 mb-4">No scans have been performed yet.</p>
-            <Link 
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 text-center rounded-lg shadow">
+            <p className="text-slate-700 mb-4">No scans have been performed yet.</p>
+            <Link
               href={`/projects/${project.id}/scans/new`}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
@@ -414,26 +434,26 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
       {/* Actions and Navigation */}
       <div className="flex justify-between items-center">
-        <Link href="/projects" className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+        <Link href="/projects" className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow-md">
           Back to Projects
         </Link>
-        
+
         <div className="flex space-x-2">
-          <Link 
+          <Link
             href={`/projects/${project.id}/scans/new`}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-md"
           >
             New Scan
           </Link>
-          <Link 
+          <Link
             href={`/projects/${project.id}/scans`}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow-md"
           >
             View All Scans
           </Link>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

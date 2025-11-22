@@ -15,25 +15,15 @@ interface RegistrationData {
   confirmPassword?: string;
 }
 
-interface ApiError {
-  response?: {
-    data?: {
-      detail?: string;
-      message?: string;
-    };
-  };
-  message?: unknown;
-}
-
 const handleApiError = (error: unknown) => {
   console.error('API Error:', error);
-  
+
   const err = error as any;
-  
+
   // Handle axios error response
   if (err.response?.data) {
     const data = err.response.data;
-    
+
     // Check for field-specific validation errors (Django serializer format)
     if (typeof data === 'object' && !data.detail && !data.message) {
       // Extract first error from validation errors object
@@ -48,22 +38,22 @@ const handleApiError = (error: unknown) => {
         }
       }
     }
-    
+
     // Check for detail or message fields
     if (data.detail) {
       return new Error(data.detail);
     }
-    
+
     if (data.message) {
       return new Error(data.message);
     }
-    
+
     // If it's a string, use it directly
     if (typeof data === 'string') {
       return new Error(data);
     }
   }
-  
+
   // Handle network errors
   if (err.message && typeof err.message === 'string') {
     if (err.message.includes('Network Error') || err.message.includes('timeout')) {
@@ -71,7 +61,7 @@ const handleApiError = (error: unknown) => {
     }
     return new Error(err.message);
   }
-  
+
   return new Error('An unknown error occurred. Please try again.');
 };
 
@@ -92,7 +82,7 @@ export const register = async (userData: RegistrationData) => {
       password_confirm: userData.confirmPassword,
     };
     delete backendData.confirmPassword;
-    
+
     const response = await apiClient.post(AUTH_ENDPOINTS.REGISTER, backendData);
     return response.data;
   } catch (error) {

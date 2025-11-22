@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useAuth } from "@/lib/contexts/AuthContext";
-import ProfileDropdown from "@/components/layout/ProfileDropdown";
 import Navbar from "@/components/layout/Navbar";
 import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 import Footer from "@/components/layout/Footer";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const { isAuthenticated } = useAuth();
 
   return (
     <main className="relative min-h-screen flex flex-col">

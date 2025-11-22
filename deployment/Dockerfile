@@ -68,4 +68,4 @@ RUN python manage.py collectstatic --noinput --settings=backend.settings
 EXPOSE 8000
 
 # Start Gunicorn
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120"]
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1", "--threads", "4", "--timeout", "120"]

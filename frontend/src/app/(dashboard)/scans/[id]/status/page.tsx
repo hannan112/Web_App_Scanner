@@ -396,7 +396,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
   if (error) {
     return (
       <div className="p-6 max-w-4xl mx-auto">
-        <div className="p-3 mb-4 text-sm text-red-600 bg-red-100 rounded">
+        <div className="p-3 mb-4 text-sm text-red-600 bg-red-100/80 backdrop-blur-sm rounded border border-red-200">
           {error}
         </div>
         <div className="flex space-x-4">
@@ -423,12 +423,12 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         subtitle={`Project: ${displayProjectName}`}
       />
 
-      <div className="bg-white rounded-lg shadow overflow-hidden mb-6">
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-lg overflow-hidden mb-6">
         {/* Scan Information Header */}
-        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-white/10">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
             <div>
-              <h2 className="text-lg font-medium text-gray-900">
+              <h2 className="text-lg font-medium text-slate-900">
                 Scan for {displayProjectName}
               </h2>
             </div>
@@ -437,7 +437,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                 {statusInfo.text}
               </span>
               {redirectCountdown !== null && (
-                <span className="ml-2 text-sm text-gray-600">
+                <span className="ml-2 text-sm text-slate-600">
                   Redirecting in {redirectCountdown}s...
                 </span>
               )}
@@ -448,7 +448,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
         {/* Scan Status Content */}
         <div className="px-6 py-5">
           <div className="mb-6">
-            <h3 className="text-base font-medium text-gray-900 mb-2">Progress</h3>
+            <h3 className="text-base font-medium text-slate-900 mb-2">Progress</h3>
             <div className="relative pt-1">
               <div className="flex mb-2 items-center justify-between">
                 <div>
@@ -464,7 +464,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                   </div>
                 )}
               </div>
-              <div className="overflow-hidden h-4 mb-4 text-xs flex rounded bg-blue-100 border-2 border-blue-200 shadow-inner">
+              <div className="overflow-hidden h-4 mb-4 text-xs flex rounded bg-blue-100/80 backdrop-blur-sm border-2 border-blue-200 shadow-inner">
                 <div
                   style={{ width: `${progress}%` }}
                   className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out"
@@ -488,15 +488,15 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                 <span className="text-lg font-medium text-blue-600">Scan in Progress</span>
               </div>
               {pollingError && (
-                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <div className="mb-4 p-3 bg-yellow-50/80 backdrop-blur-sm border border-yellow-200 rounded-md">
                   <p className="text-yellow-800 text-sm">{pollingError}</p>
                   <p className="text-yellow-700 text-xs mt-1">The scan continues on the server. Status updates will resume when connection is restored.</p>
                 </div>
               )}
-              <p className="text-gray-600">
+              <p className="text-slate-600">
                 Your scan is running. This page will automatically update as the scan progresses.
               </p>
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="text-slate-500 text-sm mt-2">
                 {getScanTypeDescription(scanData?.configuration?.scan_type)}
               </p>
               {currentPhase && (
@@ -504,13 +504,13 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
                   Current Phase: {currentPhase}
                 </p>
               )}
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="text-slate-500 text-sm mt-2">
                 You'll be redirected to the results page when the scan completes.
               </p>
 
               {/* ZAP Status for Active Scans */}
               {(scanData?.configuration?.scan_type === 'active' || scanData?.configuration?.scan_type === 'comprehensive') && zapStatus && (
-                <div className="mt-4 p-3 bg-blue-50 rounded-md">
+                <div className="mt-4 p-3 bg-blue-50/80 backdrop-blur-sm rounded-md border border-blue-200">
                   <div className="flex items-center justify-center mb-2">
                     <div className={`w-2 h-2 rounded-full mr-2 ${zapStatus.status === 'connected' ? 'bg-green-500' : 'bg-red-500'
                       }`}></div>
@@ -526,7 +526,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
 
               {/* Active Scan Statistics */}
               {activeScanStats && (
-                <div className="mt-4 p-3 bg-green-50 rounded-md">
+                <div className="mt-4 p-3 bg-green-50/80 backdrop-blur-sm rounded-md border border-green-200">
                   <h4 className="text-sm font-medium text-green-700 mb-2">Live Statistics</h4>
                   <div className="grid grid-cols-2 gap-2 text-xs text-green-600">
                     {activeScanStats.spider_urls_found !== undefined && (
@@ -549,14 +549,14 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
 
           {scanStatus === 'pending' && (
             <div className="text-center mb-6">
-              <p className="text-gray-600">
+              <p className="text-slate-600">
                 Your scan is queued and will begin shortly.
               </p>
             </div>
           )}
 
           {scanStatus === 'failed' && (
-            <div className="text-center mb-6 p-4 bg-red-50 rounded-md">
+            <div className="text-center mb-6 p-4 bg-red-50/80 backdrop-blur-sm rounded-md border border-red-200">
               <p className="text-red-600 font-medium">
                 The scan status shows as failed.
               </p>
@@ -623,7 +623,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           )}
 
           {scanStatus === 'stopped' && (
-            <div className="text-center mb-6 p-4 bg-orange-50 rounded-md">
+            <div className="text-center mb-6 p-4 bg-orange-50/80 backdrop-blur-sm rounded-md border border-orange-200">
               <p className="text-orange-600">
                 The scan was manually stopped before completion.
               </p>
@@ -631,7 +631,7 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
           )}
 
           {scanStatus === 'completed' && (
-            <div className="text-center mb-6 p-4 bg-green-50 rounded-md">
+            <div className="text-center mb-6 p-4 bg-green-50/80 backdrop-blur-sm rounded-md border border-green-200">
               <p className="text-green-600">
                 The scan has completed successfully! You'll be redirected to the results page shortly.
               </p>
@@ -731,16 +731,16 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
 
       {scanData && (
         <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6 mb-6">
-          <div className="px-6 py-4 border-b border-white/20">
-            <h3 className="text-lg font-medium text-slate-100">Scan Details</h3>
+          <div className="px-6 py-4 border-b border-white/10">
+            <h3 className="text-lg font-medium text-slate-900">Scan Details</h3>
           </div>
           <div className="px-6 py-4">
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-slate-400">Project</dt>
-                <dd className="mt-1 text-sm text-slate-100">
+                <dt className="text-sm font-medium text-slate-700">Project</dt>
+                <dd className="mt-1 text-sm text-slate-900">
                   {scanData.project_id ? (
-                    <Link href={`/projects/${scanData.project_id}`} className="text-blue-400 hover:underline">
+                    <Link href={`/projects/${scanData.project_id}`} className="text-blue-600 hover:underline">
                       {displayProjectName}
                     </Link>
                   ) : (
@@ -750,8 +750,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-slate-400">Started</dt>
-                <dd className="mt-1 text-sm text-slate-100">
+                <dt className="text-sm font-medium text-slate-700">Started</dt>
+                <dd className="mt-1 text-sm text-slate-900">
                   {scanData.started_at
                     ? new Date(scanData.started_at).toLocaleString()
                     : scanData.created_at
@@ -761,8 +761,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-slate-400">Configuration</dt>
-                <dd className="mt-1 text-sm text-slate-100 capitalize">
+                <dt className="text-sm font-medium text-slate-700">Configuration</dt>
+                <dd className="mt-1 text-sm text-slate-900 capitalize">
                   {scanData.configuration_name
                     ? `${scanData.configuration_name} Scan`
                     : "Standard Scan"}
@@ -770,8 +770,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="col-span-1">
-                <dt className="text-sm font-medium text-slate-400">Status</dt>
-                <dd className="mt-1 text-sm text-slate-100">
+                <dt className="text-sm font-medium text-slate-700">Status</dt>
+                <dd className="mt-1 text-sm text-slate-900">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.className}`}>
                     {statusInfo.text}
                   </span>
@@ -780,8 +780,8 @@ export default function ScanStatusPage({ params }: { params: Promise<{ id: strin
 
               {scanData.completed_at && (
                 <div className="col-span-1">
-                  <dt className="text-sm font-medium text-slate-400">Completed</dt>
-                  <dd className="mt-1 text-sm text-slate-100">
+                  <dt className="text-sm font-medium text-slate-700">Completed</dt>
+                  <dd className="mt-1 text-sm text-slate-900">
                     {new Date(scanData.completed_at).toLocaleString()}
                   </dd>
                 </div>

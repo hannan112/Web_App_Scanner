@@ -78,14 +78,14 @@ export default function RegisterForm() {
       });
     } catch (err: any) {
       console.error("Registration error details:", err);
-      
+
       // Handle different error formats from backend
       let errorMessage = "Registration failed. Please try again.";
-      
+
       if (err.response?.data) {
         // Backend returns serializer.errors which is an object
         const errors = err.response.data;
-        
+
         // Check for field-specific errors
         if (errors.email) {
           errorMessage = Array.isArray(errors.email) ? errors.email[0] : errors.email;
@@ -115,7 +115,7 @@ export default function RegisterForm() {
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
     } finally {
       setLoading(false);

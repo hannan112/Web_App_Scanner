@@ -24,6 +24,8 @@ from .serializers import (
     PasswordResetRequestSerializer,
     UserLoginSerializer,
     UserRegistrationSerializer,
+    UserUpdateSerializer,
+    PasswordChangeSerializer,
 )
 from .utils import send_password_reset_email, send_verification_email
 
@@ -289,7 +291,7 @@ class GoogleAuthCallbackView(APIView):
 
 class UserProfileView(APIView):
     """
-    Get current user profile
+    Get or update current user profile
     """
     permission_classes = [IsAuthenticated]
 
@@ -305,3 +307,37 @@ class UserProfileView(APIView):
             "is_active": user.is_active,
             "date_joined": user.date_joined,
         }, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        """Update user profile"""
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordChangeView(APIView):
+    """
+    Change user password
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = PasswordChangeSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response(
+                    {"old_password": ["Wrong password."]}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response(
+                {"message": "Password updated successfully."}, 
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

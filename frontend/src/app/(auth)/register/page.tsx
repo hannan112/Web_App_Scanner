@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/auth/RegisterForm";
+// import RegisterForm from "@/components/auth/RegisterForm";
 import WorldMapAnimation from "@/components/visuals/WorldMapAnimation";
 
 export default function RegisterPage() {

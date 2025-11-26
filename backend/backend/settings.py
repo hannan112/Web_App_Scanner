@@ -43,6 +43,11 @@ DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,api.morphbreak.site,morphbreak.site,www.morphbreak.site").split(",")
 
+# Always allow local hosts in debug mode
+if DEBUG:
+    LOCAL_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+    ALLOWED_HOSTS.extend([host for host in LOCAL_HOSTS if host not in ALLOWED_HOSTS])
+
 
 # Application definition
 
@@ -99,6 +104,15 @@ else:
 # CSRF trusted origins for frontend - parse and trim whitespace
 csrf_origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,https://morphbreak.site,https://www.morphbreak.site")
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_str.split(",") if origin.strip()]
+
+# Always allow local origins in debug mode
+if DEBUG:
+    LOCAL_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    for origin in LOCAL_ORIGINS:
+        if origin not in CORS_ALLOWED_ORIGINS:
+            CORS_ALLOWED_ORIGINS.append(origin)
+        if origin not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(origin)
 
 # Log CSRF origins for debugging (only in development)
 if DEBUG:

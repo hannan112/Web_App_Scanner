@@ -177,6 +177,18 @@ class ActiveScanResultSerializer(serializers.ModelSerializer):
         read_only_fields = ["created_at"]
 
 
+class VulnerabilitySummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vulnerability
+        fields = [
+            "id",
+            "name",
+            "severity",
+            "url",
+            "confidence",
+        ]
+
+
 class VulnerabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Vulnerability

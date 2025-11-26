@@ -13,11 +13,11 @@ cd ~/Web_App_Scanner
 # Backup the .env file
 cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
 
-# Update CORS_ALLOWED_ORIGINS to include all three Vercel URLs
-sed -i 's|CORS_ALLOWED_ORIGINS=.*|CORS_ALLOWED_ORIGINS=http://localhost:3000,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
+# Update CORS_ALLOWED_ORIGINS to include all three Vercel URLs and production domain
+sed -i 's|CORS_ALLOWED_ORIGINS=.*|CORS_ALLOWED_ORIGINS=http://localhost:3000,https://morphbreak.site,https://www.morphbreak.site,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
 
-# Update CSRF_TRUSTED_ORIGINS to include all three Vercel URLs
-sed -i 's|CSRF_TRUSTED_ORIGINS=.*|CSRF_TRUSTED_ORIGINS=https://143.198.211.182.nip.io,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
+# Update CSRF_TRUSTED_ORIGINS to include all three Vercel URLs and production domain
+sed -i 's|CSRF_TRUSTED_ORIGINS=.*|CSRF_TRUSTED_ORIGINS=https://143.198.211.182.nip.io,https://morphbreak.site,https://www.morphbreak.site,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
 
 # Show the updated configuration
 echo "Updated CORS configuration:"

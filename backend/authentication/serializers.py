@@ -108,7 +108,66 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         return data
 
 
-AUTHENTICATION_BACKENDS = [
+    AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     # Add any custom authentication backends here
 ]
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating user profile"""
+
+    class Meta:
+        model = CustomUser
+        fields = ("username", "email", "first_name", "last_name")
+        extra_kwargs = {
+            "username": {"required": False},
+            "email": {"required": False},
+            "first_name": {"required": False},
+            "last_name": {"required": False},
+        }
+
+    def validate_email(self, value):
+        """Validate that the email is not taken by another user"""
+        user = self.context["request"].user
+        if CustomUser.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError("This email is already in use.")
+        return value
+
+    def validate_username(self, value):
+        """Validate that the username is not taken by another user"""
+        user = self.context["request"].user
+        if CustomUser.objects.exclude(pk=user.pk).filter(username=value).exists():
+            raise serializers.ValidationError("This username is already in use.")
+        return value
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    """Serializer for changing password"""
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, min_length=8)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        """Validate passwords"""
+        if data["new_password"] != data["confirm_password"]:
+            raise serializers.ValidationError({"new_password": "Passwords don't match."})
+
+        if data["old_password"] == data["new_password"]:
+            raise serializers.ValidationError(
+                {"new_password": "New password must be different from old password."}
+            )
+
+        # Check password complexity
+        password = data["new_password"]
+        if not any(char.isdigit() for char in password):
+            raise serializers.ValidationError(
+                {"new_password": "Password must contain at least one number."}
+            )
+        if not any(char in "!@#$%^&*()_+" for char in password):
+            raise serializers.ValidationError(
+                {"new_password": "Password must contain at least one special character."}
+            )
+
+        return data

@@ -27,7 +27,7 @@ from scanning.models import (ActiveScanResult, PassiveReconResult, Scan,
 from .serializers import (ActiveScanResultSerializer, PassiveReconResultSerializer,
                           ScanConfigurationSerializer, ScanLogSerializer,
                           ScanResultsSerializer, ScanSerializer,
-                          VulnerabilitySerializer)
+                          VulnerabilitySerializer, VulnerabilitySummarySerializer)
 
 
 class ScanConfigurationViewSet(viewsets.ModelViewSet):
@@ -548,9 +548,12 @@ class ScanViewSet(viewsets.ModelViewSet):
 
             # Get active scan results if available (OPTIMIZED)
             try:
+                # OPTIMIZATION: Use select_related/defer to optimize query
+                # We defer potentially huge fields if we're going to optimize them anyway
+                # But since we need them for the optimizer, we actually have to load them.
+                # The key optimization is NOT serializing them first.
                 active_results = ActiveScanResult.objects.get(scan=scan)
-                active_data = ActiveScanResultSerializer(active_results).data
-
+                
                 # Initialize the data optimizer
                 try:
                     optimizer = ScanDataOptimizer()
@@ -566,14 +569,15 @@ class ScanViewSet(viewsets.ModelViewSet):
 
                 if optimize_data and optimizer:
                     try:
-                        # Optimize spider results
-                        spider_data = active_data.get("spider_results") or {}
+                        # OPTIMIZATION: Access model fields directly instead of serializing first
+                        # This avoids creating a massive intermediate dictionary
+                        spider_data = active_results.spider_results or {}
                         optimized_spider = optimizer.optimize_spider_results(
                             spider_data, page=spider_page, page_size=50
                         )
 
                         # Optimize AJAX spider results
-                        ajax_data = active_data.get("ajax_spider_results") or {}
+                        ajax_data = active_results.ajax_spider_results or {}
                         optimized_ajax = optimizer.optimize_ajax_spider_results(
                             ajax_data, page=ajax_page, page_size=30
                         )
@@ -607,11 +611,11 @@ class ScanViewSet(viewsets.ModelViewSet):
                                 "note": "Raw AJAX data has been processed to show only security-relevant information"
                             },
 
-                            # Other scan data
-                            "attack_surface": active_data.get("attack_surface") or {},
-                            "raw_findings": active_data.get("raw_findings") or {},
-                            "authentication_tests": active_data.get("authentication_tests") or {},
-                            "session_analysis": active_data.get("session_analysis") or {},
+                            # Other scan data - access directly from model
+                            "attack_surface": active_results.attack_surface or {},
+                            "raw_findings": active_results.raw_findings or {},
+                            "authentication_tests": active_results.authentication_tests or {},
+                            "session_analysis": active_results.session_analysis or {},
 
                             # Optimization metadata
                             "optimization_info": {
@@ -628,19 +632,21 @@ class ScanViewSet(viewsets.ModelViewSet):
                         }
                     except Exception as opt_error:
                         logger.error(f"Error during data optimization: {opt_error}")
-                        # Fall back to unoptimized data
+                        # Fall back to unoptimized data but still try to avoid full serializer if possible
                         active_recon_data = {
-                            "urls_discovered": active_data.get("urls_discovered") or [],
-                            "forms_discovered": active_data.get("forms_discovered") or [],
-                            "spider_results": active_data.get("spider_results") or {},
-                            "ajax_spider_results": active_data.get("ajax_spider_results") or {},
-                            "attack_surface": active_data.get("attack_surface") or {},
-                            "raw_findings": active_data.get("raw_findings") or {},
-                            "authentication_tests": active_data.get("authentication_tests") or {},
-                            "session_analysis": active_data.get("session_analysis") or {}
+                            "urls_discovered": active_results.urls_discovered or [],
+                            "forms_discovered": active_results.forms_discovered or [],
+                            "spider_results": active_results.spider_results or {},
+                            "ajax_spider_results": active_results.ajax_spider_results or {},
+                            "attack_surface": active_results.attack_surface or {},
+                            "raw_findings": active_results.raw_findings or {},
+                            "authentication_tests": active_results.authentication_tests or {},
+                            "session_analysis": active_results.session_analysis or {}
                         }
                 else:
                     # Legacy unoptimized data (use with caution for large datasets)
+                    # Only use serializer if explicitly requested to not optimize
+                    active_data = ActiveScanResultSerializer(active_results).data
                     active_recon_data = {
                         "urls_discovered": active_data.get("urls_discovered") or [],
                         "forms_discovered": active_data.get("forms_discovered") or [],
@@ -683,25 +689,27 @@ class ScanViewSet(viewsets.ModelViewSet):
             try:
                 vulnerabilities = Vulnerability.objects.filter(scan=scan)
                 if vulnerabilities.exists():
-                    if limit_vulnerabilities:
-                        # Limit vulnerabilities to prevent massive responses
-                        limited_vulnerabilities = vulnerabilities[:100]  # Limit to first 100
-                        vuln_data = VulnerabilitySerializer(limited_vulnerabilities, many=True).data
-
-                        # Truncate evidence fields to prevent huge responses
-                        for vuln in vuln_data:
-                            if vuln.get('evidence') and len(str(vuln['evidence'])) > 10000:
-                                vuln['evidence'] = str(vuln['evidence'])[:10000] + "... [truncated]"
-
+                    if not limit_vulnerabilities or vulnerabilities.count() <= 100:
+                        # Use Summary Serializer for list view (OPTIMIZATION)
+                        # This avoids sending massive evidence fields for every vulnerability
+                        vuln_data = VulnerabilitySummarySerializer(vulnerabilities, many=True).data
+                        
                         scan_data["vulnerabilities"] = vuln_data
                         scan_data["vulnerability_summary"] = {
                             "total_count": vulnerabilities.count(),
                             "showing_count": len(vuln_data),
-                            "truncated": vulnerabilities.count() > 100
+                            "truncated": False
                         }
                     else:
-                        # Full vulnerabilities (use with caution)
-                        scan_data["vulnerabilities"] = VulnerabilitySerializer(vulnerabilities, many=True).data
+                        # If too many, still paginate/truncate but use summary serializer
+                        vuln_data = VulnerabilitySummarySerializer(vulnerabilities[:100], many=True).data
+                        
+                        scan_data["vulnerabilities"] = vuln_data
+                        scan_data["vulnerability_summary"] = {
+                            "total_count": vulnerabilities.count(),
+                            "showing_count": len(vuln_data),
+                            "truncated": True
+                        }
                 else:
                     scan_data["vulnerabilities"] = []
             except Exception as e:
@@ -1430,7 +1438,7 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         """Return vulnerabilities for scans of projects owned by the current user"""
-        return Vulnerability.objects.filter(scan__project__owner=self.request.user)
+        return Vulnerability.objects.filter(scan__configuration__project__owner=self.request.user)
 
     @action(detail=False, methods=["get"])
     def summary(self, request):
@@ -1438,7 +1446,7 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
         user = request.user
 
         # Get counts by severity
-        vulns = Vulnerability.objects.filter(scan__project__owner=user)
+        vulns = Vulnerability.objects.filter(scan__configuration__project__owner=user)
         counts_by_severity = {
             severity: vulns.filter(severity=severity).count()
             for severity in ["critical", "high", "medium", "low", "info"]

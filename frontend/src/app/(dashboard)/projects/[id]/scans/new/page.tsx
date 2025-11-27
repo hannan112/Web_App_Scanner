@@ -11,7 +11,7 @@ import Link from "next/link";
 import { getProjectById } from "@/lib/api/projects";
 import { createScan, createScanConfiguration } from "@/lib/api/scans";
 import PageTitle from "@/components/PageTitle";
-import ZAPStatus from "@/components/scanning/ZAPStatus";
+
 
 export default function NewProjectScanPage({ params }: { params: Promise<{ id: string }> }) {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
@@ -225,13 +225,7 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
               </p>
             </div>
 
-            {/* ZAP Status for Active Scans */}
-            {isActiveScanning && (
-              <div className="mb-4">
-                <h3 className="text-sm font-medium text-slate-700 mb-2">ZAP Service Status</h3>
-                <ZAPStatus showDetails={true} autoRefresh={true} refreshInterval={15000} />
-              </div>
-            )}
+
 
             <div className="space-y-4">
               <div>

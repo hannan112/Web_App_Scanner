@@ -1,0 +1,6 @@
+url,description,expected_vulnerabilities
+http://testphp.vulnweb.com,Acunetix PHP Test Site,SQLi, XSS, etc.
+http://testasp.vulnweb.com,Acunetix ASP Test Site,SQLi, XSS, etc.
+http://zero.webappsecurity.com,Zero Bank,Banking vulnerabilities
+https://juice-shop.herokuapp.com,OWASP Juice Shop,Modern web app vulnerabilities
+http://demo.testfire.net,Altoro Mutual,Banking vulnerabilities

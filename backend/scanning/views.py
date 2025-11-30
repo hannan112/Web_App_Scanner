@@ -246,15 +246,42 @@ class ScanViewSet(viewsets.ModelViewSet):
             tracker.stop_scan(scan.id)
             
             # 2. Force restart the ZAP container to ensure clean state
+            zap_restarted = False
+            
+            # Method A: Try Docker SDK
             try:
                 import docker
                 client = docker.from_env()
                 zap_container = client.containers.get('security_scanner_zap')
                 zap_container.restart()
-                logger.info("Successfully restarted ZAP container")
+                logger.info("Successfully restarted ZAP container via Docker SDK")
+                zap_restarted = True
             except Exception as docker_error:
-                logger.error(f"Failed to restart ZAP container: {docker_error}")
-                # Continue anyway, as we still want to mark scan as stopped
+                logger.warning(f"Failed to restart ZAP via Docker SDK: {docker_error}")
+            
+            # Method B: Try Shell Script Fallback
+            if not zap_restarted:
+                try:
+                    logger.info("Attempting to restart ZAP via shell script fallback...")
+                    # Assuming the backend container has access to the scripts dir via volume or copy
+                    # However, in the docker-compose, 'scripts' is not mounted to backend.
+                    # But we can try to execute the command if we are in a dev environment or if mounted.
+                    # Since we are in the backend container, we might not have direct access to the host's docker command 
+                    # unless the socket is mounted (which it is: /var/run/docker.sock:/var/run/docker.sock).
+                    # But the script 'scripts/restart_zap.sh' is on the host, not necessarily in the container.
+                    # Wait, the prompt says "move all the scripts in the scripts dir". 
+                    # The backend container mounts `../backend:/app`. It does NOT mount `../scripts`.
+                    # So the script might not be available inside the container at `/app/scripts/restart_zap.sh`.
+                    
+                    # Let's check if we can run docker directly from shell
+                    subprocess.run(["docker", "restart", "security_scanner_zap"], check=True)
+                    logger.info("Successfully restarted ZAP via shell command")
+                    zap_restarted = True
+                except Exception as shell_error:
+                    logger.error(f"Failed to restart ZAP via shell command: {shell_error}")
+
+            if not zap_restarted:
+                logger.error("CRITICAL: Failed to restart ZAP container by all methods. Future scans may fail.")
 
             # 3. Update scan status in DB
             scan.status = "stopped"

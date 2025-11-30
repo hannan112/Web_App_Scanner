@@ -1,0 +1,5 @@
+url,description,expected_vulnerabilities
+http://example.com,IANA Example Domain,None
+https://www.google.com,Google Search,None (High Security)
+https://www.wikipedia.org,Wikipedia,None (High Security)
+http://ipv4.download.thinkbroadband.com,Download Test Site,None

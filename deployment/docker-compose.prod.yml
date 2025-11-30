@@ -30,6 +30,11 @@ services:
       - zap
     networks:
       - scanner_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # PostgreSQL Database
   db:
@@ -44,6 +49,11 @@ services:
       - POSTGRES_PASSWORD=scanner_password
     networks:
       - scanner_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # OWASP ZAP
   zap:
@@ -60,6 +70,11 @@ services:
       - JAVA_OPTS=-Xmx512m # Optimized for 1GB RAM instance
     networks:
       - scanner_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   postgres_data:

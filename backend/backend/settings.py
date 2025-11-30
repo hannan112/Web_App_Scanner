@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import logging.handlers
 from datetime import timedelta
 from pathlib import Path
 
@@ -349,8 +350,10 @@ LOGGING = {
         },
         "file": {
             "level": "INFO",
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "logs", "scanner.log"),
+            "maxBytes": 1024 * 1024 * 10,  # 10 MB
+            "backupCount": 5,
             "formatter": "verbose",
         },
     },

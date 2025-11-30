@@ -4,8 +4,11 @@
 *.sql
 db.sqlite3
 backend/database/
+!backend/database/scripts/
+!backend/database/README_DATABASE.md
 backend/db.sqlite3
 backend/backups/
+ml_training.sqlite3
 
 # Python
 __pycache__/
@@ -106,3 +109,7 @@ htmlcov/
 # Media files (user uploaded content)
 media/
 static/
+
+#ML
+/ML
+/.venv

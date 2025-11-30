@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Define container names
+# Ensure we are in the project root
+cd "$(dirname "$0")/.."
+
 CONTAINERS=("security_scanner_backend" "security_scanner_zap" "security_scanner_db")
 
 echo "Restarting containers: ${CONTAINERS[*]}..."

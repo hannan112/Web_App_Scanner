@@ -2,6 +2,9 @@
 # Script to sync production database to local environment
 
 # Configuration
+# Ensure we are in the project root
+cd "$(dirname "$0")/.."
+
 SSH_KEY="/home/hannan/keys/oceans_digital"
 SERVER="root@143.198.211.182"
 REMOTE_DB_PATH="/root/Web_App_Scanner/backend/db.sqlite3"

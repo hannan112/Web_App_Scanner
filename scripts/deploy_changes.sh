@@ -3,6 +3,9 @@
 
 set -e
 
+# Ensure we are in the project root
+cd "$(dirname "$0")/.."
+
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -57,11 +60,15 @@ echo "📦 Backing up .env file..."
 cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
 
 # Update CORS_ALLOWED_ORIGINS to include all three Vercel URLs
+# Update CORS_ALLOWED_ORIGINS to include local, production (including api), and Vercel URLs
 echo "🔧 Updating CORS configuration..."
-sed -i 's|CORS_ALLOWED_ORIGINS=.*|CORS_ALLOWED_ORIGINS=http://localhost:3000,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
+sed -i 's|CORS_ALLOWED_ORIGINS=.*|CORS_ALLOWED_ORIGINS=http://localhost:3000,https://morphbreak.site,https://www.morphbreak.site,https://api.morphbreak.site,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
 
-# Update CSRF_TRUSTED_ORIGINS to include all three Vercel URLs
-sed -i 's|CSRF_TRUSTED_ORIGINS=.*|CSRF_TRUSTED_ORIGINS=https://143.198.211.182.nip.io,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
+# Update CSRF_TRUSTED_ORIGINS to include local, production (including api), and Vercel URLs
+sed -i 's|CSRF_TRUSTED_ORIGINS=.*|CSRF_TRUSTED_ORIGINS=https://143.198.211.182.nip.io,https://morphbreak.site,https://www.morphbreak.site,https://api.morphbreak.site,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
+
+# Update ALLOWED_HOSTS to ensure api.morphbreak.site is included
+sed -i 's|ALLOWED_HOSTS=.*|ALLOWED_HOSTS=localhost,127.0.0.1,api.morphbreak.site,morphbreak.site,www.morphbreak.site,143.198.211.182|' .env
 
 # Show updated configuration
 echo "✅ Updated CORS configuration:"

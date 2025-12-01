@@ -482,12 +482,29 @@ class ActiveScanningEngine:
                             'parameter': vuln_data.get('parameter', ''),
                             'evidence': vuln_data.get('evidence', ''),
                             'confidence': vuln_data.get('confidence', 1.0),
-                            'remediation': vuln_data.get('solution', '')
+                            'remediation': vuln_data.get('solution', ''),
+                            # New metadata fields for ML / FP reduction
+                            'plugin_id': vuln_data.get('plugin_id', ''),
+                            'source': vuln_data.get('source', ''),
+                            'category': vuln_data.get('category', ''),
+                            'cwe_id': vuln_data.get('cwe_id', ''),
+                            'wasc_id': vuln_data.get('wasc_id', ''),
+                            'attack': vuln_data.get('attack', ''),
+                            'other_info': vuln_data.get('other_info', ''),
                         }
                     )
                     if created:
                         vulnerability_count += 1
                     else:
+                        # Update metadata on existing vulnerabilities if any new data is present
+                        updated = False
+                        for field in ['plugin_id', 'source', 'category', 'cwe_id', 'wasc_id', 'attack', 'other_info']:
+                            new_val = vuln_data.get(field)
+                            if new_val and getattr(vuln, field) != new_val:
+                                setattr(vuln, field, new_val)
+                                updated = True
+                        if updated:
+                            vuln.save(update_fields=['plugin_id', 'source', 'category', 'cwe_id', 'wasc_id', 'attack', 'other_info'])
                         logger.debug(f"Vulnerability already exists: {vuln.name} for {vuln.url}")
                 except Exception as e:
                     logger.error(f"Failed to save vulnerability: {e}")

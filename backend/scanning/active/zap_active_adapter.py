@@ -1560,6 +1560,7 @@ class ZAPActiveAdapter:
                     "evidence": alert.get("evidence", ""),
                     "solution": alert.get("solution", ""),
                     "reference": alert.get("reference", ""),
+                    "plugin_id": str(alert.get("pluginId", "")) if alert.get("pluginId") is not None else "",
                     "cwe_id": alert.get("cweid", ""),
                     "wasc_id": alert.get("wascid", ""),
                     "source": "ZAP Active Scan",

@@ -63485,3 +63485,940 @@ INFO 2025-11-23 11:54:11,444 zap_active_adapter ✅✅✅ AJAX spider successful
 INFO 2025-11-23 11:54:11,444 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
 INFO 2025-11-23 11:54:11,444 unified_engine Finally block: ZAP scans stopped
 INFO 2025-11-23 11:54:11,444 unified_engine Finally block: Scan 59 unregistered from tracker
+INFO 2025-12-02 19:27:08,011 views ScanConfiguration create called with data: {'project': '37', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-02 19:27:08,014 views Creating scan configuration with data: {'project': '37', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-02 19:27:08,024 views Scan configuration created successfully: 41
+INFO 2025-12-02 19:27:08,076 views Creating scan with data: {'configuration': 41}
+INFO 2025-12-02 19:27:08,077 views Config ID from request: 41 (type: <class 'int'>)
+INFO 2025-12-02 19:27:08,077 views Converted config ID: 41
+INFO 2025-12-02 19:27:08,090 views Starting scan engine for scan 41
+INFO 2025-12-02 19:27:08,100 views Scan 41 started asynchronously
+INFO 2025-12-02 19:27:08,100 views Attempting to return scan data for scan 41
+INFO 2025-12-02 19:27:08,100 views Using existing scan object, status: running
+INFO 2025-12-02 19:27:08,101 views Preparing full scan response for scan 41
+INFO 2025-12-02 19:27:08,103 views Full scan response prepared for scan 41
+INFO 2025-12-02 19:27:08,103 scan_tracker Registered scan 41 in tracker
+INFO 2025-12-02 19:27:08,106 unified_engine Starting active scan with passive reconnaissance for scan ID: 41
+INFO 2025-12-02 19:27:08,143 unified_engine Scan 41: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-12-02 19:27:08,159 unified_engine Scan 41: 10.0% - Running passive reconnaissance phase
+INFO 2025-12-02 19:27:08,478 scanner Scan 41: 5.0% - Starting passive reconnaissance
+INFO 2025-12-02 19:27:08,497 unified_engine Scan 41: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-12-02 19:27:08,997 scanner Scan 41: 15.0% - Analyzing target URL
+INFO 2025-12-02 19:27:09,015 unified_engine Scan 41: 15.2% - Passive: Analyzing target URL
+INFO 2025-12-02 19:27:09,015 scanner Target analysis completed for https://kipsschool.com/
+INFO 2025-12-02 19:27:09,315 scanner Scan 41: 25.0% - Performing DNS analysis
+INFO 2025-12-02 19:27:09,333 unified_engine Scan 41: 18.8% - Passive: Performing DNS analysis
+INFO 2025-12-02 19:27:12,590 scanner DNS analysis completed for kipsschool.com
+INFO 2025-12-02 19:27:13,091 scanner Scan 41: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-12-02 19:27:13,109 unified_engine Scan 41: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-12-02 19:27:13,948 scanner SSL analysis completed for kipsschool.com
+INFO 2025-12-02 19:27:14,350 scanner Scan 41: 55.0% - Detecting technologies
+INFO 2025-12-02 19:27:14,368 unified_engine Scan 41: 29.2% - Passive: Detecting technologies
+INFO 2025-12-02 19:27:15,678 scanner Technology detection completed for https://kipsschool.com/
+INFO 2025-12-02 19:27:16,079 scanner Scan 41: 70.0% - Analyzing security headers
+INFO 2025-12-02 19:27:16,097 unified_engine Scan 41: 34.5% - Passive: Analyzing security headers
+INFO 2025-12-02 19:27:17,320 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-12-02 19:27:17,327 zap_adapter ZAP response status code: 200
+INFO 2025-12-02 19:27:17,327 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-12-02 19:27:24,287 scanner ZAP found 8 header-related issues
+INFO 2025-12-02 19:27:24,287 scanner Headers analysis completed for https://kipsschool.com/
+INFO 2025-12-02 19:27:24,589 scanner Scan 41: 85.0% - Analyzing content for information disclosure
+INFO 2025-12-02 19:27:24,609 unified_engine Scan 41: 39.8% - Passive: Analyzing content for information disclosure
+INFO 2025-12-02 19:27:25,927 scanner Content analysis completed for https://kipsschool.com/
+INFO 2025-12-02 19:27:26,329 scanner Scan 41: 95.0% - Analyzing cookies
+INFO 2025-12-02 19:27:26,348 unified_engine Scan 41: 43.2% - Passive: Analyzing cookies
+INFO 2025-12-02 19:27:27,540 scanner Cookie analysis completed for https://kipsschool.com/
+INFO 2025-12-02 19:27:27,842 scanner Scan 41: 98.0% - Running enhanced discovery
+INFO 2025-12-02 19:27:27,860 unified_engine Scan 41: 44.3% - Passive: Running enhanced discovery
+INFO 2025-12-02 19:27:27,860 scanner Starting enhanced discovery for https://kipsschool.com/
+INFO 2025-12-02 19:27:27,864 enhanced_discovery_adapter Starting comprehensive discovery for https://kipsschool.com/
+INFO 2025-12-02 19:27:27,864 enhanced_discovery_adapter Starting subdomain discovery for kipsschool.com
+ERROR 2025-12-02 19:27:27,865 enhanced_discovery_adapter Subdomain discovery failed for kipsschool.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-12-02 19:27:27,866 enhanced_discovery_adapter Starting wayback URL discovery for kipsschool.com
+ERROR 2025-12-02 19:27:27,867 enhanced_discovery_adapter Wayback URL discovery failed for kipsschool.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-02 19:27:27,867 enhanced_discovery_adapter Starting directory discovery for https://kipsschool.com/
+ERROR 2025-12-02 19:27:27,869 enhanced_discovery_adapter Directory discovery failed for https://kipsschool.com/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-12-02 19:27:27,869 enhanced_discovery_adapter Starting API endpoint discovery for https://kipsschool.com/
+INFO 2025-12-02 19:27:51,608 enhanced_discovery_adapter Starting wayback URL discovery for kipsschool.com
+ERROR 2025-12-02 19:27:51,610 enhanced_discovery_adapter Wayback URL discovery failed for kipsschool.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-02 19:27:51,610 enhanced_discovery_adapter Found 14 API endpoints for https://kipsschool.com/
+INFO 2025-12-02 19:27:51,611 enhanced_discovery_adapter Comprehensive discovery completed for https://kipsschool.com/
+INFO 2025-12-02 19:27:51,612 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 14, 'total_discoveries': 14}
+INFO 2025-12-02 19:27:51,612 scanner Enhanced discovery completed: 14 URLs discovered
+INFO 2025-12-02 19:27:51,612 scanner Enhanced discovery results stored: True
+INFO 2025-12-02 19:27:51,812 scanner Scan 41: 99.0% - Aggregating security findings
+INFO 2025-12-02 19:27:51,828 unified_engine Scan 41: 44.6% - Passive: Aggregating security findings
+INFO 2025-12-02 19:27:51,829 scanner Vulnerability aggregation completed: 25 findings
+INFO 2025-12-02 19:27:52,029 scanner Scan 41: 100.0% - Passive scan completed
+INFO 2025-12-02 19:27:52,047 unified_engine Scan 41: 45.0% - Passive: Passive scan completed
+INFO 2025-12-02 19:27:52,051 unified_engine Saving passive results with keys: ['target_info', 'dns_analysis', 'ssl_analysis', 'technology_detection', 'security_headers', 'content_analysis', 'cookie_analysis', 'enhanced_discovery', 'vulnerabilities', 'vulnerability_summary']
+INFO 2025-12-02 19:27:52,051 unified_engine Enhanced discovery in results: True
+INFO 2025-12-02 19:27:52,062 unified_engine Passive results saved successfully. Enhanced discovery: True
+INFO 2025-12-02 19:27:52,062 url_discovery_logger URL discoveries logged to /home/hannan/Web_App_Scanner/backend/logs/scan_41/url_discoveries_passive_20251202_192752.json - 14 URLs discovered
+INFO 2025-12-02 19:27:52,063 url_discovery_logger URL list saved to /home/hannan/Web_App_Scanner/backend/logs/scan_41/discovered_urls_passive_20251202_192752.txt
+INFO 2025-12-02 19:27:52,063 unified_engine URL discoveries logged to files for passive scan
+INFO 2025-12-02 19:27:52,094 unified_engine Saved 2 new passive vulnerabilities (23 already existed)
+INFO 2025-12-02 19:27:52,109 unified_engine Scan 41: 45.0% - Running active vulnerability testing phase
+INFO 2025-12-02 19:27:52,109 unified_engine Starting enhanced active phase with passive discovery integration (Range: (45.0, 90.0))
+INFO 2025-12-02 19:27:52,137 scan_logger Initialized scan logger for scan 41 at /home/hannan/Web_App_Scanner/backend/logs/scan_41
+INFO 2025-12-02 19:27:52,206 scan_logger Found 2 Docker containers to monitor: ['docker-containers-discovery-tools-1', 'docker-containers-zap-1']
+INFO 2025-12-02 19:27:52,206 scan_logger Started Docker log capture for: docker-containers-discovery-tools-1
+INFO 2025-12-02 19:27:52,207 scan_logger Started Docker log capture for: docker-containers-zap-1
+INFO 2025-12-02 19:27:52,207 active_engine 🔍 Started Docker log capture for scan 41
+INFO 2025-12-02 19:27:52,210 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-02 19:28:40,992 enhanced_discovery Enhanced discovery initialized for https://kipsschool.com/
+INFO 2025-12-02 19:28:40,993 enhanced_discovery Available tools: []
+INFO 2025-12-02 19:28:40,996 zap_active_adapter Found 0 existing contexts
+INFO 2025-12-02 19:28:41,676 zap_active_adapter Created new ZAP session: scan_41_1764703720
+ERROR 2025-12-02 19:28:41,697 zap_active_adapter ZAP API request failed for core/action/clearSiteTree: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearSiteTree/?apikey=changeme123
+ERROR 2025-12-02 19:28:41,706 zap_active_adapter ZAP API request failed for core/action/clearStats: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearStats/?apikey=changeme123
+INFO 2025-12-02 19:28:41,712 zap_active_adapter ✅ Reset ZAP state with session: scan_41_1764703720
+INFO 2025-12-02 19:28:41,734 active_engine Active scan 41: 47.2% - Initializing active scan
+INFO 2025-12-02 19:28:41,749 active_engine Active scan 41: 49.5% - Validating target and ZAP connection
+INFO 2025-12-02 19:28:41,753 zap_active_adapter ZAP connection successful at http://localhost:8080
+INFO 2025-12-02 19:28:43,114 active_engine Prerequisites validation completed successfully
+INFO 2025-12-02 19:28:43,132 active_engine Active scan 41: 54.0% - Starting discovery phase
+INFO 2025-12-02 19:28:43,132 active_engine Starting enhanced discovery phase with passive discovery integration
+INFO 2025-12-02 19:28:43,147 active_engine Active scan 41: 54.0% - Loading enhanced discovery results from passive scan
+INFO 2025-12-02 19:28:43,148 active_engine Loaded 14 URLs from passive enhanced discovery
+INFO 2025-12-02 19:28:43,163 active_engine Active scan 41: 56.2% - Running enhanced discovery with multiple security tools
+INFO 2025-12-02 19:28:43,163 enhanced_discovery Starting enhanced discovery with multiple tools...
+INFO 2025-12-02 19:28:43,163 enhanced_discovery Starting comprehensive discovery...
+INFO 2025-12-02 19:28:43,163 enhanced_discovery Analyzing for API endpoints...
+INFO 2025-12-02 19:28:56,736 enhanced_discovery Analyzing discovered URLs for forms...
+INFO 2025-12-02 19:28:56,738 enhanced_discovery Discovery completed: 0 URLs, 0 forms, 0 API endpoints
+ERROR 2025-12-02 19:28:56,741 zap_active_adapter ZAP API request failed for spider/view/results: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/view/results/?apikey=changeme123
+INFO 2025-12-02 19:28:56,748 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-12-02 19:28:56,748 enhanced_discovery Enhanced discovery completed: {}
+INFO 2025-12-02 19:28:56,763 active_engine Active scan 41: 58.5% - Integrating passive discovery results with ZAP
+INFO 2025-12-02 19:28:56,763 active_engine Adding 14 discovered URLs to ZAP context
+WARNING 2025-12-02 19:28:57,051 active_engine Failed to add URL to ZAP context: https://kipsschool.com/docs. Result: {'accessUrl': [{'note': '', 'rtt': '279', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:28:56 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/docs HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '1', 'type': '15', 'timestamp': '1764703736766', 'tags': []}]}
+WARNING 2025-12-02 19:28:57,966 active_engine Failed to add URL to ZAP context: https://kipsschool.com/webhooks. Result: {'accessUrl': [{'note': '', 'rtt': '906', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:28:57 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/webhooks HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '3', 'type': '15', 'timestamp': '1764703737057', 'tags': []}]}
+WARNING 2025-12-02 19:28:58,889 active_engine Failed to add URL to ZAP context: https://kipsschool.com/api/. Result: {'accessUrl': [{'note': '', 'rtt': '913', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:28:57 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/api/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '4', 'type': '15', 'timestamp': '1764703737972', 'tags': []}]}
+WARNING 2025-12-02 19:28:59,810 active_engine Failed to add URL to ZAP context: https://kipsschool.com/rest/. Result: {'accessUrl': [{'note': '', 'rtt': '912', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:28:59 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/rest/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '6', 'type': '15', 'timestamp': '1764703738894', 'tags': []}]}
+WARNING 2025-12-02 19:29:00,700 active_engine Failed to add URL to ZAP context: https://kipsschool.com/graphql. Result: {'accessUrl': [{'note': '', 'rtt': '880', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:28:59 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/graphql HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '8', 'type': '15', 'timestamp': '1764703739816', 'tags': []}]}
+WARNING 2025-12-02 19:29:01,654 active_engine Failed to add URL to ZAP context: https://kipsschool.com/webhook. Result: {'accessUrl': [{'note': '', 'rtt': '945', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:01 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/webhook HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '9', 'type': '15', 'timestamp': '1764703740705', 'tags': []}]}
+WARNING 2025-12-02 19:29:02,575 active_engine Failed to add URL to ZAP context: https://kipsschool.com/internal/api/. Result: {'accessUrl': [{'note': '', 'rtt': '910', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:02 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/internal/api/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '10', 'type': '15', 'timestamp': '1764703741660', 'tags': []}]}
+WARNING 2025-12-02 19:29:03,599 active_engine Failed to add URL to ZAP context: https://kipsschool.com/swagger-ui. Result: {'accessUrl': [{'note': '', 'rtt': '1016', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:02 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/swagger-ui HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '13', 'type': '15', 'timestamp': '1764703742579', 'tags': []}]}
+WARNING 2025-12-02 19:29:04,521 active_engine Failed to add URL to ZAP context: https://kipsschool.com/api/v1/. Result: {'accessUrl': [{'note': '', 'rtt': '912', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:04 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/api/v1/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '14', 'type': '15', 'timestamp': '1764703743604', 'tags': []}]}
+WARNING 2025-12-02 19:29:05,440 active_engine Failed to add URL to ZAP context: https://kipsschool.com/swagger. Result: {'accessUrl': [{'note': '', 'rtt': '912', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:05 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/swagger HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '16', 'type': '15', 'timestamp': '1764703744526', 'tags': []}]}
+WARNING 2025-12-02 19:29:06,364 active_engine Failed to add URL to ZAP context: https://kipsschool.com/api/v2/. Result: {'accessUrl': [{'note': '', 'rtt': '916', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:05 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/api/v2/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '17', 'type': '15', 'timestamp': '1764703745444', 'tags': []}]}
+WARNING 2025-12-02 19:29:07,245 active_engine Failed to add URL to ZAP context: https://kipsschool.com/api/v3/. Result: {'accessUrl': [{'note': '', 'rtt': '873', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:07 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/api/v3/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '19', 'type': '15', 'timestamp': '1764703746368', 'tags': []}]}
+WARNING 2025-12-02 19:29:08,206 active_engine Failed to add URL to ZAP context: https://kipsschool.com/admin/api/. Result: {'accessUrl': [{'note': '', 'rtt': '953', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:07 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/admin/api/ HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '21', 'type': '15', 'timestamp': '1764703747250', 'tags': []}]}
+WARNING 2025-12-02 19:29:09,128 active_engine Failed to add URL to ZAP context: https://kipsschool.com/api-docs. Result: {'accessUrl': [{'note': '', 'rtt': '915', 'responseBody': '<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a href="/Error/NotFound">here</a>.</h2>\r\n</body></html>\r\n', 'cookieParams': '', 'requestBody': '', 'responseHeader': 'HTTP/1.1 302 Found\r\nCache-Control: private\r\nContent-Type: text/html; charset=utf-8\r\nLocation: /Error/NotFound\r\nServer: Microsoft-IIS/10.0\r\nX-AspNetMvc-Version: 5.2\r\nX-AspNet-Version: 4.0.30319\r\nX-Powered-By: ASP.NET\r\nDate: Tue, 02 Dec 2025 19:29:08 GMT\r\ncontent-length: 132\r\n\r\n', 'requestHeader': 'GET https://kipsschool.com/api-docs HTTP/1.1\r\nhost: kipsschool.com\r\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\npragma: no-cache\r\ncache-control: no-cache\r\n\r\n', 'id': '24', 'type': '15', 'timestamp': '1764703748209', 'tags': []}]}
+INFO 2025-12-02 19:29:09,128 active_engine Successfully added 14 URLs to ZAP context
+INFO 2025-12-02 19:29:09,144 active_engine Active scan 41: 60.8% - Running ZAP traditional spider
+INFO 2025-12-02 19:29:09,144 zap_active_adapter Starting advanced spider scan
+INFO 2025-12-02 19:29:09,158 zap_active_adapter Spider started with ID: 0
+INFO 2025-12-02 19:29:17,187 zap_active_adapter Spider scan completed
+INFO 2025-12-02 19:29:17,195 zap_active_adapter Spider attack surface extraction: 0 URLs, 0 forms, 0 parameters
+INFO 2025-12-02 19:29:17,195 zap_active_adapter Spider completed. Found 0 URLs
+INFO 2025-12-02 19:29:17,212 active_engine Active scan 41: 63.0% - Running ZAP AJAX spider for modern web apps
+INFO 2025-12-02 19:29:17,212 zap_active_adapter Starting AJAX spider scan
+INFO 2025-12-02 19:29:17,226 zap_active_adapter AJAX spider started (max duration: 600s)
+INFO 2025-12-02 19:29:17,226 zap_active_adapter Monitoring AJAX spider (timeout: 660s)
+INFO 2025-12-02 19:29:27,285 zap_active_adapter AJAX spider running: 10s / 660s (1.5%)
+INFO 2025-12-02 19:29:37,315 zap_active_adapter AJAX spider running: 20s / 660s (3.0%)
+INFO 2025-12-02 19:29:47,554 zap_active_adapter AJAX spider running: 30s / 660s (4.6%)
+INFO 2025-12-02 19:30:31,137 zap_active_adapter AJAX spider running: 74s / 660s (11.2%)
+INFO 2025-12-02 19:30:43,846 zap_active_adapter AJAX spider running: 87s / 660s (13.1%)
+INFO 2025-12-02 19:30:57,615 zap_active_adapter AJAX spider running: 100s / 660s (15.2%)
+INFO 2025-12-02 19:31:18,784 zap_active_adapter AJAX spider running: 122s / 660s (18.4%)
+INFO 2025-12-02 19:39:07,368 zap_active_adapter AJAX spider running: 590s / 660s (89.4%)
+INFO 2025-12-04 17:04:41,707 views ScanConfiguration create called with data: {'project': '35', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-04 17:04:41,712 views Creating scan configuration with data: {'project': '35', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-04 17:04:41,722 views Scan configuration created successfully: 48
+INFO 2025-12-04 17:04:41,770 views Creating scan with data: {'configuration': 48}
+INFO 2025-12-04 17:04:41,770 views Config ID from request: 48 (type: <class 'int'>)
+INFO 2025-12-04 17:04:41,770 views Converted config ID: 48
+INFO 2025-12-04 17:04:41,781 views Starting scan engine for scan 48
+INFO 2025-12-04 17:04:41,789 views Scan 48 started asynchronously
+INFO 2025-12-04 17:04:41,789 views Attempting to return scan data for scan 48
+INFO 2025-12-04 17:04:41,789 views Using existing scan object, status: running
+INFO 2025-12-04 17:04:41,789 views Preparing full scan response for scan 48
+INFO 2025-12-04 17:04:41,790 views Full scan response prepared for scan 48
+INFO 2025-12-04 17:04:41,790 scan_tracker Registered scan 48 in tracker
+INFO 2025-12-04 17:04:41,794 unified_engine Starting active scan with passive reconnaissance for scan ID: 48
+INFO 2025-12-04 17:04:41,820 unified_engine Scan 48: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-12-04 17:04:41,835 unified_engine Scan 48: 10.0% - Running passive reconnaissance phase
+INFO 2025-12-04 17:04:42,251 scanner Scan 48: 5.0% - Starting passive reconnaissance
+INFO 2025-12-04 17:04:42,275 unified_engine Scan 48: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-12-04 17:04:42,775 scanner Scan 48: 15.0% - Analyzing target URL
+INFO 2025-12-04 17:04:42,792 unified_engine Scan 48: 15.2% - Passive: Analyzing target URL
+INFO 2025-12-04 17:04:42,792 scanner Target analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:04:43,093 scanner Scan 48: 25.0% - Performing DNS analysis
+INFO 2025-12-04 17:04:43,107 unified_engine Scan 48: 18.8% - Passive: Performing DNS analysis
+INFO 2025-12-04 17:04:45,087 scanner DNS analysis completed for www.pakwheels.com
+INFO 2025-12-04 17:04:45,587 scanner Scan 48: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-12-04 17:04:45,602 unified_engine Scan 48: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-12-04 17:04:46,040 scanner SSL analysis completed for www.pakwheels.com
+INFO 2025-12-04 17:04:46,441 scanner Scan 48: 55.0% - Detecting technologies
+INFO 2025-12-04 17:04:46,456 unified_engine Scan 48: 29.2% - Passive: Detecting technologies
+INFO 2025-12-04 17:04:47,511 scanner Technology detection completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:04:47,912 scanner Scan 48: 70.0% - Analyzing security headers
+INFO 2025-12-04 17:04:47,927 unified_engine Scan 48: 34.5% - Passive: Analyzing security headers
+INFO 2025-12-04 17:04:49,109 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-12-04 17:04:49,111 zap_adapter ZAP response status code: 200
+INFO 2025-12-04 17:04:49,111 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-12-04 17:04:57,757 scanner ZAP found 2 header-related issues
+INFO 2025-12-04 17:04:57,757 scanner Headers analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:04:58,058 scanner Scan 48: 85.0% - Analyzing content for information disclosure
+INFO 2025-12-04 17:04:58,074 unified_engine Scan 48: 39.8% - Passive: Analyzing content for information disclosure
+INFO 2025-12-04 17:05:00,203 scanner Content analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:00,604 scanner Scan 48: 95.0% - Analyzing cookies
+INFO 2025-12-04 17:05:00,619 unified_engine Scan 48: 43.2% - Passive: Analyzing cookies
+INFO 2025-12-04 17:05:02,932 scanner Cookie analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:03,233 scanner Scan 48: 98.0% - Running enhanced discovery
+INFO 2025-12-04 17:05:03,249 unified_engine Scan 48: 44.3% - Passive: Running enhanced discovery
+INFO 2025-12-04 17:05:03,249 scanner Starting enhanced discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:03,250 enhanced_discovery_adapter Starting comprehensive discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:03,250 enhanced_discovery_adapter Starting subdomain discovery for www.pakwheels.com
+ERROR 2025-12-04 17:05:03,250 enhanced_discovery_adapter Subdomain discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-12-04 17:05:03,250 enhanced_discovery_adapter Starting wayback URL discovery for www.pakwheels.com
+ERROR 2025-12-04 17:05:03,250 enhanced_discovery_adapter Wayback URL discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-04 17:05:03,251 enhanced_discovery_adapter Starting directory discovery for https://www.pakwheels.com/
+ERROR 2025-12-04 17:05:03,251 enhanced_discovery_adapter Directory discovery failed for https://www.pakwheels.com/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-12-04 17:05:03,251 enhanced_discovery_adapter Starting API endpoint discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:43,382 enhanced_discovery_adapter Starting wayback URL discovery for www.pakwheels.com
+ERROR 2025-12-04 17:05:43,383 enhanced_discovery_adapter Wayback URL discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-04 17:05:43,383 enhanced_discovery_adapter Found 0 API endpoints for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:43,384 enhanced_discovery_adapter Comprehensive discovery completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:05:43,384 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 0, 'total_discoveries': 0}
+INFO 2025-12-04 17:05:43,384 scanner Enhanced discovery completed: 0 URLs discovered
+INFO 2025-12-04 17:05:43,384 scanner Enhanced discovery results stored: True
+INFO 2025-12-04 17:05:43,585 scanner Scan 48: 99.0% - Aggregating security findings
+INFO 2025-12-04 17:05:43,600 unified_engine Scan 48: 44.6% - Passive: Aggregating security findings
+INFO 2025-12-04 17:05:43,601 scanner Vulnerability aggregation completed: 15 findings
+INFO 2025-12-04 17:05:43,801 scanner Scan 48: 100.0% - Passive scan completed
+INFO 2025-12-04 17:05:43,816 unified_engine Scan 48: 45.0% - Passive: Passive scan completed
+INFO 2025-12-04 17:05:43,817 unified_engine Saving passive results with keys: ['target_info', 'dns_analysis', 'ssl_analysis', 'technology_detection', 'security_headers', 'content_analysis', 'cookie_analysis', 'enhanced_discovery', 'vulnerabilities', 'vulnerability_summary']
+INFO 2025-12-04 17:05:43,818 unified_engine Enhanced discovery in results: True
+INFO 2025-12-04 17:05:43,827 unified_engine Passive results saved successfully. Enhanced discovery: True
+INFO 2025-12-04 17:05:43,833 url_discovery_logger URL discoveries logged to /home/hannan/Web_App_Scanner/backend/logs/scan_48/url_discoveries_passive_20251204_170543.json - 0 URLs discovered
+INFO 2025-12-04 17:05:43,834 url_discovery_logger URL list saved to /home/hannan/Web_App_Scanner/backend/logs/scan_48/discovered_urls_passive_20251204_170543.txt
+INFO 2025-12-04 17:05:43,834 unified_engine URL discoveries logged to files for passive scan
+INFO 2025-12-04 17:05:43,867 unified_engine Saved 3 new passive vulnerabilities (12 already existed)
+INFO 2025-12-04 17:05:43,882 unified_engine Scan 48: 45.0% - Running active vulnerability testing phase
+INFO 2025-12-04 17:05:43,882 unified_engine Starting enhanced active phase with passive discovery integration (Range: (45.0, 90.0))
+INFO 2025-12-04 17:05:43,885 scan_logger Initialized scan logger for scan 48 at /home/hannan/Web_App_Scanner/backend/logs/scan_48
+INFO 2025-12-04 17:05:43,956 scan_logger Found 2 Docker containers to monitor: ['docker-containers-discovery-tools-1', 'docker-containers-zap-1']
+INFO 2025-12-04 17:05:43,957 scan_logger Started Docker log capture for: docker-containers-discovery-tools-1
+INFO 2025-12-04 17:05:43,957 scan_logger Started Docker log capture for: docker-containers-zap-1
+INFO 2025-12-04 17:05:43,957 active_engine 🔍 Started Docker log capture for scan 48
+INFO 2025-12-04 17:05:43,959 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:06:32,366 enhanced_discovery Enhanced discovery initialized for https://www.pakwheels.com/
+INFO 2025-12-04 17:06:32,366 enhanced_discovery Available tools: []
+INFO 2025-12-04 17:06:32,370 zap_active_adapter Found 0 existing contexts
+INFO 2025-12-04 17:06:32,942 zap_active_adapter Created new ZAP session: scan_48_1764867992
+ERROR 2025-12-04 17:06:32,962 zap_active_adapter ZAP API request failed for core/action/clearSiteTree: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearSiteTree/?apikey=changeme123
+ERROR 2025-12-04 17:06:32,968 zap_active_adapter ZAP API request failed for core/action/clearStats: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearStats/?apikey=changeme123
+INFO 2025-12-04 17:06:32,977 zap_active_adapter ✅ Reset ZAP state with session: scan_48_1764867992
+INFO 2025-12-04 17:06:32,999 active_engine Active scan 48: 47.2% - Initializing active scan
+INFO 2025-12-04 17:06:33,014 active_engine Active scan 48: 49.5% - Validating target and ZAP connection
+INFO 2025-12-04 17:06:33,016 zap_active_adapter ZAP connection successful at http://localhost:8080
+WARNING 2025-12-04 17:06:33,765 active_engine Target returned status 403, but continuing scan
+INFO 2025-12-04 17:06:33,765 active_engine Prerequisites validation completed successfully
+INFO 2025-12-04 17:06:33,780 active_engine Active scan 48: 54.0% - Starting discovery phase
+INFO 2025-12-04 17:06:33,780 active_engine Starting enhanced discovery phase with passive discovery integration
+INFO 2025-12-04 17:06:33,795 active_engine Active scan 48: 54.0% - Loading enhanced discovery results from passive scan
+INFO 2025-12-04 17:06:33,796 active_engine Loaded 0 URLs from passive enhanced discovery
+INFO 2025-12-04 17:06:33,809 active_engine Active scan 48: 56.2% - Running enhanced discovery with multiple security tools
+INFO 2025-12-04 17:06:33,809 enhanced_discovery Starting enhanced discovery with multiple tools...
+INFO 2025-12-04 17:06:33,810 enhanced_discovery Starting comprehensive discovery...
+INFO 2025-12-04 17:06:33,810 enhanced_discovery Analyzing for API endpoints...
+INFO 2025-12-04 17:06:44,708 enhanced_discovery Analyzing discovered URLs for forms...
+INFO 2025-12-04 17:06:44,709 enhanced_discovery Discovery completed: 0 URLs, 0 forms, 0 API endpoints
+ERROR 2025-12-04 17:06:44,712 zap_active_adapter ZAP API request failed for spider/view/results: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/view/results/?apikey=changeme123
+INFO 2025-12-04 17:06:44,714 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-12-04 17:06:44,714 enhanced_discovery Enhanced discovery completed: {}
+INFO 2025-12-04 17:06:44,729 active_engine Active scan 48: 58.5% - Integrating passive discovery results with ZAP
+INFO 2025-12-04 17:06:44,744 active_engine Active scan 48: 60.8% - Running ZAP traditional spider
+INFO 2025-12-04 17:06:44,744 zap_active_adapter Starting advanced spider scan
+INFO 2025-12-04 17:06:44,755 zap_active_adapter Spider started with ID: 0
+INFO 2025-12-04 17:07:01,742 unified_engine ⛔ Stopping scan 48 - User requested stop
+INFO 2025-12-04 17:07:01,742 unified_engine 🔴 STEP 1: Marking scan as 'stopping' in database...
+INFO 2025-12-04 17:07:01,751 unified_engine ✅ Scan 48 marked as 'stopping' in database
+INFO 2025-12-04 17:07:01,751 unified_engine 🔴 STEP 2: Waiting for monitoring loops to detect stop event...
+INFO 2025-12-04 17:07:03,752 unified_engine 🔴 STEP 3: Aggressively stopping ZAP (AJAX spider, traditional spider, active scan)...
+INFO 2025-12-04 17:07:03,753 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:07:03,753 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:07:03,753 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:07:03,753 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:04,776 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:04,776 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:04,777 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:07:06,782 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:07:06,782 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:07:06,785 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:07:06,785 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:07:06,785 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:06,799 zap_active_adapter Spider scan completed
+INFO 2025-12-04 17:07:06,804 zap_active_adapter Spider attack surface extraction: 0 URLs, 0 forms, 0 parameters
+INFO 2025-12-04 17:07:06,804 zap_active_adapter Spider completed. Found 0 URLs
+INFO 2025-12-04 17:07:06,820 active_engine Active scan 48: 63.0% - Running ZAP AJAX spider for modern web apps
+INFO 2025-12-04 17:07:06,820 zap_active_adapter Starting AJAX spider scan
+INFO 2025-12-04 17:07:06,832 zap_active_adapter AJAX spider started (max duration: 600s)
+INFO 2025-12-04 17:07:06,832 zap_active_adapter Monitoring AJAX spider (timeout: 660s)
+INFO 2025-12-04 17:07:07,797 zap_active_adapter Attempt 1/10: AJAX spider status = 'running'
+WARNING 2025-12-04 17:07:07,797 zap_active_adapter ⚠️ AJAX spider still running with status: running, retrying...
+INFO 2025-12-04 17:07:08,809 zap_active_adapter Attempt 2/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:08,809 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 2)
+INFO 2025-12-04 17:07:08,809 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:07:08,809 unified_engine ✅ ZAP scans stopped successfully
+INFO 2025-12-04 17:07:08,809 unified_engine 🔴 STEP 4: Stopping all registered adapters...
+INFO 2025-12-04 17:07:08,809 unified_engine 🔴 STEP 5: Stopping ZAP again as extra precaution...
+INFO 2025-12-04 17:07:08,810 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:07:08,810 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:07:08,810 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:07:08,810 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:08,840 zap_active_adapter AJAX spider completed normally
+INFO 2025-12-04 17:07:08,840 zap_active_adapter Stopping AJAX spider...
+INFO 2025-12-04 17:07:08,840 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:09,823 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:09,823 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:09,824 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:07:09,826 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:07:09,826 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:07:09,829 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:07:09,829 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:07:09,829 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:09,857 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:09,857 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:10,029 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-12-04 17:07:10,029 zap_active_adapter AJAX spider completed. Found 0 additional URLs
+INFO 2025-12-04 17:07:10,029 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:10,840 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:10,840 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:10,840 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:07:10,840 unified_engine ✅ ZAP scans stopped again (fresh instance)
+INFO 2025-12-04 17:07:10,840 unified_engine 🔴 STEP 6: Attempting Docker-level stop as last resort...
+INFO 2025-12-04 17:07:10,840 unified_engine Attempting to kill AJAX spider browser processes in ZAP container...
+INFO 2025-12-04 17:07:10,854 unified_engine Sent kill signal to firefox processes
+INFO 2025-12-04 17:07:10,866 unified_engine Sent kill signal to chrome processes
+INFO 2025-12-04 17:07:10,866 unified_engine ✅ Docker-level stop completed
+INFO 2025-12-04 17:07:10,867 unified_engine 🔴 STEP 7: Verifying ZAP stopped and updating scan status...
+INFO 2025-12-04 17:07:10,868 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:07:10,873 unified_engine ✅ Verified: All ZAP scans stopped
+INFO 2025-12-04 17:07:10,888 unified_engine ✅ Scan 48 marked as stopped in database
+INFO 2025-12-04 17:07:10,888 unified_engine 🔴 STEP 8: Unregistering scan from tracker...
+INFO 2025-12-04 17:07:10,888 scan_tracker Unregistered scan 48 from tracker
+INFO 2025-12-04 17:07:10,888 unified_engine ✅ Scan 48 unregistered from tracker
+INFO 2025-12-04 17:07:10,888 unified_engine ✅✅✅ Scan 48 stopped successfully - All 8 steps completed
+INFO 2025-12-04 17:07:10,888 unified_engine Cleaned up resources for scan 48
+INFO 2025-12-04 17:07:10,889 scan_tracker Initiated stop for scan 48, engine will unregister after verification
+WARNING 2025-12-04 17:07:10,925 views Failed to restart ZAP via Docker SDK: 404 Client Error for http+docker://localhost/v1.52/containers/security_scanner_zap/json: Not Found ("No such container: security_scanner_zap")
+INFO 2025-12-04 17:07:10,925 views Attempting to restart ZAP via shell script fallback...
+ERROR 2025-12-04 17:07:10,936 views Failed to restart ZAP via shell command: Command '['docker', 'restart', 'security_scanner_zap']' returned non-zero exit status 1.
+ERROR 2025-12-04 17:07:10,936 views CRITICAL: Failed to restart ZAP container by all methods. Future scans may fail.
+INFO 2025-12-04 17:07:11,049 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:11,049 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:11,064 active_engine Active scan 48: 65.2% - Enhanced discovery completed: 0 URLs, 0 forms, 0 API endpoints found
+INFO 2025-12-04 17:07:11,064 active_engine Enhanced discovery summary: {'total_urls': 0, 'total_endpoints': 0, 'total_forms': 0, 'total_subdomains': 0, 'total_technologies': 0, 'tools_used': [], 'discovery_time': 1764868004.7090878}
+INFO 2025-12-04 17:07:11,064 active_engine Passive discovery integration: 0 URLs loaded
+INFO 2025-12-04 17:07:11,080 active_engine Active scan 48: 65.2% - Starting active vulnerability testing
+INFO 2025-12-04 17:07:11,080 active_engine Starting active vulnerability testing phase
+INFO 2025-12-04 17:07:11,080 active_engine Extracted 0 total valid URLs for comprehensive vulnerability testing
+INFO 2025-12-04 17:07:11,080 active_engine No external URLs discovered, testing target URL only
+INFO 2025-12-04 17:07:11,080 zap_active_adapter Starting comprehensive active vulnerability scan
+INFO 2025-12-04 17:07:11,080 zap_active_adapter Enabling 20 ZAP scanners: 40018,40019,40020,40021,40022,40024,40027,40012,40014,40016,40017,40026,90020,90037,90019,90035,90036,90019,90017,90029
+INFO 2025-12-04 17:07:11,094 zap_active_adapter ✅ Successfully enabled ZAP vulnerability scanners
+INFO 2025-12-04 17:07:11,094 zap_active_adapter Disabling 2 ZAP scanners: 6,7
+INFO 2025-12-04 17:07:11,229 zap_active_adapter ✅ Configured SQL injection scanners with HIGH attack strength and LOW threshold
+INFO 2025-12-04 17:07:11,229 zap_active_adapter No discovered URLs provided, scanning target URL only
+INFO 2025-12-04 17:07:11,229 zap_active_adapter Starting standard active scan
+INFO 2025-12-04 17:07:11,244 zap_active_adapter Active scan started with ID: 0
+INFO 2025-12-04 17:07:11,268 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:14,287 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:17,665 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:20,685 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:23,718 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:26,738 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:29,759 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:32,787 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:35,503 views ScanConfiguration create called with data: {'project': '35', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-04 17:07:35,507 views Creating scan configuration with data: {'project': '35', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-04 17:07:35,518 views Scan configuration created successfully: 49
+INFO 2025-12-04 17:07:35,529 views Creating scan with data: {'configuration': 49}
+INFO 2025-12-04 17:07:35,529 views Config ID from request: 49 (type: <class 'int'>)
+INFO 2025-12-04 17:07:35,530 views Converted config ID: 49
+INFO 2025-12-04 17:07:35,542 views Starting scan engine for scan 49
+INFO 2025-12-04 17:07:35,551 scan_tracker Registered scan 49 in tracker
+INFO 2025-12-04 17:07:35,552 views Scan 49 started asynchronously
+INFO 2025-12-04 17:07:35,552 views Attempting to return scan data for scan 49
+INFO 2025-12-04 17:07:35,552 views Using existing scan object, status: running
+INFO 2025-12-04 17:07:35,552 views Preparing full scan response for scan 49
+INFO 2025-12-04 17:07:35,553 views Full scan response prepared for scan 49
+INFO 2025-12-04 17:07:35,555 unified_engine Starting active scan with passive reconnaissance for scan ID: 49
+INFO 2025-12-04 17:07:35,580 unified_engine Scan 49: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-12-04 17:07:35,594 unified_engine Scan 49: 10.0% - Running passive reconnaissance phase
+INFO 2025-12-04 17:07:35,606 scanner Scan 49: 5.0% - Starting passive reconnaissance
+INFO 2025-12-04 17:07:35,623 unified_engine Scan 49: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-12-04 17:07:35,811 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:36,123 scanner Scan 49: 15.0% - Analyzing target URL
+INFO 2025-12-04 17:07:36,141 unified_engine Scan 49: 15.2% - Passive: Analyzing target URL
+INFO 2025-12-04 17:07:36,142 scanner Target analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:07:36,442 scanner Scan 49: 25.0% - Performing DNS analysis
+INFO 2025-12-04 17:07:36,459 unified_engine Scan 49: 18.8% - Passive: Performing DNS analysis
+INFO 2025-12-04 17:07:38,831 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:39,445 scanner DNS analysis completed for www.pakwheels.com
+INFO 2025-12-04 17:07:39,946 scanner Scan 49: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-12-04 17:07:39,962 unified_engine Scan 49: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-12-04 17:07:41,231 scanner SSL analysis completed for www.pakwheels.com
+INFO 2025-12-04 17:07:41,632 scanner Scan 49: 55.0% - Detecting technologies
+INFO 2025-12-04 17:07:41,649 unified_engine Scan 49: 29.2% - Passive: Detecting technologies
+INFO 2025-12-04 17:07:41,699 unified_engine ⛔ Stopping scan 49 - User requested stop
+INFO 2025-12-04 17:07:41,699 unified_engine 🔴 STEP 1: Marking scan as 'stopping' in database...
+INFO 2025-12-04 17:07:41,708 unified_engine ✅ Scan 49 marked as 'stopping' in database
+INFO 2025-12-04 17:07:41,709 unified_engine 🔴 STEP 2: Waiting for monitoring loops to detect stop event...
+INFO 2025-12-04 17:07:41,835 zap_active_adapter Active vulnerability scan progress: 0% (running for 31s)
+INFO 2025-12-04 17:07:41,854 active_engine Active scan 48: 65.2% - ZAP active scan: 0%
+INFO 2025-12-04 17:07:43,494 scanner Technology detection completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:07:43,709 unified_engine 🔴 STEP 3: Aggressively stopping ZAP (AJAX spider, traditional spider, active scan)...
+INFO 2025-12-04 17:07:43,709 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:07:43,710 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:07:43,710 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:07:43,710 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:43,895 scanner Scan 49: 70.0% - Analyzing security headers
+INFO 2025-12-04 17:07:44,723 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:44,723 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:44,723 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:07:44,726 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:07:44,726 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:07:44,732 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:07:44,732 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:07:44,732 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:44,874 active_engine Active scan 48: 78.8% - ZAP active scan: 100%
+INFO 2025-12-04 17:07:44,874 zap_active_adapter Active scan completed
+INFO 2025-12-04 17:07:45,757 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:45,760 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:45,760 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:07:45,761 unified_engine ✅ ZAP scans stopped successfully
+INFO 2025-12-04 17:07:45,762 unified_engine 🔴 STEP 4: Stopping all registered adapters...
+INFO 2025-12-04 17:07:45,762 unified_engine 🔴 STEP 5: Stopping ZAP again as extra precaution...
+INFO 2025-12-04 17:07:45,770 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:07:45,770 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:07:45,770 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:07:45,770 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:46,304 zap_active_adapter Extracted 1338 vulnerabilities from ZAP
+INFO 2025-12-04 17:07:46,306 zap_active_adapter Active vulnerability scan completed
+INFO 2025-12-04 17:07:46,327 active_engine Active scan 48: 78.8% - Extracting and processing vulnerabilities
+INFO 2025-12-04 17:07:46,839 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:46,840 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:46,840 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:07:46,844 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:07:46,844 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:07:46,849 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:07:46,850 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:07:46,850 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:07:47,051 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-12-04 17:07:47,056 zap_adapter ZAP response status code: 200
+INFO 2025-12-04 17:07:47,056 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-12-04 17:07:47,982 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:07:47,982 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:07:47,983 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:07:47,983 unified_engine ✅ ZAP scans stopped again (fresh instance)
+INFO 2025-12-04 17:07:47,987 unified_engine 🔴 STEP 6: Attempting Docker-level stop as last resort...
+INFO 2025-12-04 17:07:47,988 unified_engine Attempting to kill AJAX spider browser processes in ZAP container...
+INFO 2025-12-04 17:07:48,075 unified_engine Sent kill signal to firefox processes
+INFO 2025-12-04 17:07:48,095 unified_engine Sent kill signal to chrome processes
+INFO 2025-12-04 17:07:48,095 unified_engine ✅ Docker-level stop completed
+INFO 2025-12-04 17:07:48,095 unified_engine 🔴 STEP 7: Verifying ZAP stopped and updating scan status...
+INFO 2025-12-04 17:07:48,096 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:07:48,111 unified_engine ✅ Verified: All ZAP scans stopped
+INFO 2025-12-04 17:07:48,140 unified_engine ✅ Scan 49 marked as stopped in database
+INFO 2025-12-04 17:07:48,140 unified_engine 🔴 STEP 8: Unregistering scan from tracker...
+INFO 2025-12-04 17:07:48,140 scan_tracker Unregistered scan 49 from tracker
+INFO 2025-12-04 17:07:48,141 unified_engine ✅ Scan 49 unregistered from tracker
+INFO 2025-12-04 17:07:48,141 unified_engine ✅✅✅ Scan 49 stopped successfully - All 8 steps completed
+INFO 2025-12-04 17:07:48,141 unified_engine Cleaned up resources for scan 49
+INFO 2025-12-04 17:07:48,142 scan_tracker Initiated stop for scan 49, engine will unregister after verification
+WARNING 2025-12-04 17:07:48,166 views Failed to restart ZAP via Docker SDK: 404 Client Error for http+docker://localhost/v1.52/containers/security_scanner_zap/json: Not Found ("No such container: security_scanner_zap")
+INFO 2025-12-04 17:07:48,172 views Attempting to restart ZAP via shell script fallback...
+ERROR 2025-12-04 17:07:48,217 views Failed to restart ZAP via shell command: Command '['docker', 'restart', 'security_scanner_zap']' returned non-zero exit status 1.
+ERROR 2025-12-04 17:07:48,229 views CRITICAL: Failed to restart ZAP container by all methods. Future scans may fail.
+INFO 2025-12-04 17:07:48,279 zap_active_adapter Extracted 1338 vulnerabilities from ZAP
+INFO 2025-12-04 17:07:48,330 active_engine Active scan 48: 81.0% - Generating scan statistics
+INFO 2025-12-04 17:07:48,824 active_engine Vulnerability testing completed: 1338 vulnerabilities found
+WARNING 2025-12-04 17:07:48,825 active_engine Progress would decrease from 81.0% to 74.25%, keeping current progress
+INFO 2025-12-04 17:07:48,843 active_engine Active scan 48: 81.0% - Running SQL injection tests
+INFO 2025-12-04 17:07:48,843 active_engine Starting SQL injection testing phase
+WARNING 2025-12-04 17:07:48,843 active_engine No URLs discovered, using target URL as fallback for SQL injection testing
+INFO 2025-12-04 17:07:48,843 active_engine Extracted 1 unique URLs from discovery results
+WARNING 2025-12-04 17:07:48,843 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-12-04 17:07:48,844 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-12-04 17:07:48,857 active_engine Testing 1 URLs with SQLMap (filtered for parameters)
+INFO 2025-12-04 17:07:48,858 active_engine Testing 1/1: https://www.pakwheels.com/ with SQLMap
+INFO 2025-12-04 17:07:48,858 active_engine Completed SQLMap test for https://www.pakwheels.com/ - found 1 findings
+INFO 2025-12-04 17:07:48,858 active_engine SQLMap testing completed. Found 1 findings
+INFO 2025-12-04 17:07:48,858 active_engine SQL injection testing phase completed. Found 0 vulnerabilities
+INFO 2025-12-04 17:07:48,876 active_engine Active scan 48: 81.0% - Processing and saving results
+WARNING 2025-12-04 17:07:48,876 active_engine No URLs discovered, using target URL as fallback for SQL injection testing
+INFO 2025-12-04 17:07:48,876 active_engine Extracted 1 unique URLs from discovery results
+WARNING 2025-12-04 17:07:48,876 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-12-04 17:07:48,876 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-12-04 17:07:56,970 scanner ZAP found 181 header-related issues
+INFO 2025-12-04 17:07:56,975 scanner Headers analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:07:57,301 scanner Scan 49: 85.0% - Analyzing content for information disclosure
+INFO 2025-12-04 17:08:00,319 scanner Content analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:08:01,512 scanner Scan 49: 95.0% - Analyzing cookies
+INFO 2025-12-04 17:08:07,013 scanner Cookie analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:08:07,392 scanner Scan 49: 98.0% - Running enhanced discovery
+INFO 2025-12-04 17:08:07,393 scanner Starting enhanced discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:08:07,393 enhanced_discovery_adapter Starting comprehensive discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:08:07,393 enhanced_discovery_adapter Starting subdomain discovery for www.pakwheels.com
+ERROR 2025-12-04 17:08:07,546 enhanced_discovery_adapter Subdomain discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-12-04 17:08:07,582 enhanced_discovery_adapter Starting wayback URL discovery for www.pakwheels.com
+ERROR 2025-12-04 17:08:07,738 enhanced_discovery_adapter Wayback URL discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-04 17:08:07,738 enhanced_discovery_adapter Starting directory discovery for https://www.pakwheels.com/
+ERROR 2025-12-04 17:08:07,762 enhanced_discovery_adapter Directory discovery failed for https://www.pakwheels.com/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-12-04 17:08:07,762 enhanced_discovery_adapter Starting API endpoint discovery for https://www.pakwheels.com/
+WARNING 2025-12-04 17:09:40,930 active_engine No URLs discovered, using target URL as fallback for SQL injection testing
+INFO 2025-12-04 17:09:40,931 active_engine Extracted 1 unique URLs from discovery results
+WARNING 2025-12-04 17:09:40,931 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-12-04 17:09:40,931 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-12-04 17:09:40,946 active_engine Active scan results saved successfully: {'discovery_urls': 1, 'discovery_forms': 0, 'vulnerabilities_saved': 796, 'spider_success': True, 'ajax_spider_success': True, 'active_scan_success': True}
+INFO 2025-12-04 17:09:40,946 active_engine Stopping all ZAP scans before marking scan as complete...
+INFO 2025-12-04 17:09:40,946 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:09:40,947 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:09:40,947 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:09:41,993 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:09:41,993 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:09:41,993 zap_active_adapter 🔴 STEP 2: Stopping traditional spider (ID: 0)
+INFO 2025-12-04 17:09:41,998 zap_active_adapter ✅ Traditional spider 0 stop command sent
+INFO 2025-12-04 17:09:41,998 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:09:42,003 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:09:42,003 zap_active_adapter 🔴 STEP 4: Stopping active scan (ID: 0)
+INFO 2025-12-04 17:09:42,011 zap_active_adapter ✅ Active scan 0 stop command sent
+INFO 2025-12-04 17:09:42,011 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:09:42,027 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:09:42,027 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:09:42,027 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:09:43,100 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:09:43,101 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:09:43,101 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:09:43,101 active_engine ZAP scans stopped successfully
+INFO 2025-12-04 17:09:43,135 zap_active_adapter Cleaned up all scan contexts
+INFO 2025-12-04 17:09:43,145 active_engine Active scan 48 completed successfully
+WARNING 2025-12-04 17:09:45,030 active_engine Progress would decrease from 100.0% to 90.0%, keeping current progress
+INFO 2025-12-04 17:09:45,322 active_engine Active scan 48: 100.0% - Active scan completed
+INFO 2025-12-04 17:09:45,329 active_engine Finally block: Ensuring all ZAP scans are stopped...
+INFO 2025-12-04 17:09:45,329 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:09:45,329 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:09:45,329 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:09:46,687 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:09:46,750 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:09:46,750 zap_active_adapter 🔴 STEP 2: Stopping traditional spider (ID: 0)
+INFO 2025-12-04 17:09:46,758 zap_active_adapter ✅ Traditional spider 0 stop command sent
+INFO 2025-12-04 17:09:46,758 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:09:46,761 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:09:46,761 zap_active_adapter 🔴 STEP 4: Stopping active scan (ID: 0)
+INFO 2025-12-04 17:09:46,764 zap_active_adapter ✅ Active scan 0 stop command sent
+INFO 2025-12-04 17:09:46,764 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:09:46,767 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:09:46,767 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:09:46,767 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:09:47,876 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:09:47,883 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:09:47,883 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:09:47,883 active_engine Finally block: ZAP scans stopped successfully
+INFO 2025-12-04 17:09:47,884 scan_logger Stopping Docker log capture...
+INFO 2025-12-04 17:09:53,921 scan_logger Docker log capture stopped for scan 48
+INFO 2025-12-04 17:09:53,943 scan_logger Created log summary: /home/hannan/Web_App_Scanner/backend/logs/scan_48/LOG_SUMMARY.txt
+INFO 2025-12-04 17:09:53,944 active_engine 📊 Scan logs saved: /home/hannan/Web_App_Scanner/backend/logs/scan_48/LOG_SUMMARY.txt
+INFO 2025-12-04 17:09:53,954 scan_logger Saved scan metadata to /home/hannan/Web_App_Scanner/backend/logs/scan_48/scan_metadata.json
+INFO 2025-12-04 17:09:53,955 unified_engine Scan stop requested after active scan completion
+INFO 2025-12-04 17:09:53,955 unified_engine Scan stop requested after active phase
+INFO 2025-12-04 17:09:53,955 unified_engine Finally block: Cleaning up scan 48...
+INFO 2025-12-04 17:09:54,094 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:09:54,105 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:09:54,105 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:09:54,106 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:09:55,743 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:09:55,955 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:09:55,956 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:09:56,062 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:09:56,080 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:09:56,102 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:09:56,102 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:09:56,102 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:09:57,140 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:09:57,142 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:09:57,142 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:09:57,142 unified_engine Finally block: ZAP scans stopped
+INFO 2025-12-04 17:09:57,142 unified_engine Finally block: Scan 48 unregistered from tracker
+INFO 2025-12-04 17:10:03,312 enhanced_discovery_adapter Starting wayback URL discovery for www.pakwheels.com
+ERROR 2025-12-04 17:10:03,383 enhanced_discovery_adapter Wayback URL discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-04 17:10:03,387 enhanced_discovery_adapter Found 0 API endpoints for https://www.pakwheels.com/
+INFO 2025-12-04 17:10:03,399 enhanced_discovery_adapter Comprehensive discovery completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:10:03,400 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 0, 'total_discoveries': 0}
+INFO 2025-12-04 17:10:03,400 scanner Enhanced discovery completed: 0 URLs discovered
+INFO 2025-12-04 17:10:03,400 scanner Enhanced discovery results stored: True
+INFO 2025-12-04 17:10:03,600 scanner Scan 49: 99.0% - Aggregating security findings
+INFO 2025-12-04 17:10:03,602 scanner Vulnerability aggregation completed: 194 findings
+INFO 2025-12-04 17:10:03,803 scanner Scan 49: 100.0% - Passive scan completed
+INFO 2025-12-04 17:10:03,803 unified_engine Scan stop requested after passive scan completion
+INFO 2025-12-04 17:10:03,804 unified_engine Scan stop requested after passive phase
+INFO 2025-12-04 17:10:03,805 unified_engine Finally block: Cleaning up scan 49...
+INFO 2025-12-04 17:10:03,829 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:10:03,830 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:10:03,830 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:10:03,830 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:10:05,086 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:10:05,091 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:10:05,091 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:10:05,123 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:10:05,123 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:10:05,133 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:10:05,133 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:10:05,133 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:10:06,463 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:10:06,467 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:10:06,467 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:10:06,467 unified_engine Finally block: ZAP scans stopped
+INFO 2025-12-04 17:10:06,467 unified_engine Finally block: Scan 49 unregistered from tracker
+INFO 2025-12-04 17:29:42,473 views ScanConfiguration create called with data: {'project': '35', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-04 17:29:42,477 views Creating scan configuration with data: {'project': '35', 'scan_type': 'active', 'min_confidence': 0.7, 'user_agent': '', 'request_timeout': 30, 'use_sslyze': True, 'use_nuclei': True, 'use_wappalyzer': True, 'use_zap_passive': True, 'use_zap_active': True, 'enable_spider': True, 'enable_ajax_spider': True, 'max_spider_depth': 3, 'max_spider_duration': 600, 'zap_attack_strength': 'MEDIUM', 'zap_active_scan_policy': 'Default Policy', 'test_sql_injection': True, 'test_xss': True, 'test_csrf': True, 'test_authentication': True, 'test_authorization': True, 'test_session_management': True, 'test_file_inclusion': False, 'test_path_traversal': False, 'test_command_injection': True, 'test_xxe': True, 'use_sqlmap': True, 'use_nosqlmap': False, 'sqlmap_risk_level': 2, 'sqlmap_level': 2, 'sqlmap_timeout': 300, 'max_concurrent_requests': 5, 'request_delay_ms': 100, 'scan_timeout_minutes': 60, 'use_enhanced_discovery': True, 'discovery_timeout': 30, 'max_subdomains': 100, 'max_wayback_urls': 200, 'max_directories': 50}
+INFO 2025-12-04 17:29:42,489 views Scan configuration created successfully: 50
+INFO 2025-12-04 17:29:42,534 views Creating scan with data: {'configuration': 50}
+INFO 2025-12-04 17:29:42,534 views Config ID from request: 50 (type: <class 'int'>)
+INFO 2025-12-04 17:29:42,534 views Converted config ID: 50
+INFO 2025-12-04 17:29:42,545 views Starting scan engine for scan 50
+INFO 2025-12-04 17:29:42,554 views Scan 50 started asynchronously
+INFO 2025-12-04 17:29:42,554 views Attempting to return scan data for scan 50
+INFO 2025-12-04 17:29:42,554 views Using existing scan object, status: running
+INFO 2025-12-04 17:29:42,554 views Preparing full scan response for scan 50
+INFO 2025-12-04 17:29:42,555 views Full scan response prepared for scan 50
+INFO 2025-12-04 17:29:42,556 scan_tracker Registered scan 50 in tracker
+INFO 2025-12-04 17:29:42,559 unified_engine Starting active scan with passive reconnaissance for scan ID: 50
+INFO 2025-12-04 17:29:42,594 unified_engine Scan 50: 5.0% - Starting active scan with passive reconnaissance
+INFO 2025-12-04 17:29:42,616 unified_engine Scan 50: 10.0% - Running passive reconnaissance phase
+INFO 2025-12-04 17:29:43,132 scanner Scan 50: 5.0% - Starting passive reconnaissance
+INFO 2025-12-04 17:29:43,155 unified_engine Scan 50: 11.8% - Passive: Starting passive reconnaissance
+INFO 2025-12-04 17:29:43,655 scanner Scan 50: 15.0% - Analyzing target URL
+INFO 2025-12-04 17:29:43,674 unified_engine Scan 50: 15.2% - Passive: Analyzing target URL
+INFO 2025-12-04 17:29:43,674 scanner Target analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:29:43,974 scanner Scan 50: 25.0% - Performing DNS analysis
+INFO 2025-12-04 17:29:43,991 unified_engine Scan 50: 18.8% - Passive: Performing DNS analysis
+INFO 2025-12-04 17:29:55,429 scanner DNS analysis completed for www.pakwheels.com
+INFO 2025-12-04 17:29:55,929 scanner Scan 50: 40.0% - Analyzing SSL/TLS configuration
+INFO 2025-12-04 17:29:55,944 unified_engine Scan 50: 24.0% - Passive: Analyzing SSL/TLS configuration
+INFO 2025-12-04 17:29:56,351 scanner SSL analysis completed for www.pakwheels.com
+INFO 2025-12-04 17:29:56,751 scanner Scan 50: 55.0% - Detecting technologies
+INFO 2025-12-04 17:29:56,767 unified_engine Scan 50: 29.2% - Passive: Detecting technologies
+INFO 2025-12-04 17:29:58,960 scanner Technology detection completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:29:59,362 scanner Scan 50: 70.0% - Analyzing security headers
+INFO 2025-12-04 17:29:59,380 unified_engine Scan 50: 34.5% - Passive: Analyzing security headers
+INFO 2025-12-04 17:30:01,164 zap_adapter Attempting to connect to ZAP at: http://localhost:8080/JSON/core/view/version/?apikey=changeme123
+INFO 2025-12-04 17:30:01,172 zap_adapter ZAP response status code: 200
+INFO 2025-12-04 17:30:01,173 zap_adapter ZAP connection successful: version 2.16.1
+INFO 2025-12-04 17:30:09,431 scanner ZAP found 2 header-related issues
+INFO 2025-12-04 17:30:09,432 scanner Headers analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:09,733 scanner Scan 50: 85.0% - Analyzing content for information disclosure
+INFO 2025-12-04 17:30:09,749 unified_engine Scan 50: 39.8% - Passive: Analyzing content for information disclosure
+INFO 2025-12-04 17:30:12,362 scanner Content analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:12,763 scanner Scan 50: 95.0% - Analyzing cookies
+INFO 2025-12-04 17:30:12,781 unified_engine Scan 50: 43.2% - Passive: Analyzing cookies
+INFO 2025-12-04 17:30:14,458 scanner Cookie analysis completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:14,759 scanner Scan 50: 98.0% - Running enhanced discovery
+INFO 2025-12-04 17:30:14,775 unified_engine Scan 50: 44.3% - Passive: Running enhanced discovery
+INFO 2025-12-04 17:30:14,775 scanner Starting enhanced discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:14,776 enhanced_discovery_adapter Starting comprehensive discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:14,776 enhanced_discovery_adapter Starting subdomain discovery for www.pakwheels.com
+ERROR 2025-12-04 17:30:14,776 enhanced_discovery_adapter Subdomain discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'subfinder'
+INFO 2025-12-04 17:30:14,776 enhanced_discovery_adapter Starting wayback URL discovery for www.pakwheels.com
+ERROR 2025-12-04 17:30:14,777 enhanced_discovery_adapter Wayback URL discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-04 17:30:14,777 enhanced_discovery_adapter Starting directory discovery for https://www.pakwheels.com/
+ERROR 2025-12-04 17:30:14,777 enhanced_discovery_adapter Directory discovery failed for https://www.pakwheels.com/: [Errno 2] No such file or directory: 'feroxbuster'
+INFO 2025-12-04 17:30:14,777 enhanced_discovery_adapter Starting API endpoint discovery for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:53,228 enhanced_discovery_adapter Starting wayback URL discovery for www.pakwheels.com
+ERROR 2025-12-04 17:30:53,229 enhanced_discovery_adapter Wayback URL discovery failed for www.pakwheels.com: [Errno 2] No such file or directory: 'waybackurls'
+INFO 2025-12-04 17:30:53,230 enhanced_discovery_adapter Found 0 API endpoints for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:53,231 enhanced_discovery_adapter Comprehensive discovery completed for https://www.pakwheels.com/
+INFO 2025-12-04 17:30:53,232 enhanced_discovery_adapter Summary: {'subdomains_found': 0, 'wayback_urls_found': 0, 'directories_found': 0, 'api_endpoints_found': 0, 'total_discoveries': 0}
+INFO 2025-12-04 17:30:53,232 scanner Enhanced discovery completed: 0 URLs discovered
+INFO 2025-12-04 17:30:53,232 scanner Enhanced discovery results stored: True
+INFO 2025-12-04 17:30:53,432 scanner Scan 50: 99.0% - Aggregating security findings
+INFO 2025-12-04 17:30:53,447 unified_engine Scan 50: 44.6% - Passive: Aggregating security findings
+INFO 2025-12-04 17:30:53,448 scanner Vulnerability aggregation completed: 15 findings
+INFO 2025-12-04 17:30:53,648 scanner Scan 50: 100.0% - Passive scan completed
+INFO 2025-12-04 17:30:53,662 unified_engine Scan 50: 45.0% - Passive: Passive scan completed
+INFO 2025-12-04 17:30:53,664 unified_engine Saving passive results with keys: ['target_info', 'dns_analysis', 'ssl_analysis', 'technology_detection', 'security_headers', 'content_analysis', 'cookie_analysis', 'enhanced_discovery', 'vulnerabilities', 'vulnerability_summary']
+INFO 2025-12-04 17:30:53,664 unified_engine Enhanced discovery in results: True
+INFO 2025-12-04 17:30:53,672 unified_engine Passive results saved successfully. Enhanced discovery: True
+INFO 2025-12-04 17:30:53,673 url_discovery_logger URL discoveries logged to /home/hannan/Web_App_Scanner/backend/logs/scan_50/url_discoveries_passive_20251204_173053.json - 0 URLs discovered
+INFO 2025-12-04 17:30:53,673 url_discovery_logger URL list saved to /home/hannan/Web_App_Scanner/backend/logs/scan_50/discovered_urls_passive_20251204_173053.txt
+INFO 2025-12-04 17:30:53,673 unified_engine URL discoveries logged to files for passive scan
+INFO 2025-12-04 17:30:53,706 unified_engine Saved 3 new passive vulnerabilities (12 already existed)
+INFO 2025-12-04 17:30:53,722 unified_engine Scan 50: 45.0% - Running active vulnerability testing phase
+INFO 2025-12-04 17:30:53,722 unified_engine Starting enhanced active phase with passive discovery integration (Range: (45.0, 90.0))
+INFO 2025-12-04 17:30:53,726 scan_logger Initialized scan logger for scan 50 at /home/hannan/Web_App_Scanner/backend/logs/scan_50
+INFO 2025-12-04 17:30:53,739 scan_logger Found 2 Docker containers to monitor: ['docker-containers-discovery-tools-1', 'docker-containers-zap-1']
+INFO 2025-12-04 17:30:53,740 scan_logger Started Docker log capture for: docker-containers-discovery-tools-1
+INFO 2025-12-04 17:30:53,740 scan_logger Started Docker log capture for: docker-containers-zap-1
+INFO 2025-12-04 17:30:53,740 active_engine 🔍 Started Docker log capture for scan 50
+INFO 2025-12-04 17:30:53,743 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:31:41,317 enhanced_discovery Enhanced discovery initialized for https://www.pakwheels.com/
+INFO 2025-12-04 17:31:41,317 enhanced_discovery Available tools: ['subfinder']
+INFO 2025-12-04 17:31:41,322 zap_active_adapter Found 0 existing contexts
+INFO 2025-12-04 17:31:41,943 zap_active_adapter Created new ZAP session: scan_50_1764869501
+ERROR 2025-12-04 17:31:41,972 zap_active_adapter ZAP API request failed for core/action/clearSiteTree: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearSiteTree/?apikey=changeme123
+ERROR 2025-12-04 17:31:41,986 zap_active_adapter ZAP API request failed for core/action/clearStats: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/core/action/clearStats/?apikey=changeme123
+INFO 2025-12-04 17:31:42,001 zap_active_adapter ✅ Reset ZAP state with session: scan_50_1764869501
+INFO 2025-12-04 17:31:42,025 active_engine Active scan 50: 47.2% - Initializing active scan
+INFO 2025-12-04 17:31:42,041 active_engine Active scan 50: 49.5% - Validating target and ZAP connection
+INFO 2025-12-04 17:31:42,044 zap_active_adapter ZAP connection successful at http://localhost:8080
+WARNING 2025-12-04 17:31:43,564 active_engine Target returned status 403, but continuing scan
+INFO 2025-12-04 17:31:43,564 active_engine Prerequisites validation completed successfully
+INFO 2025-12-04 17:31:43,580 active_engine Active scan 50: 54.0% - Starting discovery phase
+INFO 2025-12-04 17:31:43,580 active_engine Starting enhanced discovery phase with passive discovery integration
+INFO 2025-12-04 17:31:43,595 active_engine Active scan 50: 54.0% - Loading enhanced discovery results from passive scan
+INFO 2025-12-04 17:31:43,596 active_engine Loaded 0 URLs from passive enhanced discovery
+INFO 2025-12-04 17:31:43,611 active_engine Active scan 50: 56.2% - Running enhanced discovery with multiple security tools
+INFO 2025-12-04 17:31:43,611 enhanced_discovery Starting enhanced discovery with multiple tools...
+INFO 2025-12-04 17:31:43,611 enhanced_discovery Starting comprehensive discovery...
+INFO 2025-12-04 17:31:43,611 enhanced_discovery Discovering subdomains with subfinder...
+INFO 2025-12-04 17:31:43,612 enhanced_discovery Using Docker subfinder
+INFO 2025-12-04 17:31:51,166 enhanced_discovery Docker subfinder produced no output; ensure Docker can access the network and image is present
+INFO 2025-12-04 17:31:51,166 enhanced_discovery Found 0 subdomains
+INFO 2025-12-04 17:31:51,166 enhanced_discovery Analyzing for API endpoints...
+INFO 2025-12-04 17:32:02,199 enhanced_discovery Analyzing discovered URLs for forms...
+INFO 2025-12-04 17:32:02,200 enhanced_discovery Discovery completed: 0 URLs, 0 forms, 0 API endpoints
+ERROR 2025-12-04 17:32:02,204 zap_active_adapter ZAP API request failed for spider/view/results: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/view/results/?apikey=changeme123
+INFO 2025-12-04 17:32:02,209 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-12-04 17:32:02,209 enhanced_discovery Enhanced discovery completed: {}
+INFO 2025-12-04 17:32:02,225 active_engine Active scan 50: 58.5% - Integrating passive discovery results with ZAP
+INFO 2025-12-04 17:32:02,240 active_engine Active scan 50: 60.8% - Running ZAP traditional spider
+INFO 2025-12-04 17:32:02,240 zap_active_adapter Starting advanced spider scan
+INFO 2025-12-04 17:32:02,260 zap_active_adapter Spider started with ID: 0
+INFO 2025-12-04 17:32:39,164 unified_engine ⛔ Stopping scan 50 - User requested stop
+INFO 2025-12-04 17:32:39,164 unified_engine 🔴 STEP 1: Marking scan as 'stopping' in database...
+INFO 2025-12-04 17:32:39,175 unified_engine ✅ Scan 50 marked as 'stopping' in database
+INFO 2025-12-04 17:32:39,176 unified_engine 🔴 STEP 2: Waiting for monitoring loops to detect stop event...
+INFO 2025-12-04 17:32:41,176 unified_engine 🔴 STEP 3: Aggressively stopping ZAP (AJAX spider, traditional spider, active scan)...
+INFO 2025-12-04 17:32:41,182 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:32:41,182 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:32:41,182 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:32:41,182 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:42,222 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:42,222 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:32:42,222 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:32:44,235 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:32:44,235 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:32:44,239 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:32:44,239 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:32:44,239 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:44,424 zap_active_adapter Spider scan completed
+INFO 2025-12-04 17:32:44,460 zap_active_adapter Spider attack surface extraction: 0 URLs, 0 forms, 0 parameters
+INFO 2025-12-04 17:32:44,460 zap_active_adapter Spider completed. Found 0 URLs
+INFO 2025-12-04 17:32:44,475 active_engine Active scan 50: 63.0% - Running ZAP AJAX spider for modern web apps
+INFO 2025-12-04 17:32:44,476 zap_active_adapter Starting AJAX spider scan
+INFO 2025-12-04 17:32:44,490 zap_active_adapter AJAX spider started (max duration: 600s)
+INFO 2025-12-04 17:32:44,490 zap_active_adapter Monitoring AJAX spider (timeout: 660s)
+INFO 2025-12-04 17:32:45,253 zap_active_adapter Attempt 1/10: AJAX spider status = 'running'
+WARNING 2025-12-04 17:32:45,253 zap_active_adapter ⚠️ AJAX spider still running with status: running, retrying...
+INFO 2025-12-04 17:32:46,265 zap_active_adapter Attempt 2/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:46,265 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 2)
+INFO 2025-12-04 17:32:46,265 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:32:46,265 unified_engine ✅ ZAP scans stopped successfully
+INFO 2025-12-04 17:32:46,265 unified_engine 🔴 STEP 4: Stopping all registered adapters...
+INFO 2025-12-04 17:32:46,265 unified_engine 🔴 STEP 5: Stopping ZAP again as extra precaution...
+INFO 2025-12-04 17:32:46,265 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:32:46,266 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:32:46,266 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:32:46,266 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:46,506 zap_active_adapter AJAX spider completed normally
+INFO 2025-12-04 17:32:46,506 zap_active_adapter Stopping AJAX spider...
+INFO 2025-12-04 17:32:46,506 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:47,277 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:47,277 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:32:47,277 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:32:47,281 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:32:47,281 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:32:47,284 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:32:47,284 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:32:47,284 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:47,528 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:47,529 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:32:47,532 zap_active_adapter AJAX spider attack surface: 0 URLs, 0 AJAX requests, 0 JS files
+INFO 2025-12-04 17:32:47,532 zap_active_adapter AJAX spider completed. Found 0 additional URLs
+INFO 2025-12-04 17:32:47,532 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:48,312 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:48,313 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:32:48,313 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:32:48,313 unified_engine ✅ ZAP scans stopped again (fresh instance)
+INFO 2025-12-04 17:32:48,313 unified_engine 🔴 STEP 6: Attempting Docker-level stop as last resort...
+INFO 2025-12-04 17:32:48,473 unified_engine Found ZAP container: docker-containers-zap-1 (ba6a9ff15a95)
+INFO 2025-12-04 17:32:48,474 unified_engine Attempting to kill AJAX spider browser processes in ZAP container...
+INFO 2025-12-04 17:32:48,548 unified_engine Sent kill signal to firefox processes
+INFO 2025-12-04 17:32:48,562 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:48,562 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:32:48,590 active_engine Active scan 50: 65.2% - Enhanced discovery completed: 0 URLs, 0 forms, 0 API endpoints found
+INFO 2025-12-04 17:32:48,591 active_engine Enhanced discovery summary: {'total_urls': 0, 'total_endpoints': 0, 'total_forms': 0, 'total_subdomains': 0, 'total_technologies': 0, 'tools_used': ['subfinder'], 'discovery_time': 1764869522.2001681}
+INFO 2025-12-04 17:32:48,591 active_engine Passive discovery integration: 0 URLs loaded
+INFO 2025-12-04 17:32:48,604 active_engine Active scan 50: 65.2% - Starting active vulnerability testing
+INFO 2025-12-04 17:32:48,604 active_engine Starting active vulnerability testing phase
+INFO 2025-12-04 17:32:48,604 active_engine Extracted 0 total valid URLs for comprehensive vulnerability testing
+INFO 2025-12-04 17:32:48,604 active_engine No external URLs discovered, testing target URL only
+INFO 2025-12-04 17:32:48,604 zap_active_adapter Starting comprehensive active vulnerability scan
+INFO 2025-12-04 17:32:48,604 zap_active_adapter Enabling 20 ZAP scanners: 40018,40019,40020,40021,40022,40024,40027,40012,40014,40016,40017,40026,90020,90037,90019,90035,90036,90019,90017,90029
+INFO 2025-12-04 17:32:48,612 unified_engine ✅ Docker-level stop completed
+INFO 2025-12-04 17:32:48,612 unified_engine 🔴 STEP 7: Verifying ZAP stopped and updating scan status...
+INFO 2025-12-04 17:32:48,612 zap_active_adapter Found working ZAP host: localhost:8080
+ERROR 2025-12-04 17:32:48,946 zap_active_adapter ZAP API request failed for ajaxSpider/view/status: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+ERROR 2025-12-04 17:32:48,946 zap_active_adapter ZAP API request failed for ascan/action/enableScanners: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+WARNING 2025-12-04 17:32:48,948 zap_active_adapter ⚠️ Scanner enablement returned unexpected result: None
+INFO 2025-12-04 17:32:48,948 zap_active_adapter Disabling 2 ZAP scanners: 6,7
+ERROR 2025-12-04 17:32:48,960 zap_active_adapter ZAP API request failed for ascan/view/scans: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,960 zap_active_adapter ZAP API request failed for ascan/action/disableScanners: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:48,960 unified_engine ✅ Verified: All ZAP scans stopped
+ERROR 2025-12-04 17:32:48,962 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,963 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,965 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,966 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,968 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,970 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,972 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,973 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,974 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,976 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,978 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,979 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,981 zap_active_adapter ZAP API request failed for ascan/action/setScannerAttackStrength: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,983 zap_active_adapter ZAP API request failed for ascan/action/setScannerAlertThreshold: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:48,983 zap_active_adapter ✅ Configured SQL injection scanners with HIGH attack strength and LOW threshold
+INFO 2025-12-04 17:32:48,983 zap_active_adapter No discovered URLs provided, scanning target URL only
+INFO 2025-12-04 17:32:48,983 zap_active_adapter Starting standard active scan
+ERROR 2025-12-04 17:32:48,984 zap_active_adapter ZAP API request failed for ascan/action/scan: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:48,984 zap_active_adapter Active vulnerability scan failed: Failed to start active scan
+INFO 2025-12-04 17:32:48,986 unified_engine ✅ Scan 50 marked as stopped in database
+INFO 2025-12-04 17:32:48,986 unified_engine 🔴 STEP 8: Unregistering scan from tracker...
+INFO 2025-12-04 17:32:48,986 scan_tracker Unregistered scan 50 from tracker
+INFO 2025-12-04 17:32:48,986 unified_engine ✅ Scan 50 unregistered from tracker
+INFO 2025-12-04 17:32:48,986 unified_engine ✅✅✅ Scan 50 stopped successfully - All 8 steps completed
+INFO 2025-12-04 17:32:48,986 unified_engine Cleaned up resources for scan 50
+INFO 2025-12-04 17:32:48,986 scan_tracker Initiated stop for scan 50, engine will unregister after verification
+WARNING 2025-12-04 17:32:48,993 views Failed to restart ZAP via Docker SDK: 404 Client Error for http+docker://localhost/v1.52/containers/security_scanner_zap/json: Not Found ("No such container: security_scanner_zap")
+INFO 2025-12-04 17:32:48,993 views Attempting to restart ZAP via shell script fallback...
+INFO 2025-12-04 17:32:49,003 active_engine Active scan 50: 78.8% - Extracting and processing vulnerabilities
+ERROR 2025-12-04 17:32:49,005 zap_active_adapter ZAP API request failed for core/view/alerts: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /JSON/core/view/alerts/?apikey=changeme123 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f309db59370>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 2025-12-04 17:32:49,005 zap_active_adapter Extracted 0 vulnerabilities from ZAP
+ERROR 2025-12-04 17:32:49,011 views Failed to restart ZAP via shell command: Command '['docker', 'restart', 'security_scanner_zap']' returned non-zero exit status 1.
+ERROR 2025-12-04 17:32:49,011 views CRITICAL: Failed to restart ZAP container by all methods. Future scans may fail.
+INFO 2025-12-04 17:32:49,029 active_engine Active scan 50: 81.0% - Generating scan statistics
+ERROR 2025-12-04 17:32:49,038 zap_active_adapter ZAP API request failed for core/view/version: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /JSON/core/view/version/?apikey=changeme123 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f309db59150>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 2025-12-04 17:32:49,038 active_engine Vulnerability testing completed: 0 vulnerabilities found
+INFO 2025-12-04 17:32:49,062 active_engine Active scan 50: 74.2% - Running SQL injection tests
+INFO 2025-12-04 17:32:49,062 active_engine Starting SQL injection testing phase
+WARNING 2025-12-04 17:32:49,062 active_engine No URLs discovered, using target URL as fallback for SQL injection testing
+INFO 2025-12-04 17:32:49,062 active_engine Extracted 1 unique URLs from discovery results
+WARNING 2025-12-04 17:32:49,062 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-12-04 17:32:49,062 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-12-04 17:32:49,066 active_engine Testing 1 URLs with SQLMap (filtered for parameters)
+INFO 2025-12-04 17:32:49,066 active_engine Testing 1/1: https://www.pakwheels.com/ with SQLMap
+INFO 2025-12-04 17:32:49,066 active_engine Completed SQLMap test for https://www.pakwheels.com/ - found 1 findings
+INFO 2025-12-04 17:32:49,066 active_engine SQLMap testing completed. Found 1 findings
+INFO 2025-12-04 17:32:49,066 active_engine SQL injection testing phase completed. Found 0 vulnerabilities
+INFO 2025-12-04 17:32:49,080 active_engine Active scan 50: 81.0% - Processing and saving results
+WARNING 2025-12-04 17:32:49,080 active_engine No URLs discovered, using target URL as fallback for SQL injection testing
+INFO 2025-12-04 17:32:49,080 active_engine Extracted 1 unique URLs from discovery results
+WARNING 2025-12-04 17:32:49,080 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-12-04 17:32:49,080 active_engine Extracted 0 unique forms from discovery results
+WARNING 2025-12-04 17:32:49,087 active_engine No URLs discovered, using target URL as fallback for SQL injection testing
+INFO 2025-12-04 17:32:49,087 active_engine Extracted 1 unique URLs from discovery results
+WARNING 2025-12-04 17:32:49,087 active_engine ZAP adapter does not have _get_comprehensive_forms method
+INFO 2025-12-04 17:32:49,087 active_engine Extracted 0 unique forms from discovery results
+INFO 2025-12-04 17:32:49,092 active_engine Active scan results saved successfully: {'discovery_urls': 1, 'discovery_forms': 0, 'vulnerabilities_saved': 0, 'spider_success': True, 'ajax_spider_success': True, 'active_scan_success': True}
+INFO 2025-12-04 17:32:49,092 active_engine Stopping all ZAP scans before marking scan as complete...
+INFO 2025-12-04 17:32:49,092 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:32:49,092 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:32:49,092 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+ERROR 2025-12-04 17:32:49,093 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /JSON/ajaxSpider/action/stop/?apikey=changeme123 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f309f36caf0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+ERROR 2025-12-04 17:32:49,094 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /JSON/ajaxSpider/action/stop/?apikey=changeme123 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f309db587c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+ERROR 2025-12-04 17:32:49,095 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /JSON/ajaxSpider/action/stop/?apikey=changeme123 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f309db586b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+ERROR 2025-12-04 17:32:50,098 zap_active_adapter ZAP API request failed for ajaxSpider/view/status: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:50,098 zap_active_adapter Attempt 1/10: AJAX spider status = 'unknown'
+WARNING 2025-12-04 17:32:50,098 zap_active_adapter ⚠️ AJAX spider still running with status: unknown, retrying...
+ERROR 2025-12-04 17:32:50,100 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:50,102 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:50,103 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+ERROR 2025-12-04 17:32:51,105 zap_active_adapter ZAP API request failed for ajaxSpider/view/status: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:51,105 zap_active_adapter Attempt 2/10: AJAX spider status = 'unknown'
+WARNING 2025-12-04 17:32:51,105 zap_active_adapter ⚠️ AJAX spider still running with status: unknown, retrying...
+ERROR 2025-12-04 17:32:51,107 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:51,108 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:51,110 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:52,112 zap_active_adapter ZAP API request failed for ajaxSpider/view/status: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:52,112 zap_active_adapter Attempt 3/10: AJAX spider status = 'unknown'
+WARNING 2025-12-04 17:32:52,112 zap_active_adapter ⚠️ AJAX spider still running with status: unknown, retrying...
+ERROR 2025-12-04 17:32:52,114 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:52,116 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:52,117 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:53,119 zap_active_adapter ZAP API request failed for ajaxSpider/view/status: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:53,119 zap_active_adapter Attempt 4/10: AJAX spider status = 'unknown'
+WARNING 2025-12-04 17:32:53,120 zap_active_adapter ⚠️ AJAX spider still running with status: unknown, retrying...
+ERROR 2025-12-04 17:32:53,121 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+ERROR 2025-12-04 17:32:53,125 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+ERROR 2025-12-04 17:32:53,128 zap_active_adapter ZAP API request failed for ajaxSpider/action/stop: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+INFO 2025-12-04 17:32:54,168 zap_active_adapter Attempt 5/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:54,168 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 5)
+INFO 2025-12-04 17:32:54,168 zap_active_adapter 🔴 STEP 2: Stopping traditional spider (ID: 0)
+ERROR 2025-12-04 17:32:54,178 zap_active_adapter ZAP API request failed for spider/action/stop: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/action/stop/?apikey=changeme123&scanId=0
+INFO 2025-12-04 17:32:54,179 zap_active_adapter ✅ Traditional spider 0 stop command sent
+INFO 2025-12-04 17:32:54,179 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:32:54,186 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:32:54,186 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:32:54,194 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:32:54,194 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:32:54,194 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:32:55,218 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:32:55,218 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:32:55,218 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:32:55,218 active_engine ZAP scans stopped successfully
+INFO 2025-12-04 17:32:55,225 zap_active_adapter Cleaned up all scan contexts
+INFO 2025-12-04 17:32:55,231 active_engine Active scan 50 completed successfully
+WARNING 2025-12-04 17:33:03,795 active_engine Progress would decrease from 100.0% to 90.0%, keeping current progress
+INFO 2025-12-04 17:33:03,810 active_engine Active scan 50: 100.0% - Active scan completed
+INFO 2025-12-04 17:33:03,811 active_engine Finally block: Ensuring all ZAP scans are stopped...
+INFO 2025-12-04 17:33:03,811 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:33:03,811 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:33:03,811 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:33:04,829 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:33:04,829 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:33:04,830 zap_active_adapter 🔴 STEP 2: Stopping traditional spider (ID: 0)
+ERROR 2025-12-04 17:33:04,836 zap_active_adapter ZAP API request failed for spider/action/stop: 400 Client Error: Bad Request for url: http://localhost:8080/JSON/spider/action/stop/?apikey=changeme123&scanId=0
+INFO 2025-12-04 17:33:04,836 zap_active_adapter ✅ Traditional spider 0 stop command sent
+INFO 2025-12-04 17:33:04,837 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:33:04,840 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:33:04,840 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:33:04,846 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:33:04,846 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:33:04,846 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:33:05,866 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:33:05,867 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:33:05,867 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:33:05,867 active_engine Finally block: ZAP scans stopped successfully
+INFO 2025-12-04 17:33:05,867 scan_logger Stopping Docker log capture...
+INFO 2025-12-04 17:33:08,867 scan_logger Docker log capture stopped for scan 50
+INFO 2025-12-04 17:33:08,868 scan_logger Created log summary: /home/hannan/Web_App_Scanner/backend/logs/scan_50/LOG_SUMMARY.txt
+INFO 2025-12-04 17:33:08,868 active_engine 📊 Scan logs saved: /home/hannan/Web_App_Scanner/backend/logs/scan_50/LOG_SUMMARY.txt
+INFO 2025-12-04 17:33:08,868 scan_logger Saved scan metadata to /home/hannan/Web_App_Scanner/backend/logs/scan_50/scan_metadata.json
+INFO 2025-12-04 17:33:08,868 unified_engine Scan stop requested after active scan completion
+INFO 2025-12-04 17:33:08,868 unified_engine Scan stop requested after active phase
+INFO 2025-12-04 17:33:08,868 unified_engine Finally block: Cleaning up scan 50...
+INFO 2025-12-04 17:33:08,869 zap_active_adapter Found working ZAP host: localhost:8080
+INFO 2025-12-04 17:33:08,869 zap_active_adapter 🔴 Stopping all ZAP scans AGGRESSIVELY...
+INFO 2025-12-04 17:33:08,869 zap_active_adapter 🔴 STEP 1: Stopping AJAX spider (CRITICAL - prevents CPU overload)
+INFO 2025-12-04 17:33:08,869 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:33:09,885 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:33:09,885 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:33:09,885 zap_active_adapter 🔴 STEP 3: Stopping ALL spider scans (safety net)
+INFO 2025-12-04 17:33:09,888 zap_active_adapter ✅ All spider scans stop command sent
+INFO 2025-12-04 17:33:09,888 zap_active_adapter 🔴 STEP 5: Stopping ALL active scans (safety net)
+INFO 2025-12-04 17:33:09,892 zap_active_adapter ✅ All active scans stop command sent
+INFO 2025-12-04 17:33:09,893 zap_active_adapter 🔴 STEP 6: Stopping AJAX spider AGAIN (final safety check)
+INFO 2025-12-04 17:33:09,893 zap_active_adapter 🔴 Force stopping AJAX spider (max 10 retries)...
+INFO 2025-12-04 17:33:10,919 zap_active_adapter Attempt 1/10: AJAX spider status = 'stopped'
+INFO 2025-12-04 17:33:10,919 zap_active_adapter ✅✅✅ AJAX spider successfully stopped (attempt 1)
+INFO 2025-12-04 17:33:10,919 zap_active_adapter ✅✅✅ All ZAP scans stopped successfully - 6 steps completed
+INFO 2025-12-04 17:33:10,919 unified_engine Finally block: ZAP scans stopped
+INFO 2025-12-04 17:33:10,919 unified_engine Finally block: Scan 50 unregistered from tracker

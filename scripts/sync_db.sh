@@ -5,8 +5,8 @@
 # Ensure we are in the project root
 cd "$(dirname "$0")/.."
 
-SSH_KEY="/home/hannan/keys/oceans_digital"
-SERVER="root@143.198.211.182"
+SSH_KEY="/home/hannan/keys/mykey"
+SERVER="root@api.morphbreak.site"
 REMOTE_DB_PATH="/root/Web_App_Scanner/backend/db.sqlite3"
 LOCAL_DB_PATH="backend/db.sqlite3"
 BACKUP_DIR="backend/backups"

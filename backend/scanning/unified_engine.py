@@ -1103,31 +1103,71 @@ class UnifiedScanningEngine:
             return False
 
     def _docker_level_stop(self):
-        """Attempt to stop ZAP processes at Docker container level"""
+        """Attempt to stop ZAP processes at Docker container level using Docker SDK"""
         try:
-            import subprocess
+            import docker
+            client = docker.from_env()
+            
+            # Find ZAP container dynamically
+            zap_container = None
+            
+            # Method 1: Try by exact name (if known)
+            try:
+                zap_container = client.containers.get('security_scanner_zap')
+            except:
+                pass
+                
+            # Method 2: Search by image name
+            if not zap_container:
+                for container in client.containers.list():
+                    if 'zaproxy' in container.image.tags[0] if container.image.tags else '':
+                        zap_container = container
+                        break
+                        
+            # Method 3: Search by name pattern
+            if not zap_container:
+                for container in client.containers.list():
+                    if 'zap' in container.name.lower():
+                        zap_container = container
+                        break
+            
+            if not zap_container:
+                logger.warning("Could not find ZAP container for Docker-level stop")
+                return
+
+            logger.info(f"Found ZAP container: {zap_container.name} ({zap_container.id[:12]})")
 
             # Try to kill Firefox/Chrome processes (AJAX spider browsers)
             logger.info("Attempting to kill AJAX spider browser processes in ZAP container...")
+            
+            # Kill Firefox
             try:
-                subprocess.run(
-                    ["docker", "exec", "zap", "pkill", "-f", "firefox"],
-                    capture_output=True,
-                    timeout=5
-                )
-                logger.info("Sent kill signal to firefox processes")
+                # use exec_run which is the SDK equivalent of docker exec
+                exit_code, output = zap_container.exec_run(["pkill", "-f", "firefox"])
+                if exit_code == 0:
+                    logger.info("Sent kill signal to firefox processes")
+                else:
+                    logger.debug(f"Firefox kill exited with code {exit_code} (may not be running)")
             except Exception as e:
-                logger.debug(f"Firefox kill failed (may not be running): {e}")
+                logger.debug(f"Firefox kill failed: {e}")
 
+            # Kill Chrome
             try:
-                subprocess.run(
-                    ["docker", "exec", "zap", "pkill", "-f", "chrome"],
-                    capture_output=True,
-                    timeout=5
-                )
-                logger.info("Sent kill signal to chrome processes")
+                exit_code, output = zap_container.exec_run(["pkill", "-f", "chrome"])
+                if exit_code == 0:
+                    logger.info("Sent kill signal to chrome processes")
+                else:
+                    logger.debug(f"Chrome kill exited with code {exit_code} (may not be running)")
             except Exception as e:
-                logger.debug(f"Chrome kill failed (may not be running): {e}")
+                logger.debug(f"Chrome kill failed: {e}")
+                
+            # Kill Java (ZAP itself) - ONLY if absolutely necessary
+            # This will cause the container to restart if restart policy is set
+            # logger.warning("Killing ZAP Java process...")
+            # try:
+            #     zap_container.exec_run(["pkill", "-f", "java"])
+            # except:
+            #     pass
 
         except Exception as e:
             logger.warning(f"Docker-level stop failed: {e}")

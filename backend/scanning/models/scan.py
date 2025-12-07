@@ -57,6 +57,7 @@ class ScanConfiguration(models.Model):
     # ZAP Active Scan Configuration
     zap_attack_strength = models.CharField(max_length=20, choices=ATTACK_STRENGTH_CHOICES, default="MEDIUM")
     zap_active_scan_policy = models.CharField(max_length=100, default="Default Policy")
+    active_scan_timeout_minutes = models.IntegerField(default=30, help_text="Timeout for active scan phase in minutes")
     
     # Vulnerability testing categories
     test_sql_injection = models.BooleanField(default=True)

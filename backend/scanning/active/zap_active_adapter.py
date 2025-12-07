@@ -771,8 +771,33 @@ class ZAPActiveAdapter:
         start_time = time.time()
         last_progress_log = 0
 
+        # Get timeout from config (default 30 minutes)
+        timeout_minutes = getattr(self.config, 'active_scan_timeout_minutes', 30)
+        timeout_seconds = timeout_minutes * 60
+        logger.info(f"Active scan monitoring started with timeout: {timeout_minutes} minutes ({timeout_seconds}s)")
+
         while True:
             try:
+                # Check for timeout
+                elapsed = time.time() - start_time
+                if elapsed > timeout_seconds:
+                    logger.warning(f"⚠️ Active scan timed out after {elapsed:.1f}s (limit: {timeout_seconds}s)")
+                    logger.warning("Stopping active scan due to timeout...")
+                    try:
+                        self._make_api_post_request("ascan/action/stop", {"scanId": self.active_scan_id})
+                        # Give it a moment to register the stop
+                        time.sleep(2)
+                    except Exception as stop_error:
+                        logger.error(f"Error stopping active scan on timeout: {stop_error}")
+                    
+                    # Log timeout event
+                    if self.scan_logger:
+                        self.scan_logger.log_error(
+                            "Active Scan Timeout", 
+                            f"Active scan phase stopped after exceeding {timeout_minutes} minutes limit."
+                        )
+                    break
+
                 # CRITICAL: Check if user requested stop
                 if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
                     logger.info("🔴 Stop requested by user - stopping active scan monitoring")
@@ -786,7 +811,6 @@ class ZAPActiveAdapter:
                 zap_progress = int(status.get("status", 0))
 
                 # Log progress every 30 seconds to show activity
-                elapsed = time.time() - start_time
                 if elapsed - last_progress_log >= 30:
                     logger.info(f"Active vulnerability scan progress: {zap_progress}% (running for {elapsed:.0f}s)")
                     last_progress_log = elapsed
@@ -798,21 +822,18 @@ class ZAPActiveAdapter:
                     # Map ZAP progress (0-100) to our progress range
                     mapped_progress = start_progress + (zap_progress * progress_range_size / 100.0)
                     progress_callback(mapped_progress, f"ZAP active scan: {zap_progress}%")
-
+                
                 if zap_progress >= 100:
-                    logger.info("Active scan completed")
+                    logger.info("Active vulnerability scan completed normally")
                     break
 
-                # Check stop flag before sleeping
-                if self.engine and hasattr(self.engine, 'is_stop_requested') and self.engine.is_stop_requested():
-                    logger.info("🔴 Stop requested during active scan sleep period")
-                    break
-
-                time.sleep(3)  # Shorter interval for more responsive updates
+                time.sleep(5)  # Check every 5 seconds
 
             except Exception as e:
                 logger.error(f"Error monitoring active scan: {e}")
                 break
+
+
     
     def _get_spider_results(self) -> Dict:
         """Get spider scan results - extract only essential attack surface data"""

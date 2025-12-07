@@ -37,6 +37,7 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
     enable_ajax_spider: true,
     max_spider_depth: 3,
     max_spider_duration: 10, // 10 minutes
+    active_scan_timeout_minutes: 30, // 30 minutes default active scan timeout
 
     // ZAP Active Scan Configuration
     zap_attack_strength: "MEDIUM" as 'LOW' | 'MEDIUM' | 'HIGH' | 'INSANE',
@@ -166,6 +167,7 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
           enable_spider: configData.enable_spider,
           enable_ajax_spider: configData.enable_ajax_spider,
           max_spider_depth: configData.max_spider_depth,
+          active_scan_timeout_minutes: configData.active_scan_timeout_minutes,
           test_sql_injection: configData.test_sql_injection
         });
 
@@ -471,8 +473,29 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
                       </div>
 
                       <div>
+                        <label htmlFor="active_scan_timeout_minutes" className="block text-sm font-medium text-slate-700 mb-1">
+                          Active Scan Timeout (minutes)
+                        </label>
+                        <input
+                          type="number"
+                          id="active_scan_timeout_minutes"
+                          name="active_scan_timeout_minutes"
+                          min="5"
+                          max="180"
+                          value={customConfigs.active_scan_timeout_minutes}
+                          onChange={handleCustomConfigChange}
+                          className="w-full p-2 border border-gray-300 rounded-md"
+                        />
+                        <p className="mt-1 text-xs text-slate-500">
+                          Timeout for active scan phase (5-180 minutes)
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
                         <label htmlFor="scan_timeout_minutes" className="block text-sm font-medium text-slate-700 mb-1">
-                          Scan Timeout (minutes)
+                          Total Scan Timeout (minutes)
                         </label>
                         <input
                           type="number"

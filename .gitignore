@@ -8,6 +8,8 @@ backend/database/scripts/
 backend/db.sqlite3
 backend/backups/
 ml_training.sqlite3
+backend/dataset
+
 
 # Python
 __pycache__/

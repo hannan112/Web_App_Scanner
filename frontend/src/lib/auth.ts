@@ -87,15 +87,15 @@ export const authOptions: NextAuthOptions = {
           provider: account.provider,
           hasUser: !!user,
         });
-        
+
         if (account.provider === "google") {
           try {
             console.log("Google auth - attempting token exchange with backend");
-            console.log("Google tokens:", { 
+            console.log("Google tokens:", {
               accessTokenAvailable: !!account.access_token,
               idTokenAvailable: !!account.id_token
             });
-            
+
             // Exchange Google token for backend token
             const response = await fetch(`${API_URL}/auth/google/`, {
               method: 'POST',
@@ -105,24 +105,24 @@ export const authOptions: NextAuthOptions = {
                 access_token: account.access_token
               }),
             });
-            
+
             console.log(`Google token exchange response: ${response.status}`);
-            
+
             if (!response.ok) {
               const errorData = await response.text();
               console.error('Google auth backend error:', errorData);
               throw new Error('Failed to authenticate with backend');
             }
-            
+
             const data = await response.json();
             console.log("Response data:", data);
-            
+
             // Make sure tokens and user info exist
             if (!data.access || !data.refresh) {
               console.error("Missing tokens in backend response", data);
               throw new Error('Invalid response from backend - missing tokens');
             }
-            
+
             return {
               ...token,
               accessToken: data.access,
@@ -152,19 +152,19 @@ export const authOptions: NextAuthOptions = {
           hasAccessToken: !!token.accessToken,
           hasUserId: !!token.userId
         });
-        
+
         session.user = {
           ...session.user,
           id: (token.userId as string) || (token.sub as string),
         };
-        
+
         session.accessToken = token.accessToken as string;
         session.refreshToken = token.refreshToken as string;
         session.error = token.error as string | undefined;
       } else {
         console.warn("Session callback - no token available");
       }
-      
+
       return session;
     },
   },
@@ -177,7 +177,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  
+
   // Add debug option to see detailed logs in development
   debug: process.env.NODE_ENV === 'development',
 }; 

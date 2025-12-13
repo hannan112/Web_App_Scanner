@@ -45,9 +45,9 @@ export const setupInterceptors = (refreshTokenFn: () => Promise<any>) => {
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
-      
+
       if (
-        error.response?.status === 401 && 
+        error.response?.status === 401 &&
         !originalRequest._retry &&
         typeof window !== 'undefined' &&
         localStorage.getItem('refreshToken')
@@ -55,7 +55,7 @@ export const setupInterceptors = (refreshTokenFn: () => Promise<any>) => {
         originalRequest._retry = true;
         try {
           await refreshTokenFn();
-          
+
           // Retry the original request with new token
           const token = localStorage.getItem('accessToken');
           if (token) {
@@ -69,7 +69,7 @@ export const setupInterceptors = (refreshTokenFn: () => Promise<any>) => {
           return Promise.reject(refreshError);
         }
       }
-      
+
       return Promise.reject(error);
     }
   );
@@ -100,7 +100,7 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response) {
       console.error(`API Error (${error.response.status}):`, error.response.data);
-      
+
       // If unauthorized, log token state
       if (error.response.status === 401) {
         console.warn("401 Unauthorized: Token state check:", {

@@ -60,7 +60,7 @@ services:
     image: ghcr.io/zaproxy/zaproxy:stable
     container_name: security_scanner_zap
     restart: always
-    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=${ZAP_API_KEY:-changeme123} -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=false -config scanner.threadPerHost=2 -config spider.thread=2 -config pscan.threads=2
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=${ZAP_API_KEY:-changeme123} -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=false -config scanner.threadPerHost=3 -config spider.thread=3 -config pscan.threads=3
     volumes:
       - zap_data:/home/zap/.ZAP
     ports:
@@ -71,7 +71,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.50'
+          cpus: '3.00'
           memory: 3g
     networks:
       - scanner_network

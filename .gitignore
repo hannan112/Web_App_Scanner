@@ -112,6 +112,4 @@ htmlcov/
 media/
 static/
 
-#ML
-/ML
-/.venv
+

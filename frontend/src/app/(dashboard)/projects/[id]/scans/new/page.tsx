@@ -11,6 +11,7 @@ import Link from "next/link";
 import { getProjectById } from "@/lib/api/projects";
 import { createScan, createScanConfiguration } from "@/lib/api/scans";
 import PageTitle from "@/components/PageTitle";
+import ScanConfirmationModal from "@/components/scanning/ScanConfirmationModal";
 
 
 export default function NewProjectScanPage({ params }: { params: Promise<{ id: string }> }) {
@@ -78,6 +79,7 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   // Resolve params first
   useEffect(() => {
@@ -148,8 +150,15 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
   // Check if active scanning features are selected
   const isActiveScanning = customConfigs.scan_type === 'active' || customConfigs.scan_type === 'comprehensive';
 
-  // Start scan handler
-  const handleStartScan = async () => {
+  // Handle start button click - validation only
+  const handleStartScan = () => {
+    setError(null);
+    setShowConfirmation(true);
+  };
+
+  // Execute scan after confirmation
+  const executeScan = async () => {
+    setShowConfirmation(false);
     setSubmitting(true);
     setError(null);
 
@@ -162,14 +171,7 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
         };
 
         console.log("Final config data being sent:", configData);
-        console.log("Active scanning fields:", {
-          use_zap_active: configData.use_zap_active,
-          enable_spider: configData.enable_spider,
-          enable_ajax_spider: configData.enable_ajax_spider,
-          max_spider_depth: configData.max_spider_depth,
-          active_scan_timeout_minutes: configData.active_scan_timeout_minutes,
-          test_sql_injection: configData.test_sql_injection
-        });
+        // ... logging active fields ...
 
         // Call an API function to create configuration
         const createdConfig = await createScanConfiguration(configData);
@@ -182,7 +184,7 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
         console.log("Created scan:", scan);
 
         // Redirect to scan status page
-        router.push(`/scans/${scan.id}/status`);
+        router.push(`/scans/${scan.uuid}/status`);
       } catch (configErr: unknown) {
         console.error("Configuration creation error:", configErr);
         const errorMessage = configErr instanceof Error ? configErr.message : 'Unknown error occurred';
@@ -825,6 +827,12 @@ export default function NewProjectScanPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
       </div>
+      <ScanConfirmationModal
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={executeScan}
+        title="Authorization Confirmation"
+      />
     </div>
   );
 }

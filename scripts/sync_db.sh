@@ -5,7 +5,7 @@
 # Ensure we are in the project root
 cd "$(dirname "$0")/.."
 
-SSH_KEY="/home/hannan/keys/mykey"
+SSH_KEY="/home/hannan-ali/Keys/key"
 SERVER="root@api.morphbreak.site"
 REMOTE_DB_PATH="/root/Web_App_Scanner/backend/db.sqlite3"
 LOCAL_DB_PATH="backend/db.sqlite3"

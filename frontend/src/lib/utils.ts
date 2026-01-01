@@ -45,7 +45,7 @@ export function getStatusBadgeClass(status: string): string {
 
 export function getScanActionLink(scan: Scan): { href: string; text: string } {
   if (scan.status === 'completed') {
-    return { href: `/projects/${scan.project_id}/scans/${scan.id}`, text: 'View Results' };
+    return { href: `/projects/${scan.project_id}/scans/${scan.uuid}`, text: 'View Results' };
   }
   if (scan.status === 'failed') {
     return { href: '#', text: 'Failed' };

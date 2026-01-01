@@ -5,6 +5,7 @@ import { Key, ReactNode } from "react";
 // Basic project information
 export interface Project {
     id: number;
+    uuid?: string;
     name: string;
     target_url: string;
     description: string;
@@ -18,6 +19,7 @@ export interface Project {
 export interface ProjectStats {
     project: {
         id: string;
+        uuid: string;
         name: string;
         target_url: string;
         description?: string;
@@ -29,6 +31,7 @@ export interface ProjectStats {
         vulnerability_counts: Record<string, number>;
         recent_scans: Array<{
             id: string;
+            uuid: string;
             scan_type: string;
             status: string;
             start_time: string;
@@ -76,24 +79,24 @@ export interface ScanConfig {
     min_confidence: number;
     user_agent?: string;
     request_timeout: number;
-    
+
     // Passive scan tools
     use_sslyze: boolean;
     use_nuclei: boolean;
     use_wappalyzer: boolean;
     use_zap_passive: boolean;
-    
+
     // Active scan settings
     use_zap_active: boolean;
     enable_spider: boolean;
     enable_ajax_spider: boolean;
     max_spider_depth: number;
     max_spider_duration: number;
-    
+
     // ZAP Active Scan Configuration
     zap_attack_strength: 'LOW' | 'MEDIUM' | 'HIGH' | 'INSANE';
     zap_active_scan_policy: string;
-    
+
     // Vulnerability testing categories
     test_sql_injection: boolean;
     test_xss: boolean;
@@ -105,19 +108,19 @@ export interface ScanConfig {
     test_path_traversal: boolean;
     test_command_injection: boolean;
     test_xxe: boolean;
-    
+
     // SQL Injection testing tools
     use_sqlmap: boolean;
     use_nosqlmap: boolean;
     sqlmap_risk_level: number;
     sqlmap_level: number;
     sqlmap_timeout: number;
-    
+
     // Rate limiting and safety
     max_concurrent_requests: number;
     request_delay_ms: number;
     scan_timeout_minutes: number;
-    
+
     // Enhanced discovery settings
     use_enhanced_discovery: boolean;
     discovery_timeout: number;
@@ -140,13 +143,18 @@ export interface ScanResult {
     affected_url?: string;
     remediation: string;
     created_at: string;
+    is_fp?: boolean;
+    fp_confidence?: number;
 }
+
 
 // Scan interface
 export interface Scan {
     configuration_name: string;
     id: number;
+    uuid: string;
     project_id: number;
+    project_uuid?: string;
     status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'stopped';
     started_at: string | null;
     completed_at: string | null;
@@ -234,7 +242,7 @@ export interface ActiveScanResult {
     total_responses_received: number;
     scan_duration_seconds: number;
     created_at: string;
-    
+
     // Enhanced discovery fields
     api_endpoints?: string[];
     js_endpoints?: string[];

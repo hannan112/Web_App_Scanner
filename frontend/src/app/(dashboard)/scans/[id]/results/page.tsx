@@ -187,7 +187,9 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
         subtitle={`Project: ${projectName}`}
       />
 
+
       {/* Data Export Section */}
+
       <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div>
@@ -295,6 +297,27 @@ export default function ScanResultsPage({ params }: { params: Promise<{ id: stri
           onError={(errMsg: SetStateAction<string | null>) => setError(errMsg)}
         />
       </ErrorBoundary>
+
+      {/* Disclaimer & Legal Notice */}
+      <footer className="mt-12 pt-8 border-t border-slate-200">
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Disclaimer & Legal Notice</h3>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-4">
+          <div>
+            <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wide mb-1">Accuracy of Results</h4>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Please note that this security scanning tool is in an initial stage of development. While every effort has been made to ensure accuracy, the results provided in this report may contain errors, false positives, or false negatives. This report should be used as a preliminary assessment and does not guarantee the complete security of the target application. We recommend manual verification of all critical findings.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wide mb-1">Legal Disclaimer</h4>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              The authors and maintainers of this tool are not responsible for any damage caused by the use or misuse of this software. This tool is intended for educational and authorized security testing purposes only. The user assumes all legal and regulatory responsibility for the use of this tool against any target systems. By using this report, you acknowledge that you have proper authorization to scan the target URL.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -9,6 +9,7 @@ interface RunningScanData {
   has_running_scan: boolean;
   scan: {
     id: number;
+    uuid: string;
     status: string;
     progress: number;
     target_url: string;
@@ -56,9 +57,9 @@ export default function RunningScanIndicator() {
   // Don't show indicator on scan status/detail pages (e.g., /scans/302/status or /projects/1/scans/302)
   // This prevents showing the indicator when user is already viewing the running scan
   const isScanStatusPage = pathname?.includes('/scans/') && (
-    pathname?.includes('/status') || 
-    pathname?.endsWith(`/${scan.id}`) ||
-    pathname?.includes(`/scans/${scan.id}/`)
+    pathname?.includes('/status') ||
+    pathname?.endsWith(`/${scan.uuid}`) ||
+    pathname?.includes(`/scans/${scan.uuid}/`)
   );
 
   if (isScanStatusPage) {
@@ -67,7 +68,7 @@ export default function RunningScanIndicator() {
 
   return (
     <Link
-      href={`/projects/${scan.project_id}/scans/${scan.id}`}
+      href={`/projects/${scan.project_id}/scans/${scan.uuid}`}
       className="flex items-center space-x-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded-md transition-colors border border-blue-200"
     >
       {/* Animated scanning icon */}

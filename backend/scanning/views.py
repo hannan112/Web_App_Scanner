@@ -75,10 +75,13 @@ class ScanViewSet(viewsets.ModelViewSet):
 
     serializer_class = ScanSerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "uuid"
 
     def get_queryset(self):
         """Return scans for projects owned by the current user"""
         return Scan.objects.filter(configuration__project__owner=self.request.user)
+
+
 
     def get_serializer_class(self):
         """Return different serializer for detailed view"""
@@ -159,6 +162,7 @@ class ScanViewSet(viewsets.ModelViewSet):
                     {
                         "error": "You already have a scan running. Please wait for it to complete or stop it before starting a new scan.",
                         "active_scan_id": active_scan.id,
+                        "active_scan_uuid": active_scan.uuid,
                         "active_scan_status": active_scan.status,
                         "active_project_id": active_project.id if active_project else None,
                         "active_project_name": active_project.name if active_project else "Unknown",
@@ -477,7 +481,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def results(self, request, pk=None):
+    def results(self, request, pk=None, uuid=None, **kwargs):
         """Get comprehensive scan results with optimized data size"""
         try:
             scan = self.get_object()
@@ -752,14 +756,50 @@ class ScanViewSet(viewsets.ModelViewSet):
             # Add summary statistics (calculate from database, not from serialized data)
             try:
                 vuln_queryset = Vulnerability.objects.filter(scan=scan)
+                total_count = vuln_queryset.count()
+                
+                # Calculate ML stats
+                # Need to iterate because other_info is JSON in DB
+                fp_count = 0
+                tp_count = 0
+                verified_count = 0
+                
+                # Optimization: Fetch only ID and other_info for iteration if dataset is large, 
+                # but for stats we might need full iteration.
+                # Since we are iterating, let's just do it over the queryset efficiently.
+                for v in vuln_queryset.only('other_info', 'severity'):
+                    is_fp = False
+                    if v.other_info:
+                        try:
+                            import json
+                            info = json.loads(v.other_info) if isinstance(v.other_info, str) else v.other_info
+                            if isinstance(info, dict) and info.get('ml_is_fp'):
+                                is_fp = True
+                        except:
+                            pass
+                    
+                    if is_fp:
+                        fp_count += 1
+                    else:
+                        tp_count += 1
+                        
                 scan_data["summary"] = {
-                    "total_vulnerabilities": vuln_queryset.count(),
+                    "total_vulnerabilities": total_count,
                     "critical_count": vuln_queryset.filter(severity="critical").count(),
                     "high_count": vuln_queryset.filter(severity="high").count(),
                     "medium_count": vuln_queryset.filter(severity="medium").count(),
                     "low_count": vuln_queryset.filter(severity="low").count(),
                     "info_count": vuln_queryset.filter(severity="info").count(),
+                    
+                    # ML FALSE POSITIVE REDUCTION STATS
+                    "ml_stats": {
+                        "before_ml_total": total_count,
+                        "after_ml_total": total_count - fp_count,
+                        "false_positives_detected": fp_count,
+                        "reduction_percentage": round((fp_count / total_count * 100), 2) if total_count > 0 else 0.0
+                    }
                 }
+                
             except Exception as e:
                 logger.error(f"Error calculating vulnerability statistics: {str(e)}")
                 scan_data["summary"] = {
@@ -773,9 +813,7 @@ class ScanViewSet(viewsets.ModelViewSet):
 
             return Response(scan_data)
         except Exception as e:
-            import traceback
             logger.error(f"Error retrieving scan results: {str(e)}")
-            logger.error(f"Traceback: {traceback.format_exc()}")
             return Response(
                 {"error": f"Error retrieving scan results: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -902,24 +940,60 @@ class ScanViewSet(viewsets.ModelViewSet):
             status=status.HTTP_501_NOT_IMPLEMENTED, # 501 Not Implemented
         )
 
-    @action(detail=True, methods=["post"])
-    def report(self, request, pk=None):
+    @action(detail=True, methods=["get", "post"])
+    def report(self, request, pk=None, uuid=None):
         """Generate a PDF report for the scan"""
         try:
             scan = self.get_object()
 
             # For completed scans only
-            if scan.status != "completed":
-                return Response(
-                    {"error": "Reports are only available for completed scans"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            # if scan.status != "completed":
+            #     return Response(
+            #         {"error": "Reports are only available for completed scans"},
+            #         status=status.HTTP_400_BAD_REQUEST,
+            #     )
 
-            # TODO: Implement report generation
-            # For now, return a mock response
-            return Response(
-                {"message": "Report generation initiated"}, status=status.HTTP_200_OK
-            )
+            # Gather data similar to 'results' view
+            # 1. Basic Scan Info
+            scan_data = ScanSerializer(scan).data
+            
+            # 2. Project Info
+            project_data = None
+            if scan.configuration and scan.configuration.project:
+                project_data = {
+                    "id": scan.configuration.project.id,
+                    "name": scan.configuration.project.name,
+                    "target_url": scan.configuration.project.target_url,
+                }
+
+            # 3. Vulnerability Summary and List
+            # Re-calculate summary if needed or fetch from existing logic
+            vulns = Vulnerability.objects.filter(scan=scan)
+            scan_data['vulnerabilities'] = VulnerabilitySerializer(vulns, many=True).data
+            
+            # Calculate summary counts
+            summary = {
+                "total_vulnerabilities": vulns.count(),
+                "critical_count": vulns.filter(severity="critical").count(),
+                "high_count": vulns.filter(severity="high").count(),
+                "medium_count": vulns.filter(severity="medium").count(),
+                "low_count": vulns.filter(severity="low").count(),
+                "info_count": vulns.filter(severity="info").count(),
+            }
+            scan_data['summary'] = summary
+            
+            # Generate PDF
+            from .report_generator import ReportGenerator
+            generator = ReportGenerator(scan_data, project_data)
+            pdf_buffer = generator.generate()
+            
+            # Return as file response
+            response = HttpResponse(pdf_buffer, content_type='application/pdf')
+            filename = f"scan_report_{scan.id}_{timezone.now().strftime('%Y%m%d')}.pdf"
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            
+            return response
+
         except Exception as e:
             logger.error(f"Error generating report: {str(e)}")
             return Response(
@@ -1360,6 +1434,7 @@ class ScanViewSet(viewsets.ModelViewSet):
                     "has_running_scan": True,
                     "scan": {
                         "id": scan.id,
+                        "uuid": scan.uuid,
                         "status": scan.status,
                         "progress": scan.progress,
                         "target_url": scan.target_url,

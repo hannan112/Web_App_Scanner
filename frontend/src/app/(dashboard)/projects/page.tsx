@@ -99,7 +99,7 @@ export default function ProjectsPage() {
               {projects.map((project) => (
                 <tr key={project.id} className="border-b border-slate-200 hover:bg-white/20 transition-colors">
                   <td className="py-2 px-4 text-slate-800">
-                    <Link href={`/projects/${project.id}`} className="text-blue-600 hover:underline font-medium">
+                    <Link href={`/projects/${project.uuid}`} className="text-blue-600 hover:underline font-medium">
                       {project.name}
                     </Link>
                   </td>
@@ -138,8 +138,8 @@ export default function ProjectsPage() {
                       {deleteConfirm === project.id && (
                         <div className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
                           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby={`menu-button-${project.id}`}>
-                            <Link href={`/projects/${project.id}`} className="block px-4 py-2 text-sm text-blue-700 hover:bg-gray-100" role="menuitem">View</Link>
-                            <Link href={`/projects/${project.id}/edit`} className="block px-4 py-2 text-sm text-green-700 hover:bg-gray-100" role="menuitem">Edit</Link>
+                            <Link href={`/projects/${project.uuid}`} className="block px-4 py-2 text-sm text-blue-700 hover:bg-gray-100" role="menuitem">View</Link>
+                            <Link href={`/projects/${project.uuid}/edit`} className="block px-4 py-2 text-sm text-green-700 hover:bg-gray-100" role="menuitem">Edit</Link>
                             <button onClick={() => handleDelete(project.id)} className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100" role="menuitem">Delete</button>
                           </div>
                         </div>

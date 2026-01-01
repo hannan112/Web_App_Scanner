@@ -12,8 +12,60 @@ import threading
 import time
 from typing import Dict
 from django.utils import timezone
+import os
+import logging
+import threading
+import time
+import pandas as pd
+import joblib
+from typing import Dict, List
+import numpy as np
+from django.conf import settings
+import json
+
 
 logger = logging.getLogger(__name__)
+
+# ML Constants
+HEADER_VULNS = [
+    "missing_security_header",
+    "missing anti-clickjacking header",
+    "content security policy (csp) header not set",
+    "missing content-security-policy header",
+    "strict-transport-security header not set",
+    "strict-transport-security missing max-age (non-compliant with spec)",
+    "missing hsts header",
+    "x-content-type-options header missing",
+    "missing x-content-type-options header",
+    "missing x-frame-options header",
+    "multiple x-frame-options header entries",
+    "missing x-xss-protection header",
+    "missing referrer-policy header",
+    "x-aspnet-version response header",
+    "server leaks information via \"x-powered-by\" http response header field(s)",
+    "server leaks version information via \"server\" http response header field",
+    "permissive cors policy",
+    "csp: notices",
+    "csp: wildcard directive",
+    "csp: style-src unsafe-inline",
+    "csp: script-src unsafe-inline",
+    "csp: script-src unsafe-eval",
+    "csp: failure to define directive with no fallback"
+]
+
+INJECTION_VULNS = [
+    "sql injection",
+    "sql injection - mysql",
+    "sql injection - mysql (time based)",
+    "sql injection - sqlite (time based)",
+    "sql injection - mssql (time based)",
+    "cross site scripting (reflected)",
+    "cross site scripting (dom based)",
+    "cross site scripting (persistent)",
+    "xslt injection",
+    "format string error"
+]
+
 
 
 class UnifiedScanningEngine:
@@ -788,14 +840,201 @@ class UnifiedScanningEngine:
 
         return optimized_requests
 
+    def apply_ml_fp_reduction(self):
+        """
+        Apply Machine Learning model to reduce false positives in vulnerability results.
+        Process:
+        1. Fetch vulnerabilities for current scan
+        2. Clean and Normalize Data
+        3. Feature Extraction
+        4. Pseudo-labeling (Weak Supervision)
+        5. Model Inference (Random Forest)
+        6. Store results in other_info (Post-scan scope)
+        """
+        try:
+            from scanning.models.vulnerability import Vulnerability
+            
+            # Guard clause: Only run for comprehensive scans
+            # RESEARCH-CORRECTNESS: Active/Passive only scans might lack context
+            if self.configuration.scan_type != 'comprehensive':
+                logger.info(f"Skipping ML FP reduction for scan type: {self.configuration.scan_type}")
+                return
+
+
+            logger.info(f"Starting ML False Positive Reduction for Scan {self.scan_id}")
+            
+            # 1. Fetch Data
+            vulns = list(Vulnerability.objects.filter(scan_id=self.scan_id).values())
+            if not vulns:
+                logger.info("No vulnerabilities found to analyze.")
+                return
+
+            df = pd.DataFrame(vulns)
+
+
+            
+            # 2. Cleaning & Normalization (Phase 1 & 2)
+            # Fill missing values
+            df['evidence'] = df['evidence'].fillna("")
+            df['parameter'] = df['parameter'].fillna("Not Applicable")
+            # RESEARCH-CORRECTNESS: Do not assume low severity for missing values to avoid bias.
+            df['severity'] = df['severity'].fillna("informational")
+            
+            # Filter out "informational" severity to keep them out of ML scope
+            # They should appear as "without applying ML" (no other_info update)
+            df = df[~df['severity'].str.lower().isin(['informational', 'info'])]
+            
+            if df.empty:
+                logger.info("No vulnerabilities remaining after filtering informational ones.")
+                return
+
+
+            
+            # Normalize name for matching
+            df['name_norm'] = df['name'].str.lower().str.strip()
+            
+            # Deduplication (Phase 2 - Memory only for analysis if needed, but we iterate all)
+            # We process all records to tag them. Database deduplication happens at save time usually.
+            
+            # 3. Feature Extraction (Phase 3)
+            # is_header_issue
+            df['is_header_issue'] = df['name_norm'].isin(HEADER_VULNS).astype(int)
+            
+            # is_injection
+            df['is_injection'] = df['name_norm'].isin(INJECTION_VULNS).astype(int)
+            
+            # is_real_world (Phase 3)
+            # We assume this is a real scan, so always 1.
+            df['is_real_world'] = 1
+
+            
+            # has_evidence (Phase 3)
+            df['has_evidence'] = df['evidence'].apply(
+                lambda x: 0 if x in ["", "Not Applicable", None] else 1
+            )
+            
+            # 4. Pseudo-Labeling (Runtime Removal)
+            # RESEARCH-CORRECTNESS: Pseudo-labeling is a training-time concept.
+            # We do NOT generate likely_fp at runtime to avoid overriding the model 
+            # or creating circular logic.
+
+            
+            # 5. Model Inference (Phase 5)
+            model_path = os.path.join(settings.BASE_DIR, '../ML/fp_confidence_random_forest.pkl')
+            model_path = os.path.abspath(model_path)
+            
+            model_loaded = False
+            if os.path.exists(model_path):
+                try:
+                    model = joblib.load(model_path)
+                    model_loaded = True
+                except Exception as e:
+                    logger.error(f"Failed to load ML model: {e}")
+
+            if model_loaded:
+                try:
+                    # Prepare features - MATCHING TRAINING DATA COLUMNS
+                    # Model expects: ['has_evidence', 'is_header_issue', 'is_injection']
+                    # Note: likely_fp and is_real_world are for heuristics/fallback only, not model input.
+                    features_to_use = ['has_evidence', 'is_header_issue', 'is_injection']
+
+                    
+                    # Ensure all exist (pandas treats missing cols as keyerror)
+                    missing_cols = [c for c in features_to_use if c not in df.columns]
+                    if missing_cols:
+                        logger.warning(f"Missing columns for ML: {missing_cols}")
+                        # Create them with 0
+                        for c in missing_cols:
+                            df[c] = 0
+                    
+                    X = df[features_to_use]
+                    
+                    # Predict probability
+                    probs = model.predict_proba(X)
+                    
+                    if probs.shape[1] == 2:
+                        df['ml_fp_confidence'] = probs[:, 1]
+                    else:
+                        df['ml_fp_confidence'] = 0.0
+                        
+                    # Threshold
+                    THRESHOLD = 0.7
+                    df['ml_is_fp'] = (df['ml_fp_confidence'] >= THRESHOLD)
+                    
+                except Exception as e:
+                    logger.error(f"Model inference failed: {e}")
+                    # fail safe: default to 0.0
+                    df['ml_fp_confidence'] = 0.0
+                    df['ml_is_fp'] = False
+            else:
+                # Fallback if model missing or failed to load
+                logger.warning("ML model missing. Skipping FP reduction.")
+                df['ml_fp_confidence'] = 0.0
+                df['ml_is_fp'] = False
+
+
+
+            # 6. Store Results (Phase 6 - No Schema Change)
+            update_count = 0
+            for index, row in df.iterrows():
+                try:
+                    vuln_id = row['id']
+                    v_obj = Vulnerability.objects.get(id=vuln_id)
+                    
+                    if not v_obj.other_info:
+                        existing_info = {}
+                    elif isinstance(v_obj.other_info, dict):
+                        existing_info = v_obj.other_info
+                    elif isinstance(v_obj.other_info, str) and v_obj.other_info.strip():
+                        try:
+                            existing_info = json.loads(v_obj.other_info)
+                        except:
+                            existing_info = {"raw_other_info": v_obj.other_info}
+                    else:
+                        existing_info = {}
+                        
+                    existing_info['ml_fp_confidence'] = float(row.get('ml_fp_confidence', 0.0))
+                    existing_info['ml_is_fp'] = bool(row.get('ml_is_fp', False))
+                    existing_info['ml_is_real_site'] = 1
+
+                    
+                    v_obj.other_info = json.dumps(existing_info)
+
+                    v_obj.save(update_fields=['other_info'])
+                    update_count += 1
+
+                except Exception as save_err:
+                    logger.warning(f"Failed to update vuln {vuln_id}: {save_err}")
+                    
+            logger.info(f"ML Processing complete. Updated {update_count} vulnerabilities.")
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            logger.exception(f"Critical error in apply_ml_fp_reduction: {e}")
+
     def _integrate_comprehensive_results(self):
         """Integrate results from both passive and active phases"""
         try:
             # This is where you could apply ML algorithms to:
-            # 1. Deduplicate vulnerabilities
-            # 2. Cross-reference findings
-            # 3. Enhance confidence scores
             # 4. Reduce false positives
+            
+            # Apply ML-based False Positive Reduction
+            try:
+                self.apply_ml_fp_reduction()
+            except Exception as ml_error:
+                logger.error(f"Failed to apply ML FP reduction: {ml_error}")
+
+            
+            # Apply ML-based False Positive Reduction
+            # ONLY for comprehensive scans as per requirements
+            if self.configuration.scan_type == 'comprehensive':
+                try:
+                    self.apply_ml_fp_reduction()
+                except Exception as ml_error:
+                    logger.error(f"Failed to apply ML FP reduction: {ml_error}")
+
+
             
             from scanning.models.scan import ScanLog
             from scanning.utils.url_discovery_logger import URLDiscoveryLogger

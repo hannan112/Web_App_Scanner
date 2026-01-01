@@ -12,6 +12,7 @@ import { createScan, createScanConfiguration } from "@/lib/api/scans";
 import PageTitle from "@/components/PageTitle";
 import ZAPStatus from "@/components/scanning/ZAPStatus";
 import { Project, ScanConfig } from "@/types/project";
+import ScanConfirmationModal from "@/components/scanning/ScanConfirmationModal";
 
 export default function NewScanPage() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
@@ -77,6 +78,7 @@ export default function NewScanPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   // Check if user is authenticated
   useEffect(() => {
@@ -147,13 +149,19 @@ export default function NewScanPage() {
   // Check if active scanning features are selected
   const isActiveScanning = customConfigs.scan_type === 'active' || customConfigs.scan_type === 'comprehensive';
 
-  // Start scan handler
-  const handleStartScan = async () => {
+  // Handle start button click - validation only
+  const handleStartScan = () => {
     if (!selectedProject) {
       setError("Please select a project to scan");
       return;
     }
+    setError(null);
+    setShowConfirmation(true);
+  };
 
+  // Execute scan after confirmation
+  const executeScan = async () => {
+    setShowConfirmation(false);
     setSubmitting(true);
     setError(null);
 
@@ -167,13 +175,7 @@ export default function NewScanPage() {
         };
 
         console.log("Final config data being sent:", configData);
-        console.log("Active scanning fields:", {
-          use_zap_active: configData.use_zap_active,
-          enable_spider: configData.enable_spider,
-          enable_ajax_spider: configData.enable_ajax_spider,
-          max_spider_depth: configData.max_spider_depth,
-          test_sql_injection: configData.test_sql_injection
-        });
+        // ... logging active fields ...
 
         // Call an API function to create configuration
         const createdConfig = await createScanConfiguration(configData);
@@ -186,7 +188,7 @@ export default function NewScanPage() {
         console.log("Created scan:", scan);
 
         // Redirect to scan status page
-        router.push(`/scans/${scan.id}/status`);
+        router.push(`/scans/${scan.uuid}/status`);
       } catch (configErr: unknown) {
         console.error("Configuration creation error:", configErr);
         const errorMessage = configErr instanceof Error ? configErr.message : 'Unknown error occurred';
@@ -949,6 +951,12 @@ export default function NewScanPage() {
           </div>
         </div>
       </div>
+      <ScanConfirmationModal
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={executeScan}
+        title="Authorization Confirmation"
+      />
     </div>
   );
 }

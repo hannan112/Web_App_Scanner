@@ -20,7 +20,7 @@ export default function ScansPage() {
   const [projectsData, setProjectsData] = useState<Project[]>([]); // Initialize as empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stoppingId, setStoppingId] = useState<number | null>(null);
+  const [stoppingId, setStoppingId] = useState<string | null>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const [shouldPoll, setShouldPoll] = useState(true);
   const scansRef = useRef<Scan[]>([]);
@@ -174,14 +174,14 @@ export default function ScansPage() {
     };
   }, [isAuthenticated, shouldPoll]);
 
-  const handleStop = async (id: number) => {
+  const handleStop = async (uuid: string) => {
     try {
-      setStoppingId(id);
-      await stopScan(String(id));
+      setStoppingId(uuid);
+      await stopScan(uuid);
 
       // Immediately update the scan status to stopped
       setScans(prev => {
-        const updatedScans = prev.map(s => s.id === id ? { ...s, status: 'stopped' } as Scan : s);
+        const updatedScans = prev.map(s => s.uuid === uuid ? { ...s, status: 'stopped' } as Scan : s);
 
         // Update the ref as well
         scansRef.current = updatedScans;
@@ -310,7 +310,7 @@ export default function ScansPage() {
                     </span>
                   </td>
                   <td className="py-2 px-4 text-slate-800">
-                    <Link href={`/projects/${scan.project_id}`} className="text-blue-600 hover:underline">
+                    <Link href={`/projects/${scan.project_uuid || scan.project_id}`} className="text-blue-600 hover:underline">
                       {projects[scan.project_id] || projects[String(scan.project_id)] || `Project ${scan.project_id}`}
                     </Link>
                   </td>
@@ -329,22 +329,22 @@ export default function ScansPage() {
                   <td className="py-2 px-4">
                     <div className="flex space-x-2">
                       {scan.status === 'completed' && (
-                        <Link href={`/scans/${scan.id}/results`} className="text-blue-600 hover:underline">
+                        <Link href={`/scans/${scan.uuid}/results`} className="text-blue-600 hover:underline">
                           View Results
                         </Link>
                       )}
                       {(scan.status === 'in_progress') && (
-                        <Link href={`/scans/${scan.id}/status`} className="text-blue-600 hover:underline">
+                        <Link href={`/scans/${scan.uuid}/status`} className="text-blue-600 hover:underline">
                           View Progress
                         </Link>
                       )}
                       {(scan.status === 'in_progress') && (
                         <button
-                          onClick={() => handleStop(scan.id)}
-                          disabled={stoppingId === scan.id}
+                          onClick={() => handleStop(scan.uuid)}
+                          disabled={stoppingId === scan.uuid}
                           className={`text-red-600 hover:underline disabled:opacity-50`}
                         >
-                          {stoppingId === scan.id ? 'Stopping…' : 'Stop'}
+                          {stoppingId === scan.uuid ? 'Stopping…' : 'Stop'}
                         </button>
                       )}
                     </div>

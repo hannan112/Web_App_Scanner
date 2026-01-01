@@ -120,7 +120,7 @@ export default function DashboardPage() {
                       {new Date(project.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-2 px-4">
-                      <Link href={`/projects/${project.id}`} className="text-blue-600 hover:underline mr-4">
+                      <Link href={`/projects/${project.uuid}`} className="text-blue-600 hover:underline mr-4">
                         View
                       </Link>
                     </td>

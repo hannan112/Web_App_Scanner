@@ -10,6 +10,7 @@ interface ScanBarChartProps {
 
 export default function ScanBarChart({ scans, projectsData }: ScanBarChartProps) {
   // Group scans by project and sort by project name
+  console.log("DEBUG: ScanBarChart projectsData sample:", projectsData[0]);
   const projectScanData = projectsData
     .map(project => {
       const projectScans = scans.filter(scan =>
@@ -25,6 +26,7 @@ export default function ScanBarChart({ scans, projectsData }: ScanBarChartProps)
       return {
         projectName: project.name,
         projectId: project.id,
+        projectUuid: project.uuid,
         total,
         completed,
         inProgress,
@@ -72,7 +74,7 @@ export default function ScanBarChart({ scans, projectsData }: ScanBarChartProps)
             {projectScanData.map((project) => (
               <tr key={project.projectId} className="hover:bg-white/10 transition-colors">
                 <td className="py-4 px-6 whitespace-nowrap">
-                  <Link href={`/projects/${project.projectId}`} className="text-sm font-medium text-blue-600 hover:underline">
+                  <Link href={`/projects/${project.projectUuid || project.projectId}`} className="text-sm font-medium text-blue-600 hover:underline">
                     {project.projectName}
                   </Link>
                 </td>

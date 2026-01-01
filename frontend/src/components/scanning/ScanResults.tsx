@@ -214,12 +214,15 @@ const ScanResults: React.FC<ScanResultsProps> = ({
       url: typeof vuln.url === 'string' ? vuln.url : null,
       parameter: typeof vuln.parameter === 'string' ? vuln.parameter : null,
       evidence: typeof vuln.evidence === 'string' ? vuln.evidence : JSON.stringify(vuln.evidence),
-      remediation: typeof vuln.remediation === 'string' ? vuln.remediation : null
+      remediation: typeof vuln.remediation === 'string' ? vuln.remediation : null,
+      is_fp: !!vuln.is_fp,
+      fp_confidence: typeof vuln.fp_confidence === 'number' ? vuln.fp_confidence : 0
     };
   });
 
   // Separate vulnerabilities from info-level findings
   const actualVulnerabilities = safeVulnerabilities.filter(v => v && v.severity !== 'info');
+
   const infoFindings = safeVulnerabilities.filter(v => v && v.severity === 'info');
 
   // Get vulnerability stats (excluding info)
@@ -228,6 +231,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
     high: actualVulnerabilities.filter(v => v && v.severity === 'high').length,
     medium: actualVulnerabilities.filter(v => v && v.severity === 'medium').length,
     low: actualVulnerabilities.filter(v => v && v.severity === 'low').length,
+    fp: actualVulnerabilities.filter(v => v && v.is_fp).length,
     total: actualVulnerabilities.length
   };
 
@@ -236,7 +240,12 @@ const ScanResults: React.FC<ScanResultsProps> = ({
     if (!v) return false;
 
     // Apply severity filter
-    const severityMatch = severityFilter === 'all' || v.severity === severityFilter;
+    let severityMatch = true;
+    if (severityFilter === 'fp') {
+      severityMatch = !!v.is_fp;
+    } else {
+      severityMatch = severityFilter === 'all' || v.severity === severityFilter;
+    }
 
     // Apply confidence filter
     let confidenceMatch = true;
@@ -515,7 +524,14 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                       setIsModalOpen(true);
                     }}
                   >
-                    <span className="truncate text-gray-600 group-hover:text-gray-900 mr-2">{vuln.name}</span>
+                    <div className="flex items-center gap-2 truncate mr-2">
+                      <span className="truncate text-gray-600 group-hover:text-gray-900">{vuln.name}</span>
+                      {vuln.is_fp && (
+                        <span className="px-1.5 py-0.5 rounded text-[10px] uppercase bg-gray-100 text-gray-500 border border-gray-200" title={`ML Confidence: ${(vuln.fp_confidence * 100).toFixed(1)}%`}>
+                          Possible FP
+                        </span>
+                      )}
+                    </div>
                     <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase ${getSeverityBadgeClass(vuln.severity)}`}>
                       {vuln.severity}
                     </span>
@@ -654,7 +670,8 @@ const ScanResults: React.FC<ScanResultsProps> = ({
       forms.push(...validForms);
     }
 
-    return forms.map(form => deepSanitize(form, 'form'));
+    return forms;
+
   };
 
   if (isLoading) {
@@ -944,6 +961,12 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                       <div className="text-2xl font-bold text-yellow-600">{vulnStats.medium + vulnStats.low}</div>
                       <div className="text-sm text-yellow-700">Medium/Low Priority</div>
                     </div>
+                    {vulnStats.fp > 0 && (
+                      <div className="bg-gray-100 p-4 rounded-lg col-span-2 sm:col-span-1">
+                        <div className="text-2xl font-bold text-gray-700">{vulnStats.fp}</div>
+                        <div className="text-sm text-gray-600">ML False Positives</div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Confidence Distribution */}
@@ -1505,6 +1528,11 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                     {vulnStats.low} Low
                   </span>
                 )}
+                {vulnStats.fp > 0 && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 border border-gray-300">
+                    {vulnStats.fp} F. Positives
+                  </span>
+                )}
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
                   {vulnStats.total} Total
                 </span>
@@ -1546,6 +1574,7 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                 className="border border-gray-300 rounded-md text-sm px-3 py-2 min-w-[140px]"
               >
                 <option value="all">All Severities ({actualVulnerabilities.filter(v => confidenceFilter === 'all' || (v && (v.confidence || 0) >= parseFloat(confidenceFilter) / 100)).length})</option>
+                <option value="fp">False Positives ({vulnStats.fp})</option>
                 <option value="critical">Critical ({actualVulnerabilities.filter(v => v && v.severity === 'critical' && (confidenceFilter === 'all' || (v.confidence || 0) >= parseFloat(confidenceFilter) / 100)).length})</option>
                 <option value="high">High ({actualVulnerabilities.filter(v => v && v.severity === 'high' && (confidenceFilter === 'all' || (v.confidence || 0) >= parseFloat(confidenceFilter) / 100)).length})</option>
                 <option value="medium">Medium ({actualVulnerabilities.filter(v => v && v.severity === 'medium' && (confidenceFilter === 'all' || (v.confidence || 0) >= parseFloat(confidenceFilter) / 100)).length})</option>
@@ -1661,9 +1690,16 @@ const ScanResults: React.FC<ScanResultsProps> = ({
                       <div key={vuln.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-shadow">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {safeRender(vuln.name, 'Unknown Vulnerability')}
-                            </h3>
+                            <div className="flex items-center gap-3">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {safeRender(vuln.name, 'Unknown Vulnerability')}
+                              </h3>
+                              {vuln.is_fp && (
+                                <span className="px-2 py-0.5 rounded text-xs font-semibold uppercase bg-gray-100 text-gray-600 border border-gray-300" title={`ML Confidence: ${(vuln.fp_confidence * 100).toFixed(1)}%`}>
+                                  Likely FP
+                                </span>
+                              )}
+                            </div>
                             <p className="mt-2 text-gray-600">
                               {safeRender(vuln.description, 'No description available')}
                             </p>

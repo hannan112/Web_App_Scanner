@@ -186,7 +186,35 @@ class VulnerabilitySummarySerializer(serializers.ModelSerializer):
             "severity",
             "url",
             "confidence",
+            "is_fp",
+            "fp_confidence",
         ]
+
+    is_fp = serializers.SerializerMethodField()
+    fp_confidence = serializers.SerializerMethodField()
+
+    def get_is_fp(self, obj):
+        try:
+            if obj.other_info:
+                import json
+                info = json.loads(obj.other_info) if isinstance(obj.other_info, str) else obj.other_info
+                if isinstance(info, dict):
+                    return info.get('ml_is_fp', False)
+        except:
+            pass
+        return False
+
+    def get_fp_confidence(self, obj):
+        try:
+            if obj.other_info:
+                import json
+                info = json.loads(obj.other_info) if isinstance(obj.other_info, str) else obj.other_info
+                if isinstance(info, dict):
+                    return info.get('ml_fp_confidence', 0.0)
+        except:
+            pass
+        return 0.0
+
 
 
 class VulnerabilitySerializer(serializers.ModelSerializer):
@@ -203,6 +231,7 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
             "evidence",
             "confidence",
             "remediation",
+            "other_info",
             "created_at",
         ]
         read_only_fields = ["created_at"]
@@ -442,6 +471,7 @@ class ScanResultsSerializer(serializers.ModelSerializer):
 class ScanSerializer(serializers.ModelSerializer):
     scan_type = serializers.SerializerMethodField()
     project_id = serializers.SerializerMethodField()
+    project_uuid = serializers.SerializerMethodField()
     configuration_name = serializers.SerializerMethodField()
     config = serializers.SerializerMethodField()
 
@@ -462,6 +492,7 @@ class ScanSerializer(serializers.ModelSerializer):
             "updated_at",
             "scan_type",
             "project_id",
+            "project_uuid",
             "configuration_name",
         ]
         read_only_fields = [
@@ -491,6 +522,16 @@ class ScanSerializer(serializers.ModelSerializer):
         try:
             if obj.configuration and obj.configuration.project:
                 return obj.configuration.project.id
+            return None
+        except Exception:
+            return None
+
+    def get_project_uuid(self, obj):
+        try:
+            if obj.configuration and obj.configuration.project:
+                return str(obj.configuration.project.uuid)
+            return None
+        except Exception:
             return None
         except Exception:
             return None

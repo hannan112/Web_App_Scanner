@@ -3,7 +3,10 @@ from django.db import models
 from authentication.models import CustomUser
 
 
+import uuid
+
 class Project(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255)
     target_url = models.URLField()
     description = models.TextField(blank=True, null=True)

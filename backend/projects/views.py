@@ -4,6 +4,7 @@ from django.utils import timezone
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 from .models import Project
 from .serializers import (ProjectCreateUpdateSerializer,
@@ -16,6 +17,27 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """ViewSet for CRUD operations on Project model"""
 
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "uuid"
+
+    def get_object(self):
+        """
+        Override get_object to allow lookup by either UUID or integer ID.
+        This ensures backward compatibility for simplified navigation and cached frontend links.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        lookup_value = self.kwargs.get(lookup_url_kwarg)
+
+        # Check if the lookup value is an integer (legacy ID)
+        if lookup_value is not None and str(lookup_value).isdigit():
+            filter_kwargs = {"id": lookup_value}
+        else:
+            # Assume it's a UUID
+            filter_kwargs = {self.lookup_field: lookup_value}
+
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -78,7 +100,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=True, methods=["get"])
-    def stats(self, request, pk=None):
+    def stats(self, request, pk=None, uuid=None, **kwargs):
         """Get detailed project statistics"""
         project = self.get_object()
 

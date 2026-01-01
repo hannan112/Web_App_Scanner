@@ -89,7 +89,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       const last = projectStats.scan_stats.recent_scans[0];
       setLastScanMeta(last);
       try {
-        const data = await getScanResults(String(last.id));
+        const data = await getScanResults(last.uuid);
         // Prefer server-provided summary if present
         const summary = data?.summary || null;
         setLastScanSummary(summary);
@@ -149,7 +149,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
           <h2 className="text-xl font-semibold text-slate-900">Project Details</h2>
           <div className="space-x-2">
             <Link
-              href={`/projects/${project.id}/edit`}
+              href={`/projects/${project.uuid}/edit`}
               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm shadow-md"
             >
               Edit
@@ -339,7 +339,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
               )}
 
               <div className="pt-2 border-t border-white/10">
-                <Link href={`/projects/${project.id}/scans/${lastScanMeta.id}`} className="text-blue-600 hover:underline text-sm">View last scan</Link>
+                <Link href={`/projects/${project.uuid}/scans/${lastScanMeta.uuid}`} className="text-blue-600 hover:underline text-sm">View last scan</Link>
               </div>
             </div>
           ) : (
@@ -353,7 +353,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-slate-900">Scan History</h2>
           <Link
-            href={`/projects/${project.id}/scans/new`}
+            href={`/projects/${project.uuid}/scans/new`}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md"
           >
             Start New Scan
@@ -391,8 +391,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
                       </span>
                     </td>
                     <td className="py-2 px-4">
-                      <span className={`px-2 py-1 rounded text-xs font-medium border ${
-                        scan.status === 'completed' ? 'bg-green-100/80 backdrop-blur-sm text-green-800 border-green-200/50' :
+                      <span className={`px-2 py-1 rounded text-xs font-medium border ${scan.status === 'completed' ? 'bg-green-100/80 backdrop-blur-sm text-green-800 border-green-200/50' :
                         scan.status === 'running' ? 'bg-blue-100/80 backdrop-blur-sm text-blue-800 border-blue-200/50' :
                           scan.status === 'failed' ? 'bg-red-100/80 backdrop-blur-sm text-red-800 border-red-200/50' :
                             scan.status === 'stopped' ? 'bg-orange-100/80 backdrop-blur-sm text-orange-800 border-orange-200/50' :
@@ -410,7 +409,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
                         scan.status === 'running' ? 'In progress' : '-'}
                     </td>
                     <td className="py-2 px-4">
-                      <Link href={`/projects/${project.id}/scans/${scan.id}`} className="text-blue-600 hover:underline">
+                      <Link href={`/projects/${project.uuid}/scans/${scan.uuid}`} className="text-blue-600 hover:underline">
                         View Results
                       </Link>
                     </td>
@@ -423,7 +422,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
           <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 text-center rounded-lg shadow">
             <p className="text-slate-700 mb-4">No scans have been performed yet.</p>
             <Link
-              href={`/projects/${project.id}/scans/new`}
+              href={`/projects/${project.uuid}/scans/new`}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Start First Scan
@@ -440,13 +439,13 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
         <div className="flex space-x-2">
           <Link
-            href={`/projects/${project.id}/scans/new`}
+            href={`/projects/${project.uuid}/scans/new`}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-md"
           >
             New Scan
           </Link>
           <Link
-            href={`/projects/${project.id}/scans`}
+            href={`/projects/${project.uuid}/scans`}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow-md"
           >
             View All Scans

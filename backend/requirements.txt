@@ -39,3 +39,6 @@ numpy>=1.24.0
 joblib>=1.3.0  # For model serialization
 nltk>=3.8.0  # For text processing
 regex>=2023.0.0  # For advanced pattern matching
+
+# Reporting
+reportlab>=4.0.0  # For PDF generation

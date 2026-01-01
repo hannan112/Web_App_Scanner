@@ -16,13 +16,14 @@ class ProjectListSerializer(serializers.ModelSerializer):
         model = Project
         fields = [
             "id",
+            "uuid",
             "name",
             "target_url",
             "created_at",
             "scan_count",
             "last_scan_date",
         ]
-        read_only_fields = ["id", "created_at", "scan_count", "last_scan_date"]
+        read_only_fields = ["id", "uuid", "created_at", "scan_count", "last_scan_date"]
 
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
@@ -30,8 +31,8 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["id", "name", "target_url", "description", "created_at", "updated_at"]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        fields = ["id", "uuid", "name", "target_url", "description", "created_at", "updated_at"]
+        read_only_fields = ["id", "uuid", "created_at", "updated_at"]
 
 
 class ProjectCreateUpdateSerializer(serializers.ModelSerializer):
@@ -39,8 +40,8 @@ class ProjectCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["id", "name", "target_url", "description"]
-        read_only_fields = ["id"]
+        fields = ["id", "uuid", "name", "target_url", "description"]
+        read_only_fields = ["id", "uuid"]
 
     def validate_target_url(self, value):
         """

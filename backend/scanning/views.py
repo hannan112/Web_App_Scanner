@@ -41,15 +41,21 @@ class ScanConfigurationViewSet(viewsets.ModelViewSet):
         return ScanConfiguration.objects.filter(project__owner=self.request.user)
 
     def perform_create(self, serializer):
-        """Validate the user has access to the project"""
-        project_id = self.request.data.get("project")
-        project = get_object_or_404(Project, id=project_id, owner=self.request.user)
+        """
+        Set the project from the validated data.
+        The serializer already validates and retrieves the Project instance using SlugRelatedField.
+        We just need to verify ownership here if not handled by permission classes.
+        """
+        # Get project from validated data
+        project = serializer.validated_data.get('project')
         
-        # Debug logging
-        logger.info(f"Creating scan configuration with data: {self.request.data}")
-        
+        # Verify ownership
+        if project.owner != self.request.user:
+             # This should ideally be a permission class, but enforcing here for safety
+             raise permissions.PermissionDenied("You do not have permission to create configurations for this project.")
+
         try:
-            serializer.save(project=project)
+            serializer.save()
             logger.info(f"Scan configuration created successfully: {serializer.instance.id}")
         except Exception as e:
             logger.error(f"Error creating scan configuration: {str(e)}")
@@ -232,9 +238,14 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["post"])
-    def stop(self, request, pk=None):
+    def stop(self, request, pk=None, uuid=None, **kwargs):
         """Stop a running scan and restart ZAP container"""
-        scan = self.get_object()
+        if uuid:
+            scan = get_object_or_404(Scan, uuid=uuid)
+            if scan.configuration.project.owner != request.user:
+                    raise permissions.PermissionDenied("You do not have permission to stop this scan.")
+        else:
+            scan = self.get_object()
 
         # Accept legacy 'in_progress' as running
         if scan.status not in ["running", "in_progress"]:
@@ -306,9 +317,14 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["post"])
-    def force_stop(self, request, pk=None):
+    def force_stop(self, request, pk=None, uuid=None, **kwargs):
         """Force stop a scan using Docker-level termination (emergency stop)"""
-        scan = self.get_object()
+        if uuid:
+            scan = get_object_or_404(Scan, uuid=uuid)
+            if scan.configuration.project.owner != request.user:
+                    raise permissions.PermissionDenied("You do not have permission to stop this scan.")
+        else:
+            scan = self.get_object()
 
         try:
             import subprocess
@@ -384,10 +400,15 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def download_raw_data(self, request, pk=None):
+    def download_raw_data(self, request, pk=None, uuid=None, **kwargs):
         """Download complete raw scan data for manual analysis"""
         try:
-            scan = self.get_object()
+            if uuid:
+                scan = get_object_or_404(Scan, uuid=uuid)
+                if scan.configuration.project.owner != request.user:
+                     raise permissions.PermissionDenied("You do not have permission to view this scan.")
+            else:
+                scan = self.get_object()
 
             # Get data type requested
             data_type = request.GET.get('type', 'all')  # all, vulnerabilities, ajax_spider, raw_findings
@@ -820,10 +841,17 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def status(self, request, pk=None):
+    def status(self, request, pk=None, uuid=None, **kwargs):
         """Get current scan status and progress"""
         try:
-            scan = self.get_object()
+            # Try to get object by UUID first if provided
+            if uuid:
+                scan = get_object_or_404(Scan, uuid=uuid)
+                # Verify permissions through configuration project
+                if scan.configuration.project.owner != request.user:
+                     raise permissions.PermissionDenied("You do not have permission to view this scan.")
+            else:
+                scan = self.get_object()
 
             project_info = None
             if scan.configuration and scan.configuration.project:
@@ -1002,7 +1030,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def progress(self, request, pk=None):
+    def progress(self, request, pk=None, uuid=None, **kwargs):
         """Get real-time scan progress and recent logs"""
         try:
             # Debug logging for authentication issues
@@ -1056,7 +1084,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def statistics(self, request, pk=None):
+    def statistics(self, request, pk=None, uuid=None, **kwargs):
         """Get active scan statistics"""
         try:
             scan = self.get_object()
@@ -1127,7 +1155,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def spider_data(self, request, pk=None):
+    def spider_data(self, request, pk=None, uuid=None, **kwargs):
         """Get optimized spider data with pagination"""
         try:
             scan = self.get_object()
@@ -1169,7 +1197,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def ajax_spider_data(self, request, pk=None):
+    def ajax_spider_data(self, request, pk=None, uuid=None, **kwargs):
         """Get optimized AJAX spider data with pagination"""
         try:
             scan = self.get_object()
@@ -1211,7 +1239,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def chunked_results(self, request, pk=None):
+    def chunked_results(self, request, pk=None, uuid=None, **kwargs):
         """Get scan results in chunks to prevent frontend crashes"""
         try:
             scan = self.get_object()
@@ -1274,7 +1302,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def compressed_results(self, request, pk=None):
+    def compressed_results(self, request, pk=None, uuid=None, **kwargs):
         """Get compressed scan results to reduce transfer size"""
         try:
             scan = self.get_object()
@@ -1324,7 +1352,7 @@ class ScanViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
-    def test_fix(self, request, pk=None):
+    def test_fix(self, request, pk=None, uuid=None, **kwargs):
         """Test endpoint to verify the scanType fix"""
         try:
             scan = self.get_object()

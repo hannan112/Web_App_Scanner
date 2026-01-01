@@ -37,7 +37,9 @@ export default function NewScanPage() {
     enable_spider: true,
     enable_ajax_spider: true,
     max_spider_depth: 3,
+    max_spider_depth: 3,
     max_spider_duration: 10, // 10 minutes
+    active_scan_timeout_minutes: 30, // 30 minutes default active scan timeout
 
     // ZAP Active Scan Configuration
     zap_attack_strength: "MEDIUM" as 'LOW' | 'MEDIUM' | 'HIGH' | 'INSANE',
@@ -99,7 +101,9 @@ export default function NewScanPage() {
         setProjects(projectsData);
 
         if (projectsData.length > 0) {
-          setSelectedProject(String(projectsData[0].id));
+          // Prefer UUID, fallback to ID if UUID is missing (though it shouldn't be)
+          const firstProjectId = projectsData[0].uuid || String(projectsData[0].id);
+          setSelectedProject(firstProjectId);
           // Always use default configuration, don't fetch saved ones
         }
       } catch (err) {
@@ -240,7 +244,7 @@ export default function NewScanPage() {
                 <option value="">No projects available</option>
               ) : (
                 projects.map(project => (
-                  <option key={project.id} value={project.id}>
+                  <option key={project.id} value={project.uuid || project.id}>
                     {project.name} ({project.target_url})
                   </option>
                 ))

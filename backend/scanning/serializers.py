@@ -10,9 +10,16 @@ from scanning.models.scan import (
 from scanning.models.vulnerability import Vulnerability
 
 
+from projects.models import Project
+
 class ScanConfigurationSerializer(serializers.ModelSerializer):
     """Serializer for comprehensive scan configurations (passive, active, comprehensive)"""
     
+    project = serializers.SlugRelatedField(
+        queryset=Project.objects.all(),
+        slug_field='uuid'
+    )
+
     class Meta:
         model = ScanConfiguration
         fields = [
@@ -39,6 +46,7 @@ class ScanConfigurationSerializer(serializers.ModelSerializer):
             # ZAP Active Scan Configuration
             "zap_attack_strength",
             "zap_active_scan_policy",
+            "active_scan_timeout_minutes",
             
             # Vulnerability testing categories
             "test_sql_injection",

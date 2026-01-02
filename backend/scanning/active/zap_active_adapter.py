@@ -188,7 +188,7 @@ class ZAPActiveAdapter:
             logger.error(f"ZAP connection failed: {e}")
         return False
     
-    def _make_api_request(self, endpoint: str, params: Dict = None) -> Optional[Dict]:
+    def _make_api_request(self, endpoint: str, params: Dict = None, timeout: int = 30) -> Optional[Dict]:
         """Make API request to ZAP with logging"""
         try:
             url = f"{self.api_url}/{endpoint}/"
@@ -196,7 +196,7 @@ class ZAPActiveAdapter:
             if self.api_key:
                 params["apikey"] = self.api_key
 
-            response = requests.get(url, params=params, timeout=30)
+            response = requests.get(url, params=params, timeout=timeout)
             response.raise_for_status()
 
             result = response.json()
@@ -217,7 +217,7 @@ class ZAPActiveAdapter:
 
             return None
     
-    def _make_api_post_request(self, endpoint: str, data: Dict = None) -> Optional[Dict]:
+    def _make_api_post_request(self, endpoint: str, data: Dict = None, timeout: int = 30) -> Optional[Dict]:
         """Make API request to ZAP with logging (uses GET, not POST)
 
         IMPORTANT: Despite the name, this uses GET requests because ZAP's JSON API
@@ -237,7 +237,7 @@ class ZAPActiveAdapter:
             params.update(data)
 
             # Use GET instead of POST - ZAP action endpoints don't accept POST!
-            response = requests.get(url, params=params, timeout=30)
+            response = requests.get(url, params=params, timeout=timeout)
             response.raise_for_status()
 
             result = response.json()
@@ -1549,10 +1549,38 @@ class ZAPActiveAdapter:
     def _extract_vulnerabilities(self) -> List[Dict]:
         """Extract and format vulnerabilities from ZAP results, scoped to current target"""
         vulnerabilities = []
+        max_retries = 3
+        
+        # Increase timeout specifically for alert retrieval as this can be large
+        alert_timeout = 300  # 5 minutes
 
         try:
             # Fetch all alerts (no domain scoping) to avoid missing relevant items
-            alerts_response = self._make_api_request("core/view/alerts")
+            # Add retry mechanism for resilience
+            alerts_response = None
+            last_error = None
+            
+            for attempt in range(max_retries):
+                try:
+                    logger.debug(f"Fetching alerts from ZAP (attempt {attempt+1}/{max_retries})...")
+                    alerts_response = self._make_api_request("core/view/alerts", timeout=alert_timeout)
+                    if alerts_response:
+                        break
+                    time.sleep(2)
+                except Exception as e:
+                    last_error = e
+                    logger.warning(f"Attempt {attempt+1} to fetch alerts failed: {e}")
+                    time.sleep(2)
+            
+            if not alerts_response and last_error:
+                logger.error(f"Failed to fetch alerts after {max_retries} attempts. Last error: {last_error}")
+                # Log critical error to scan logger
+                if self.scan_logger:
+                    self.scan_logger.log_error(
+                        "Alert Retrieval Failed", 
+                        f"Failed to retrieve vulnerabilities from ZAP after {max_retries} attempts. Partial results may occur."
+                    )
+            
             alerts = alerts_response.get("alerts", []) if alerts_response else []
 
             logger.debug(f"ZAP returned {len(alerts)} alerts")

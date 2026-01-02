@@ -37,7 +37,7 @@ export default function NewScanPage() {
     enable_spider: true,
     enable_ajax_spider: true,
     max_spider_depth: 3,
-    max_spider_depth: 3,
+
     max_spider_duration: 10, // 10 minutes
     active_scan_timeout_minutes: 30, // 30 minutes default active scan timeout
 

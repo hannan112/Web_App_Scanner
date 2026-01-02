@@ -671,26 +671,18 @@ class ActiveScanningEngine:
         all_urls = set()
 
         try:
-            # 1. Extract from passive discovery (integration)
-            passive_data = discovery_results.get('passive_discovery', {})
-            passive_urls = passive_data.get('urls', [])
-            if passive_urls:
-                normalized_passive = self._normalize_urls(passive_urls)
-                all_urls.update(normalized_passive)
-                logger.info(f"Found {len(normalized_passive)} URLs from passive discovery")
-
-            # 2. Extract from enhanced discovery (external tools like subfinder, nuclei)
+            # Extract from enhanced discovery (external tools like subfinder, nuclei)
             enhanced_data = discovery_results.get('enhanced_discovery', {})
             if enhanced_data:
-                # URLs discovered (fix: use 'urls' key, not 'urls_discovered')
-                enhanced_urls = enhanced_data.get('urls', [])
+                # URLs discovered by external tools
+                enhanced_urls = enhanced_data.get('urls_discovered', [])
                 if enhanced_urls:
                     normalized_enhanced = self._normalize_urls(enhanced_urls)
                     all_urls.update(normalized_enhanced)
-                    logger.info(f"Found {len(normalized_enhanced)} URLs from enhanced discovery")
+                    logger.info(f"Found {len(normalized_enhanced)} URLs from enhanced discovery tools")
 
                 # Subdomains discovered
-                subdomains = enhanced_data.get('subdomains', [])
+                subdomains = enhanced_data.get('subdomains_discovered', [])
                 for subdomain in subdomains:
                     if subdomain and isinstance(subdomain, str):
                         # Convert subdomain to full URL
@@ -698,25 +690,23 @@ class ActiveScanningEngine:
                         all_urls.add(subdomain_url)
 
                 # API endpoints discovered
-                api_endpoints = enhanced_data.get('api_endpoints', [])
+                api_endpoints = enhanced_data.get('api_endpoints_discovered', [])
                 if api_endpoints:
                     normalized_api = self._normalize_urls(api_endpoints)
                     all_urls.update(normalized_api)
                     logger.info(f"Found {len(normalized_api)} API endpoints from enhanced discovery")
 
-            # 3. Extract from ZAP spider results
+            # Extract from ZAP spider results
             spider_data = discovery_results.get('spider_results', {})
-            # Fix: use 'urls' key
-            spider_urls = spider_data.get('urls', [])
+            spider_urls = spider_data.get('urls_discovered', [])
             if spider_urls:
                 normalized_spider = self._normalize_urls(spider_urls)
                 all_urls.update(normalized_spider)
                 logger.info(f"Found {len(normalized_spider)} URLs from ZAP spider")
 
-            # 4. Extract from ZAP AJAX spider results
+            # Extract from ZAP AJAX spider results
             ajax_data = discovery_results.get('ajax_spider_results', {})
-            # Fix: use 'urls' key
-            ajax_urls = ajax_data.get('urls', [])
+            ajax_urls = ajax_data.get('urls_discovered', [])
             if ajax_urls:
                 normalized_ajax = self._normalize_urls(ajax_urls)
                 all_urls.update(normalized_ajax)

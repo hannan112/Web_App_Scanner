@@ -74,6 +74,23 @@ npm run dev
 
 The frontend will be available at `http://localhost:3000`
 
+#### 4. Security & Scanning Tools Setup (Docker)
+
+To run actual web application scans, you must start the scanning tools (OWASP ZAP and discovery containers):
+
+```bash
+# Navigate to the docker-containers directory
+cd docker-containers
+
+# Start ZAP and discovery tool containers
+docker compose up -d
+
+# Set up local discovery tool wrappers
+./setup-discovery-tools.sh
+```
+
+For more details about the hybrid scanning strategy, refer to the [docker-containers README](file:///home/hannan/Projects/Web_App_Scanner/docker-containers/README.md).
+
 ### 🔧 Environment Configuration
 
 #### Backend Environment Variables

@@ -23,6 +23,7 @@ ML/*.csv
 !ML/sample_dataset.csv
 
 
+
 # Python
 __pycache__/
 *.py[cod]
@@ -139,7 +140,8 @@ id_dsa
 *.asc
 *.secret
 
-# Deployment env files
+# Deployment env files and scripts
 deployment/.env.prod
+/scripts/
 
 

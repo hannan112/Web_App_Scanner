@@ -13,6 +13,7 @@ ml_training.sqlite3
 backend/dataset/*
 !backend/dataset/safe_sites.csv
 !backend/dataset/vulnerable_sites.csv
+!backend/dataset/scans.csv
 !backend/dataset/README.md
 
 # ML - keep notebooks/model, block the raw scraped dataset

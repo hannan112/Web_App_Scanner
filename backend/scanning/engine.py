@@ -186,24 +186,7 @@ class PassiveScanningEngine:
             
             logger.info(f"Scan {self.scan_id} completed successfully with comprehensive results saved")
             logger.info(f"Results summary: {results_summary}")
-            
-            
-            # Send email notification
-            logger.info(f"🔔 Attempting to send scan completion email for scan {self.scan_id}...")
-            try:
-                from notifications.services import send_scan_completion_email
-                logger.info(f"✅ Email service imported successfully")
-                if self.scan.configuration and self.scan.configuration.project:
-                    user = self.scan.configuration.project.owner
-                    logger.info(f"✅ Found project owner: {user.email}")
-                    send_scan_completion_email(self.scan, user)
-                    logger.info(f"✅ Email sent successfully to {user.email}")
-                else:
-                    logger.warning(f"⚠️ No configuration or project found for scan {self.scan_id}")
-            except Exception as e:
-                logger.warning(f"Failed to send completion email: {e}", exc_info=True)
-            
-            
+
         except Exception as e:
             logger.exception(f"Failed saving results: {e}")
             self._fail_scan(str(e))
@@ -226,12 +209,3 @@ class PassiveScanningEngine:
             )
         except Exception as e:
             logger.error(f"Failed to create error log: {e}")
-        
-        # Send email notification for failure
-        try:
-            from notifications.services import send_scan_completion_email
-            if self.scan.configuration and self.scan.configuration.project:
-                user = self.scan.configuration.project.owner
-                send_scan_completion_email(self.scan, user)
-        except Exception as e:
-            logger.warning(f"Failed to send failure email: {e}")

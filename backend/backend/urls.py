@@ -23,7 +23,6 @@ urlpatterns = [
     path("api/auth/", include("authentication.urls")),
     path("api/", include("projects.urls")),
     path("api/scanning/", include("scanning.urls")),
-    path("api/blog/", include("blog.urls")),
     path("accounts/", include("allauth.urls")),
     path("api/auth/", include("dj_rest_auth.urls")),
     path("api/auth/registration/", include("dj_rest_auth.registration.urls")),

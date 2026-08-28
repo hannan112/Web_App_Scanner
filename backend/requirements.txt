@@ -22,7 +22,6 @@ beautifulsoup4>=4.11.2
 pyjwt>=2.6.0
 tqdm  # If you use context_for_LLMs.py
 python-magic  # If you use context_for_LLMs.py
-resend>=2.0.0  # For email notifications
 
 # Additional dependencies
 Pillow>=10.0.0  # For image processing

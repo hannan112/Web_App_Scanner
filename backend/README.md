@@ -99,11 +99,6 @@ SECRET_KEY=your-secret-key-here
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
-# Email Settings (sent via Resend - https://resend.com)
-RESEND_API_KEY=re_your_resend_api_key
-EMAIL_FROM_ADDRESS=your-email@example.com
-EMAIL_FROM_NAME=Security Scanner
-
 # JWT Settings
 JWT_SIGNING_KEY=your-jwt-signing-key-here
 

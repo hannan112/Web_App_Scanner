@@ -31,7 +31,6 @@ export default function PricingPage() {
           <Link href="/" className="text-2xl font-bold text-blue-700">Security Scanner</Link>
           <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium">Home</Link>
           <Link href="/pricing" className="text-blue-700 font-medium">Pricing</Link>
-          <Link href="/blog" className="text-gray-700 hover:text-blue-700 font-medium">Blog</Link>
           <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium">Contact</Link>
         </div>
         <div>
@@ -244,7 +243,7 @@ export default function PricingPage() {
                 <Link href="/contact" className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
                   Contact Sales
                 </Link>
-                <Link href="/blog" className="px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition">
+                <Link href="/" className="px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition">
                   Learn More
                 </Link>
               </div>

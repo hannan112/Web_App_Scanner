@@ -76,8 +76,6 @@ INSTALLED_APPS = [
     "authentication",
     "projects",
     "scanning",
-    "blog",
-    "notifications",
     # OAuth related
     "django.contrib.sites",
     "allauth",
@@ -462,7 +460,7 @@ JAZZMIN_SETTINGS = {
     "hide_models": [],
 
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["auth", "authentication", "projects", "scanning", "blog", "notifications"],
+    "order_with_respect_to": ["auth", "authentication", "projects", "scanning"],
 
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
@@ -486,8 +484,6 @@ JAZZMIN_SETTINGS = {
         "scanning.ScanConfiguration": "fas fa-cog",
         "scanning.Vulnerability": "fas fa-bug",
         "scanning.ScanResult": "fas fa-file-alt",
-        "blog.BlogPost": "fas fa-blog",
-        "notifications.Notification": "fas fa-bell",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",

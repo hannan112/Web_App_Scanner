@@ -50,11 +50,6 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/blog" className="text-sm text-slate-300 hover:text-white transition">
-                  Blog
-                </Link>
-              </li>
-              <li>
                 <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-300 hover:text-white transition">
                   OWASP Top 10
                 </a>
@@ -84,11 +79,6 @@ export default function Footer() {
               <li>
                 <Link href="/contact" className="text-sm text-slate-300 hover:text-white transition">
                   Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-sm text-slate-300 hover:text-white transition">
-                  Blog
                 </Link>
               </li>
               <li>

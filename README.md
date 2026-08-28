@@ -82,7 +82,6 @@ Copy `backend/.env.example` to `backend/.env` and configure the following variab
 
 - `SECRET_KEY`: Django secret key (generate a unique one for production)
 - `DEBUG`: Set to `True` for development
-- `EMAIL_*`: Email configuration for sending notifications
 - `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: For Google OAuth (optional)
 
 #### Frontend Environment

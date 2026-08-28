@@ -47,8 +47,10 @@ def send_scan_completion_email(scan, user):
                 logger.warning(f"Could not get vulnerability count: {e}")
         
         # Prepare common email data
+        # Note: Resend's free tier only allows sending to verified recipients until
+        # you verify your own sending domain - see https://resend.com/domains
         common_data = {
-            'user_email': 'hannanhaxor686@gmail.com',  # Hardcoded for Resend free tier
+            'user_email': user.email,
             'user_name': user.username or user.email.split('@')[0],
             'scan_id': scan.id,
             'scan_type': scan_type,

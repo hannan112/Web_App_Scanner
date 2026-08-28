@@ -3,12 +3,17 @@ from projects.models import Project
 from authentication.models import CustomUser
 
 class Command(BaseCommand):
-    help = 'Adds a list of vulnerable web applications to the database'
+    help = 'Adds a list of known-vulnerable public test targets as projects for a user'
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "user_email",
+            help="Email of the existing user to own the created projects",
+        )
 
     def handle(self, *args, **kwargs):
-        # Target user email
-        user_email = "hannanhaxor686@gmail.com"
-        
+        user_email = kwargs["user_email"]
+
         try:
             user = CustomUser.objects.get(email=user_email)
         except CustomUser.DoesNotExist:

@@ -80,10 +80,7 @@ api.interceptors.request.use(
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('accessToken');
       if (token) {
-        console.log(`API Request to ${config.url}: Using token ${token.substring(0, 10)}...`);
         config.headers.Authorization = `Bearer ${token}`;
-      } else {
-        console.warn(`API Request to ${config.url}: No access token found in localStorage`);
       }
     }
     return config;

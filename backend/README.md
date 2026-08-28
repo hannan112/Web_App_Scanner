@@ -37,7 +37,7 @@ backend/
 ├── logs/                  # Application logs
 ├── venv/                  # Virtual environment
 ├── requirements.txt       # Python dependencies
-├── env.example           # Environment variables template
+├── .env.example           # Environment variables template
 └── README.md             # This file
 ```
 
@@ -70,7 +70,7 @@ backend/
 
 4. **Set up environment variables**
    ```bash
-   cp env.example .env
+   cp .env.example .env
    # Edit .env with your configuration
    ```
 
@@ -99,13 +99,10 @@ SECRET_KEY=your-secret-key-here
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
-# Email Settings
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-app-password
-DEFAULT_FROM_EMAIL=Security Scanner <noreply@securityscanner.com>
+# Email Settings (sent via Resend - https://resend.com)
+RESEND_API_KEY=re_your_resend_api_key
+EMAIL_FROM_ADDRESS=your-email@example.com
+EMAIL_FROM_NAME=Security Scanner
 
 # JWT Settings
 JWT_SIGNING_KEY=your-jwt-signing-key-here
@@ -225,8 +222,8 @@ python manage.py migrate
 
 ## License
 
-[Add your license information here]
+This project is licensed under the MIT License — see [LICENSE.md](../LICENSE.md) for details.
 
 ## Support
 
-For support and questions, please [create an issue](link-to-issues) or contact the development team. 
+For support and questions, please open an issue on the [GitHub repository](https://github.com/hannan112/Web_App_Scanner/issues).

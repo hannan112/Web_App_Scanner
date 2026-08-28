@@ -940,34 +940,6 @@ class ScanViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["get"])
-    def crawl(self, request, pk=None):
-        """Get crawl results"""
-        # The CrawlResult model was removed, so this will cause an error.
-        # Assuming the intent was to remove this action or update it.
-        # For now, keeping it as is, but it will fail.
-        # try:
-        #     scan = self.get_object()
-        #     try:
-        #         results = CrawlResult.objects.get(scan=scan)
-        #         serializer = CrawlResultSerializer(results)
-        #         return Response(serializer.data)
-        #     except CrawlResult.DoesNotExist:
-        #         return Response(
-        #             {"error": "Crawl results not found"},
-        #             status=status.HTTP_404_NOT_FOUND,
-        #         )
-        # except Exception as e:
-        #     logger.error(f"Error retrieving crawl results: {str(e)}")
-        #     return Response(
-        #         {"error": f"Error retrieving crawl results: {str(e)}"},
-        #         status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        #     )
-        return Response(
-            {"error": "Crawl functionality is currently unavailable."},
-            status=status.HTTP_501_NOT_IMPLEMENTED, # 501 Not Implemented
-        )
-
     @action(detail=True, methods=["get", "post"])
     def report(self, request, pk=None, uuid=None):
         """Generate a PDF report for the scan"""

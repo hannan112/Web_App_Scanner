@@ -23,15 +23,15 @@ git pull origin main
 
 # Build and start containers
 echo -e "${YELLOW}🏗️ Building and starting containers...${NC}"
-docker compose -f deployment/docker-compose.prod.yml up -d --build
+docker compose --env-file deployment/.env.prod -f deployment/docker-compose.prod.yml up -d --build
 
 # Run migrations
 echo -e "${YELLOW}🔄 Running database migrations...${NC}"
-docker compose -f deployment/docker-compose.prod.yml exec backend python manage.py migrate
+docker compose --env-file deployment/.env.prod -f deployment/docker-compose.prod.yml exec backend python manage.py migrate
 
 # Collect static files
 echo -e "${YELLOW}🎨 Collecting static files...${NC}"
-docker compose -f deployment/docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
+docker compose --env-file deployment/.env.prod -f deployment/docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
 
 # Clean up unused images
 echo -e "${YELLOW}🧹 Cleaning up old images...${NC}"

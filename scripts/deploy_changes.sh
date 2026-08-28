@@ -11,8 +11,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-SSH_KEY="/home/hannan/keys/oceans_digital"
-SERVER="root@143.198.211.182"
+SSH_KEY="${DEPLOY_SSH_KEY:?Set DEPLOY_SSH_KEY to your SSH private key path}"
+SERVER="${DEPLOY_SERVER:?Set DEPLOY_SERVER, e.g. root@your-server-ip}"
+PROD_DOMAIN="${DEPLOY_DOMAIN:?Set DEPLOY_DOMAIN, e.g. api.your-domain.com}"
+FRONTEND_ORIGINS="${DEPLOY_FRONTEND_ORIGINS:?Set DEPLOY_FRONTEND_ORIGINS, comma-separated allowed origins}"
 REMOTE_DIR="~/Web_App_Scanner"
 
 echo -e "${BLUE}🚀 Starting Deployment Process...${NC}"
@@ -31,17 +33,12 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
 fi
 
-# Step 3: Commit changes
-echo -e "${YELLOW}📝 Committing changes...${NC}"
-git add -A
-git commit -m "Fix: Improve scan status polling and CORS configuration
-
-- Add 30s timeout to API client for production
-- Improve error handling to distinguish network errors from scan failures
-- Add retry logic with exponential backoff for failed requests
-- Make polling more resilient - continue after temporary failures
-- Improve CORS configuration parsing to handle whitespace
-- Add debug logging for CORS origins"
+# Step 3: Require changes to already be committed - this script should not
+# invent commit messages on your behalf
+if [[ -n "$(git status --porcelain)" ]]; then
+    echo "Error: You have uncommitted changes. Commit them yourself first, then re-run this script."
+    exit 1
+fi
 
 # Step 4: Push to git (this will trigger Vercel deployment)
 echo -e "${YELLOW}📤 Pushing to git (triggers Vercel auto-deploy)...${NC}"
@@ -52,23 +49,20 @@ echo ""
 
 # Step 5: Deploy backend to Digital Ocean
 echo -e "${YELLOW}🌊 Deploying backend to Digital Ocean...${NC}"
-ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" << 'EOF'
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" bash -s -- "$FRONTEND_ORIGINS" "$PROD_DOMAIN" << 'EOF'
 cd ~/Web_App_Scanner
+FRONTEND_ORIGINS="$1"
+PROD_DOMAIN="$2"
 
 # Backup current .env
 echo "📦 Backing up .env file..."
 cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
 
-# Update CORS_ALLOWED_ORIGINS to include all three Vercel URLs
-# Update CORS_ALLOWED_ORIGINS to include local, production (including api), and Vercel URLs
+# Update CORS_ALLOWED_ORIGINS / CSRF_TRUSTED_ORIGINS / ALLOWED_HOSTS
 echo "🔧 Updating CORS configuration..."
-sed -i 's|CORS_ALLOWED_ORIGINS=.*|CORS_ALLOWED_ORIGINS=http://localhost:3000,https://morphbreak.site,https://www.morphbreak.site,https://api.morphbreak.site,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
-
-# Update CSRF_TRUSTED_ORIGINS to include local, production (including api), and Vercel URLs
-sed -i 's|CSRF_TRUSTED_ORIGINS=.*|CSRF_TRUSTED_ORIGINS=https://143.198.211.182.nip.io,https://morphbreak.site,https://www.morphbreak.site,https://api.morphbreak.site,https://web-app-scanner.vercel.app,https://web-app-scanner-git-main-hannan-alis-projects-0d0fd28d.vercel.app,https://web-app-scanner-iam4u58dg-hannan-alis-projects-0d0fd28d.vercel.app|' .env
-
-# Update ALLOWED_HOSTS to ensure api.morphbreak.site is included
-sed -i 's|ALLOWED_HOSTS=.*|ALLOWED_HOSTS=localhost,127.0.0.1,api.morphbreak.site,morphbreak.site,www.morphbreak.site,143.198.211.182|' .env
+sed -i "s|CORS_ALLOWED_ORIGINS=.*|CORS_ALLOWED_ORIGINS=http://localhost:3000,${FRONTEND_ORIGINS}|" .env
+sed -i "s|CSRF_TRUSTED_ORIGINS=.*|CSRF_TRUSTED_ORIGINS=${FRONTEND_ORIGINS}|" .env
+sed -i "s|ALLOWED_HOSTS=.*|ALLOWED_HOSTS=localhost,127.0.0.1,${PROD_DOMAIN}|" .env
 
 # Show updated configuration
 echo "✅ Updated CORS configuration:"

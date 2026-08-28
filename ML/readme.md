@@ -1,329 +1,101 @@
-Yes, I understand **exactly** what you want 👍
-Below is a **clear, implementation-oriented guide** you can share with your professor **and** directly follow to integrate the ML model into a **running web application scanner**.
+# ML: false-positive reduction
 
-This is written like **engineering + research documentation**, not tutorial fluff.
+A side project exploring whether a lightweight classifier can flag likely false-positive
+findings in the scanner's output, so results can eventually be shown pre-filtered by confidence
+rather than as one flat list. This is a research/experimentation track, not yet wired into the
+live scanning pipeline — see [Status](#status) below.
 
----
+## Contents
 
-# **Guide: Integrating ML-Based False Positive Reduction into a Running Web App Scanner**
+| File | Purpose |
+|---|---|
+| `FP_random_forest.ipynb` | Trains a `RandomForestClassifier` on labeled scan findings and saves `fp_confidence_random_forest.pkl`. |
+| `apply_fp_model_demo.ipynb` | Loads the trained model and applies it to a single scan's findings, showing before/after filtering. |
+| `fp_confidence_random_forest.pkl` | The trained model artifact. |
+| `sample_dataset.csv` | A small synthetic dataset (fabricated project/URL data) with the same schema as the real training data, so the training notebook runs end-to-end out of the box. |
+| `sample_scan_vulnerabilities.json` | A small synthetic single-scan result, so the demo notebook runs end-to-end out of the box. |
 
-## **Purpose of This Guide**
+The real dataset used to train the shipped model (~119K rows, collected from scans run under
+explicit authorization from the target owners) is **not included** in this repo — those
+authorizations covered the scan itself, not public redistribution of the findings. The
+synthetic files above exist purely so the notebooks are reproducible without that data; see
+[Reproducing with real data](#reproducing-with-real-data) for how to regenerate a real dataset
+of your own.
 
-This guide explains how to integrate a **machine learning–based false positive reduction module** into an existing web application scanner **after scan results are generated**.
+## Methodology
 
-The ML model does **not interfere with scanning**.
-It operates as a **post-processing intelligence layer** that:
+Each vulnerability finding is reduced to a handful of low-dimensional features rather than raw
+text, to avoid overfitting on scanner-specific wording:
 
-* Cleans scan results
-* Extracts behavioral features
-* Applies a trained ML model
-* Produces a **reduced, cleaner vulnerability report**
+| Feature | Meaning |
+|---|---|
+| `has_evidence` | Whether the finding included a concrete evidence string (vs. a bare header/config observation). |
+| `is_header_issue` | Whether the finding name matches a curated list of header/config-only findings (often false positives when unaccompanied by evidence). |
+| `is_injection` | Whether the finding name matches a curated list of injection/exploit-class findings (SQLi, XSS, etc.) — these are rarely false positives. |
 
----
-
-## **High-Level Concept**
+A `RandomForestClassifier` is trained on these features against a weak-supervision label
+(`likely_fp`), then outputs a `fp_confidence` probability per finding rather than a hard
+delete/keep decision — findings are never discarded outright, only ranked by how likely they
+are to be noise.
 
 ```
 Raw Scan Results
       ↓
 Normalization & Cleaning
       ↓
-Feature Extraction
+Feature Extraction (has_evidence, is_header_issue, is_injection)
       ↓
-ML Inference (FP Confidence)
+ML Inference (fp_confidence, 0-1)
       ↓
-Threshold-Based Filtering
+Threshold-Based Filtering (default 0.7)
       ↓
-Final Clean Results (Reduced FP)
+Final Results (ranked/filtered, nothing deleted)
 ```
 
----
+## Status
 
-## **1. Where ML Fits in the Running Application**
+This is a standalone experiment: the notebooks demonstrate training and applying the model
+against exported scan data, but the backend does not currently call this model automatically
+when a scan completes.
 
-### Correct Placement (IMPORTANT)
+### How it would integrate into the live backend
 
-✅ ML is applied **after**:
-
-* Scanning is complete
-* Results are normalized
-* Vulnerabilities are stored in the database
-
-❌ ML is **NOT**:
-
-* Part of crawling
-* Part of detection
-* Part of exploitation
-
-### Recommended Integration Point
-
-In Django:
+The intended integration point is a post-processing step after results are normalized and
+saved, not part of crawling/detection itself:
 
 ```
 UnifiedScanningEngine
     → normalize_results()
     → deduplicate_results()
-    → apply_ml_fp_reduction()   ← ADD HERE
+    → apply_ml_fp_reduction()   ← integration point
     → save_final_results()
 ```
 
----
-
-## **2. Input to the ML Module**
-
-Each vulnerability record must contain **at minimum**:
-
-| Field     | Required |
-| --------- | -------- |
-| name      | ✅        |
-| severity  | ✅        |
-| url       | ✅        |
-| evidence  | ✅        |
-| parameter | Optional |
-| cwe_id    | Optional |
-
-These fields already exist in your scanner output.
-
----
-
-## **3. Step-by-Step Implementation Guide**
-
----
-
-## **Step 1: Fetch Raw Scan Results**
-
-After scan completion:
-
-```python
-vulns = Vulnerability.objects.filter(scan_id=scan_id)
-df = pd.DataFrame(list(vulns.values()))
-```
-
-This creates a **DataFrame representation** of scan results.
-
----
-
-## **Step 2: Cleaning & Normalization**
-
-Standardize missing values:
-
-```python
-df = df.fillna("Not Applicable")
-```
-
-Normalize text fields:
-
-```python
-df["name_norm"] = df["name"].str.lower().str.strip()
-```
-
-This ensures consistent feature extraction.
-
----
-
-## **Step 3: Feature Extraction (CRITICAL)**
-
-### 3.1 Evidence Presence
-
-```python
-df["has_evidence"] = df["evidence"].apply(
-    lambda x: 0 if x in ["", "Not Applicable", None] else 1
-)
-```
-
----
-
-### 3.2 Header Vulnerability Indicator
-
-```python
-df["is_header_issue"] = df["name_norm"].isin(header_vulns).astype(int)
-```
-
-`header_vulns` is a predefined curated list.
-
----
-
-### 3.3 Injection Vulnerability Indicator
-
-```python
-df["is_injection"] = df["name_norm"].isin(injection_vulns).astype(int)
-```
-
----
-
-### 3.4 Deployment Context
-
-```python
-df["is_real_world"] = 1   # since this is a production scan
-```
-
-(For test labs, set to `0`)
-
----
-
-## **4. ML Inference**
-
-### 4.1 Load the Trained Model
-
-```python
-import joblib
-model = joblib.load("fp_random_forest.pkl")
-```
-
----
-
-### 4.2 Prepare Feature Matrix
-
-```python
-features = ["has_evidence", "is_header_issue", "is_injection"]
-X = df[features]
-```
-
----
-
-### 4.3 Predict FP Confidence
-
-```python
-df["fp_confidence"] = model.predict_proba(X)[:, 1]
-```
-
-This outputs a **probability**, not a hard label.
-
----
-
-## **5. Threshold-Based Filtering**
-
-### Why Thresholding?
-
-* Prevents unsafe automation
-* Allows risk tuning
-* Avoids hard deletion
-
-### Apply Threshold
-
-```python
-THRESHOLD = 0.7
-df["fp_filtered"] = (df["fp_confidence"] >= THRESHOLD).astype(int)
-```
-
-Meaning:
-
-* `1` → likely false positive
-* `0` → retain
-
----
-
-## **6. Generate Clean Results After ML**
-
-### 6.1 Final Reduced Dataset
-
-```python
-clean_df = df[df["fp_filtered"] == 0]
-```
-
----
-
-### 6.2 Save Reduced Results
-
-```python
-clean_df.to_json(
-    f"scan_{scan_id}_clean_results.json",
-    orient="records",
-    indent=2
-)
-```
-
----
-
-## **7. Persist Results Back to Database**
-
-```python
-for _, row in df.iterrows():
-    Vulnerability.objects.filter(id=row["id"]).update(
-        fp_confidence=row["fp_confidence"],
-        fp_filtered=row["fp_filtered"]
-    )
-```
-
-This ensures:
-
-* Auditability
-* Traceability
-* UI visualization
-
----
-
-## **8. Frontend Integration**
-
-### Recommended UI Behavior
-
-* Default view: **filtered results**
-* Toggle switch: *“Show filtered (likely FP)”*
-* Badge: FP Confidence %
-
-Example:
-
-```
-[✓] Show Likely False Positives
-FP Confidence: 0.83
-```
-
----
-
-## **9. Safety Guarantees (Very Important)**
-
-✔ No vulnerability is deleted
-✔ Analysts can override filtering
-✔ ML assists, does not decide
-✔ Full transparency preserved
-
-This is **publishable-safe** and **industry-aligned**.
-
----
-
-## **10. Why This Design Works**
-
-| Design Choice            | Reason                   |
-| ------------------------ | ------------------------ |
-| Post-scan ML             | Zero impact on detection |
-| Confidence scores        | Avoids hard mistakes     |
-| Weak supervision         | No labels required       |
-| Low-dimensional features | Prevents overfitting     |
-| Thresholding             | Risk control             |
-
----
-
-## **11. Limitations (Be Honest in Research)**
-
-* Model depends on scanner behavior
-* Header rules may vary by scanner
-* Requires retraining if scanner changes
-
-These are acceptable and expected.
-
----
-
-## **12. Summary**
-
-This guide demonstrates how to integrate a machine learning–based false positive reduction module into a live web application scanner. By operating after result generation, the ML model improves usability without compromising detection integrity or security guarantees.
-
----
-
-## ✅ This guide is ready for:
-
-* Professor review
-* Research paper appendix
-* Implementation handoff
-* Viva explanation
-
----
-
-If you want next, I can:
-
-* Convert this into **pseudo-code diagram**
-* Create **sequence diagram**
-* Write **deployment checklist**
-* Provide **error-handling strategies**
-* Add **retraining pipeline**
-
-Just tell me 👍
+Each vulnerability record needs at minimum `name`, `severity`, `url`, `evidence` (optional:
+`parameter`, `cwe_id`) — these fields already exist in the scanner's output, so no schema
+changes would be required. The classifier would be loaded once (`joblib.load(...)`), features
+extracted per finding, and `fp_confidence`/`fp_filtered` persisted back onto each
+`Vulnerability` row for auditability. The UI would default to showing filtered results with a
+toggle to reveal everything, plus a confidence badge - so an analyst can always override the
+model's judgment.
+
+## Reproducing with real data
+
+To retrain against real scan data instead of the synthetic sample:
+
+1. Run scans through the backend against targets you're authorized to test (see
+   [`backend/docs/SCANNING_SITES_LIST.md`](../backend/docs/SCANNING_SITES_LIST.md) for safe
+   public targets).
+2. Export the findings via the scanning app's results API/export into a CSV with columns
+   `name,severity,project_name,url,parameter,evidence,cwe_id,has_evidence`.
+3. Point `FP_random_forest.ipynb`'s load cell at your exported CSV instead of
+   `sample_dataset.csv` and re-run.
+
+## Limitations
+
+- The model's usefulness depends on the scanner's own finding names/wording; retraining is
+  needed if the scanner's vulnerability naming changes.
+- The `is_header_issue`/`is_injection` feature lists are hand-curated and scanner-specific, not
+  learned.
+- `likely_fp` is weak-supervision, not human-labeled ground truth - useful as a heuristic prior,
+  not a validated benchmark.

@@ -8,7 +8,15 @@ backend/database/scripts/
 backend/db.sqlite3
 backend/backups/
 ml_training.sqlite3
-backend/dataset
+
+# Dataset - block real scan data, allow public reference lists only
+backend/dataset/*
+!backend/dataset/safe_sites.csv
+!backend/dataset/vulnerable_sites.csv
+!backend/dataset/README.md
+
+# ML - keep notebooks/model, block the raw scraped dataset
+ML/dataset_without_duplicates.csv
 
 
 # Python
@@ -39,7 +47,6 @@ ENV/
 .virtualenv/
 pip-log.txt
 pip-delete-this-directory.txt
-scripts/
 
 # Django
 *.log
@@ -111,5 +118,23 @@ htmlcov/
 # Media files (user uploaded content)
 media/
 static/
+
+# Secrets & keys
+*.pem
+*.key
+*.cert
+*.crt
+*.csr
+*.p12
+*.pfx
+*.ppk
+id_rsa
+id_dsa
+*.gpg
+*.asc
+*.secret
+
+# Deployment env files
+deployment/.env.prod
 
 

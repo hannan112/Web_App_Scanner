@@ -18,7 +18,7 @@ This guide will help you set up and run the project on your local machine.
 
 ```bash
 git clone <repository-url>
-cd prototype-2
+cd Web_App_Scanner
 ```
 
 #### 2. Backend Setup (Django)
@@ -101,7 +101,7 @@ python manage.py migrate
 ### 📦 Project Structure
 
 ```
-prototype-2/
+Web_App_Scanner/
 ├── backend/              # Django backend application
 │   ├── authentication/   # User authentication
 │   ├── projects/        # Project management
@@ -130,10 +130,10 @@ cd backend
 python manage.py test
 ```
 
-Run tests for the frontend:
+The frontend doesn't have automated tests set up yet (good first-contribution opportunity). You can at least lint it:
 ```bash
 cd frontend
-npm test
+npm run lint
 ```
 
 ### 🐛 Troubleshooting
@@ -193,7 +193,7 @@ npm test
 ### 👥 Contributors
 
 List of contributors:
-- [Hannan Ali - hannanhaxor686@gmail.com]
+- [Hannan Ali](https://github.com/hannan112)
 
 ### 📄 License
 

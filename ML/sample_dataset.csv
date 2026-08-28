@@ -1,0 +1,401 @@
+name,severity,project_name,url,parameter,evidence,cwe_id,has_evidence
+Cookie Without HttpOnly Flag,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page0,id,payload triggered anomalous response (sample #0),200,1
+Directory Browsing Enabled,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page1,id,payload triggered anomalous response (sample #1),200,1
+Missing X-XSS-Protection Header,Low,demo-corp-site,https://demo-corp-site.example-test.local/page2,,,693,0
+Format String Error,Low,example-saas-app,https://example-saas-app.example-test.local/page3,,payload triggered anomalous response (sample #3),79,1
+Missing Anti-clickjacking Header,Low,dvwa,https://dvwa.example-test.local/page4,q,,693,0
+Missing X-XSS-Protection Header,High,bwapp,https://bwapp.example-test.local/page5,search,,693,0
+SQL Injection - MySQL,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page6,,payload triggered anomalous response (sample #6),89,1
+Missing HSTS Header,High,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page7,,payload triggered anomalous response (sample #7),693,1
+Cookie Without Secure Flag,Low,bwapp,https://bwapp.example-test.local/page8,id,,200,0
+Directory Browsing Enabled,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page9,,,200,0
+Missing HSTS Header,Low,example-saas-app,https://example-saas-app.example-test.local/page10,search,,693,0
+SQL Injection - MySQL,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page11,,payload triggered anomalous response (sample #11),89,1
+Cookie Without HttpOnly Flag,Low,acme-webapp,https://acme-webapp.example-test.local/page12,name,payload triggered anomalous response (sample #12),200,1
+SQL Injection - MySQL (time based),Low,acme-webapp,https://acme-webapp.example-test.local/page13,,payload triggered anomalous response (sample #13),89,1
+Insecure HTTP Method Enabled,Informational,dvwa,https://dvwa.example-test.local/page14,name,,200,0
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page15,,,693,0
+Cross Site Scripting (DOM Based),Medium,acme-webapp,https://acme-webapp.example-test.local/page16,,payload triggered anomalous response (sample #16),79,1
+Format String Error,Informational,example-saas-app,https://example-saas-app.example-test.local/page17,name,payload triggered anomalous response (sample #17),79,1
+SQL Injection - MySQL,Low,acme-webapp,https://acme-webapp.example-test.local/page18,id,payload triggered anomalous response (sample #18),89,1
+Insecure HTTP Method Enabled,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page19,,payload triggered anomalous response (sample #19),200,1
+Cross Site Scripting (Reflected),Medium,example-saas-app,https://example-saas-app.example-test.local/page0,name,payload triggered anomalous response (sample #20),79,1
+XSLT Injection,Low,demo-corp-site,https://demo-corp-site.example-test.local/page1,id,payload triggered anomalous response (sample #21),79,1
+Directory Browsing Enabled,Low,bwapp,https://bwapp.example-test.local/page2,search,,200,0
+Cross Site Scripting (Reflected),Informational,demo-corp-site,https://demo-corp-site.example-test.local/page3,,payload triggered anomalous response (sample #23),79,1
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",Low,dvwa,https://dvwa.example-test.local/page4,,payload triggered anomalous response (sample #24),693,1
+Permissive CORS Policy,Medium,dvwa,https://dvwa.example-test.local/page5,,,693,0
+Insecure HTTP Method Enabled,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page6,id,,200,0
+SQL Injection - MySQL,Medium,bwapp,https://bwapp.example-test.local/page7,q,payload triggered anomalous response (sample #27),89,1
+Session ID in URL Rewrite,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page8,,payload triggered anomalous response (sample #28),79,1
+Strict-Transport-Security Header Not Set,High,dvwa,https://dvwa.example-test.local/page9,,,693,0
+Missing X-Frame-Options Header,Informational,example-saas-app,https://example-saas-app.example-test.local/page10,,,693,0
+Information Disclosure - Debug Error Messages,Medium,bwapp,https://bwapp.example-test.local/page11,search,,200,0
+Cross Site Scripting (DOM Based),High,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page12,q,payload triggered anomalous response (sample #32),79,1
+Strict-Transport-Security Header Not Set,Low,acme-webapp,https://acme-webapp.example-test.local/page13,,payload triggered anomalous response (sample #33),693,1
+Cookie Without HttpOnly Flag,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page14,id,,200,0
+XSLT Injection,Medium,example-saas-app,https://example-saas-app.example-test.local/page15,q,payload triggered anomalous response (sample #35),79,1
+Information Disclosure - Debug Error Messages,Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page16,name,,200,0
+Missing X-XSS-Protection Header,Medium,example-saas-app,https://example-saas-app.example-test.local/page17,,,693,0
+Information Disclosure - Debug Error Messages,High,demo-corp-site,https://demo-corp-site.example-test.local/page18,,,200,0
+Missing HSTS Header,Low,acme-webapp,https://acme-webapp.example-test.local/page19,q,payload triggered anomalous response (sample #39),693,1
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",Low,demo-corp-site,https://demo-corp-site.example-test.local/page0,,,693,0
+Missing HSTS Header,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page1,,,693,0
+Missing Referrer-Policy Header,Low,example-saas-app,https://example-saas-app.example-test.local/page2,id,,693,0
+Missing X-Frame-Options Header,Medium,example-saas-app,https://example-saas-app.example-test.local/page3,name,,693,0
+Permissive CORS Policy,Medium,example-saas-app,https://example-saas-app.example-test.local/page4,id,payload triggered anomalous response (sample #44),693,1
+Session ID in URL Rewrite,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page5,id,payload triggered anomalous response (sample #45),79,1
+Content Security Policy (CSP) Header Not Set,High,acme-webapp,https://acme-webapp.example-test.local/page6,,,693,0
+Missing X-Frame-Options Header,Low,demo-corp-site,https://demo-corp-site.example-test.local/page7,id,payload triggered anomalous response (sample #47),693,1
+Session ID in URL Rewrite,Low,demo-corp-site,https://demo-corp-site.example-test.local/page8,name,payload triggered anomalous response (sample #48),79,1
+Directory Browsing Enabled,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page9,,payload triggered anomalous response (sample #49),200,1
+SQL Injection,High,example-saas-app,https://example-saas-app.example-test.local/page10,,payload triggered anomalous response (sample #50),89,1
+Permissive CORS Policy,High,demo-corp-site,https://demo-corp-site.example-test.local/page11,,,693,0
+Missing HSTS Header,Low,acme-webapp,https://acme-webapp.example-test.local/page12,search,payload triggered anomalous response (sample #52),693,1
+Strict-Transport-Security Header Not Set,Medium,bwapp,https://bwapp.example-test.local/page13,,,693,0
+Outdated JavaScript Library Detected,Low,demo-corp-site,https://demo-corp-site.example-test.local/page14,,,200,0
+Missing HSTS Header,Medium,dvwa,https://dvwa.example-test.local/page15,,,693,0
+Format String Error,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page16,,payload triggered anomalous response (sample #56),79,1
+SQL Injection,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page17,search,payload triggered anomalous response (sample #57),89,1
+Content Security Policy (CSP) Header Not Set,Informational,example-saas-app,https://example-saas-app.example-test.local/page18,search,payload triggered anomalous response (sample #58),693,1
+Insecure HTTP Method Enabled,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page19,,,200,0
+Cross Site Scripting (Reflected),High,demo-corp-site,https://demo-corp-site.example-test.local/page0,,payload triggered anomalous response (sample #60),79,1
+X-Content-Type-Options Header Missing,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page1,q,payload triggered anomalous response (sample #61),693,1
+Content Security Policy (CSP) Header Not Set,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page2,q,payload triggered anomalous response (sample #62),693,1
+Directory Browsing Enabled,Informational,example-saas-app,https://example-saas-app.example-test.local/page3,q,,200,0
+Missing X-Frame-Options Header,Informational,dvwa,https://dvwa.example-test.local/page4,,payload triggered anomalous response (sample #64),693,1
+SQL Injection,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page5,,payload triggered anomalous response (sample #65),89,1
+Information Disclosure - Debug Error Messages,Medium,bwapp,https://bwapp.example-test.local/page6,name,,200,0
+Content Security Policy (CSP) Header Not Set,Medium,dvwa,https://dvwa.example-test.local/page7,search,,693,0
+Permissive CORS Policy,Medium,dvwa,https://dvwa.example-test.local/page8,name,,693,0
+SQL Injection,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page9,search,payload triggered anomalous response (sample #69),89,1
+SQL Injection - MySQL,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page10,,payload triggered anomalous response (sample #70),89,1
+Format String Error,High,demo-corp-site,https://demo-corp-site.example-test.local/page11,search,payload triggered anomalous response (sample #71),79,1
+Missing X-Frame-Options Header,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page12,search,,693,0
+Information Disclosure - Debug Error Messages,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page13,name,,200,0
+Session ID in URL Rewrite,Low,demo-corp-site,https://demo-corp-site.example-test.local/page14,id,payload triggered anomalous response (sample #74),79,1
+XSLT Injection,Medium,dvwa,https://dvwa.example-test.local/page15,id,payload triggered anomalous response (sample #75),79,1
+Directory Browsing Enabled,Low,bwapp,https://bwapp.example-test.local/page16,search,payload triggered anomalous response (sample #76),200,1
+XSLT Injection,Medium,example-saas-app,https://example-saas-app.example-test.local/page17,,payload triggered anomalous response (sample #77),79,1
+Permissive CORS Policy,Low,acme-webapp,https://acme-webapp.example-test.local/page18,,,693,0
+Information Disclosure - Debug Error Messages,Low,bwapp,https://bwapp.example-test.local/page19,search,,200,0
+Permissive CORS Policy,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page0,q,,693,0
+XSLT Injection,Low,acme-webapp,https://acme-webapp.example-test.local/page1,search,payload triggered anomalous response (sample #81),79,1
+XSLT Injection,High,bwapp,https://bwapp.example-test.local/page2,,payload triggered anomalous response (sample #82),79,1
+Missing Referrer-Policy Header,Informational,dvwa,https://dvwa.example-test.local/page3,id,payload triggered anomalous response (sample #83),693,1
+Missing Referrer-Policy Header,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page4,,,693,0
+Missing X-XSS-Protection Header,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page5,,payload triggered anomalous response (sample #85),693,1
+Outdated JavaScript Library Detected,Low,demo-corp-site,https://demo-corp-site.example-test.local/page6,,payload triggered anomalous response (sample #86),200,1
+Outdated JavaScript Library Detected,Low,demo-corp-site,https://demo-corp-site.example-test.local/page7,id,,200,0
+Cross Site Scripting (DOM Based),Low,example-saas-app,https://example-saas-app.example-test.local/page8,,payload triggered anomalous response (sample #88),79,1
+Cookie Without Secure Flag,Low,example-saas-app,https://example-saas-app.example-test.local/page9,,,200,0
+Cross Site Scripting (Reflected),Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page10,,payload triggered anomalous response (sample #90),79,1
+Cross Site Scripting (Persistent),Informational,acme-webapp,https://acme-webapp.example-test.local/page11,search,payload triggered anomalous response (sample #91),79,1
+Insecure HTTP Method Enabled,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page12,id,payload triggered anomalous response (sample #92),200,1
+Outdated JavaScript Library Detected,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page13,id,,200,0
+X-Content-Type-Options Header Missing,Low,example-saas-app,https://example-saas-app.example-test.local/page14,id,,693,0
+Cross Site Scripting (Reflected),Low,example-saas-app,https://example-saas-app.example-test.local/page15,q,payload triggered anomalous response (sample #95),79,1
+Cross Site Scripting (Reflected),Informational,demo-corp-site,https://demo-corp-site.example-test.local/page16,,payload triggered anomalous response (sample #96),79,1
+Session ID in URL Rewrite,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page17,search,payload triggered anomalous response (sample #97),79,1
+Insecure HTTP Method Enabled,Low,example-saas-app,https://example-saas-app.example-test.local/page18,,,200,0
+Cookie Without Secure Flag,Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page19,id,,200,0
+SQL Injection - MySQL (time based),Low,example-saas-app,https://example-saas-app.example-test.local/page0,,payload triggered anomalous response (sample #100),89,1
+Cross Site Scripting (DOM Based),Informational,owasp juice shop,https://owasp-juice-shop.example-test.local/page1,,payload triggered anomalous response (sample #101),79,1
+Session ID in URL Rewrite,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page2,q,payload triggered anomalous response (sample #102),79,1
+Cross Site Scripting (DOM Based),Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page3,q,payload triggered anomalous response (sample #103),79,1
+Cross Site Scripting (DOM Based),Medium,example-saas-app,https://example-saas-app.example-test.local/page4,,payload triggered anomalous response (sample #104),79,1
+Cross Site Scripting (Reflected),Low,demo-corp-site,https://demo-corp-site.example-test.local/page5,,payload triggered anomalous response (sample #105),79,1
+Format String Error,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page6,id,payload triggered anomalous response (sample #106),79,1
+Insecure HTTP Method Enabled,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page7,q,,200,0
+Missing Anti-clickjacking Header,High,dvwa,https://dvwa.example-test.local/page8,,,693,0
+Missing X-XSS-Protection Header,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page9,,payload triggered anomalous response (sample #109),693,1
+Information Disclosure - Debug Error Messages,Informational,dvwa,https://dvwa.example-test.local/page10,id,payload triggered anomalous response (sample #110),200,1
+Permissive CORS Policy,Medium,example-saas-app,https://example-saas-app.example-test.local/page11,id,,693,0
+Session ID in URL Rewrite,High,dvwa,https://dvwa.example-test.local/page12,,payload triggered anomalous response (sample #112),79,1
+Permissive CORS Policy,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page13,id,,693,0
+SQL Injection - MySQL,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page14,,payload triggered anomalous response (sample #114),89,1
+SQL Injection,Informational,example-saas-app,https://example-saas-app.example-test.local/page15,id,payload triggered anomalous response (sample #115),89,1
+Cross Site Scripting (Reflected),Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page16,name,payload triggered anomalous response (sample #116),79,1
+Missing X-Frame-Options Header,Low,bwapp,https://bwapp.example-test.local/page17,,,693,0
+Cross Site Scripting (Persistent),Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page18,q,payload triggered anomalous response (sample #118),79,1
+Strict-Transport-Security Header Not Set,Medium,example-saas-app,https://example-saas-app.example-test.local/page19,,,693,0
+Directory Browsing Enabled,Low,demo-corp-site,https://demo-corp-site.example-test.local/page0,name,,200,0
+Missing X-XSS-Protection Header,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page1,,,693,0
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",High,acme-webapp,https://acme-webapp.example-test.local/page2,name,,693,0
+Format String Error,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page3,name,payload triggered anomalous response (sample #123),79,1
+Cross Site Scripting (DOM Based),Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page4,name,payload triggered anomalous response (sample #124),79,1
+Outdated JavaScript Library Detected,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page5,name,,200,0
+Information Disclosure - Debug Error Messages,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page6,search,payload triggered anomalous response (sample #126),200,1
+Missing Referrer-Policy Header,Medium,acme-webapp,https://acme-webapp.example-test.local/page7,,,693,0
+Outdated JavaScript Library Detected,Low,acme-webapp,https://acme-webapp.example-test.local/page8,,payload triggered anomalous response (sample #128),200,1
+Insecure HTTP Method Enabled,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page9,search,,200,0
+Missing Referrer-Policy Header,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page10,search,,693,0
+Content Security Policy (CSP) Header Not Set,Low,bwapp,https://bwapp.example-test.local/page11,,payload triggered anomalous response (sample #131),693,1
+Insecure HTTP Method Enabled,Low,demo-corp-site,https://demo-corp-site.example-test.local/page12,name,,200,0
+SQL Injection,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page13,,payload triggered anomalous response (sample #133),89,1
+Cross Site Scripting (Persistent),Low,demo-corp-site,https://demo-corp-site.example-test.local/page14,id,payload triggered anomalous response (sample #134),79,1
+Session ID in URL Rewrite,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page15,,payload triggered anomalous response (sample #135),79,1
+Session ID in URL Rewrite,Informational,owasp juice shop,https://owasp-juice-shop.example-test.local/page16,id,payload triggered anomalous response (sample #136),79,1
+Format String Error,Low,dvwa,https://dvwa.example-test.local/page17,name,payload triggered anomalous response (sample #137),79,1
+Cross Site Scripting (DOM Based),Informational,bwapp,https://bwapp.example-test.local/page18,name,payload triggered anomalous response (sample #138),79,1
+Permissive CORS Policy,Low,demo-corp-site,https://demo-corp-site.example-test.local/page19,,,693,0
+Missing X-XSS-Protection Header,Low,bwapp,https://bwapp.example-test.local/page0,q,payload triggered anomalous response (sample #140),693,1
+Format String Error,Low,demo-corp-site,https://demo-corp-site.example-test.local/page1,,payload triggered anomalous response (sample #141),79,1
+Cookie Without Secure Flag,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page2,,,200,0
+Cross Site Scripting (DOM Based),Informational,acme-webapp,https://acme-webapp.example-test.local/page3,,payload triggered anomalous response (sample #143),79,1
+Cookie Without HttpOnly Flag,Low,acme-webapp,https://acme-webapp.example-test.local/page4,,,200,0
+X-Content-Type-Options Header Missing,High,dvwa,https://dvwa.example-test.local/page5,search,payload triggered anomalous response (sample #145),693,1
+Cookie Without Secure Flag,Low,bwapp,https://bwapp.example-test.local/page6,search,,200,0
+Outdated JavaScript Library Detected,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page7,id,,200,0
+Cookie Without Secure Flag,Low,example-saas-app,https://example-saas-app.example-test.local/page8,id,,200,0
+Strict-Transport-Security Header Not Set,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page9,search,,693,0
+Session ID in URL Rewrite,Low,acme-webapp,https://acme-webapp.example-test.local/page10,,payload triggered anomalous response (sample #150),79,1
+Cross Site Scripting (DOM Based),Informational,dvwa,https://dvwa.example-test.local/page11,name,payload triggered anomalous response (sample #151),79,1
+Cookie Without HttpOnly Flag,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page12,search,,200,0
+Directory Browsing Enabled,Medium,acme-webapp,https://acme-webapp.example-test.local/page13,search,,200,0
+Directory Browsing Enabled,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page14,search,,200,0
+Missing HSTS Header,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page15,id,,693,0
+Directory Browsing Enabled,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page16,search,payload triggered anomalous response (sample #156),200,1
+Cookie Without Secure Flag,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page17,,payload triggered anomalous response (sample #157),200,1
+X-Content-Type-Options Header Missing,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page18,id,,693,0
+Cookie Without HttpOnly Flag,Low,dvwa,https://dvwa.example-test.local/page19,id,,200,0
+Format String Error,Informational,acme-webapp,https://acme-webapp.example-test.local/page0,id,payload triggered anomalous response (sample #160),79,1
+Cross Site Scripting (DOM Based),Low,dvwa,https://dvwa.example-test.local/page1,,payload triggered anomalous response (sample #161),79,1
+Permissive CORS Policy,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page2,name,,693,0
+Missing Referrer-Policy Header,Medium,acme-webapp,https://acme-webapp.example-test.local/page3,,,693,0
+Information Disclosure - Debug Error Messages,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page4,name,,200,0
+SQL Injection,Informational,bwapp,https://bwapp.example-test.local/page5,search,payload triggered anomalous response (sample #165),89,1
+Information Disclosure - Debug Error Messages,Informational,example-saas-app,https://example-saas-app.example-test.local/page6,name,,200,0
+SQL Injection - MySQL,Low,example-saas-app,https://example-saas-app.example-test.local/page7,search,payload triggered anomalous response (sample #167),89,1
+Missing X-XSS-Protection Header,Low,dvwa,https://dvwa.example-test.local/page8,,payload triggered anomalous response (sample #168),693,1
+Cross Site Scripting (Reflected),Low,example-saas-app,https://example-saas-app.example-test.local/page9,,payload triggered anomalous response (sample #169),79,1
+SQL Injection - MySQL (time based),Low,acme-webapp,https://acme-webapp.example-test.local/page10,id,payload triggered anomalous response (sample #170),89,1
+X-Content-Type-Options Header Missing,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page11,name,,693,0
+Missing HSTS Header,High,example-saas-app,https://example-saas-app.example-test.local/page12,,payload triggered anomalous response (sample #172),693,1
+Cookie Without HttpOnly Flag,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page13,search,,200,0
+Cookie Without Secure Flag,Informational,owasp juice shop,https://owasp-juice-shop.example-test.local/page14,,,200,0
+Format String Error,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page15,,payload triggered anomalous response (sample #175),79,1
+Cross Site Scripting (Persistent),Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page16,q,payload triggered anomalous response (sample #176),79,1
+Cookie Without HttpOnly Flag,Informational,bwapp,https://bwapp.example-test.local/page17,name,,200,0
+Missing HSTS Header,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page18,id,,693,0
+Content Security Policy (CSP) Header Not Set,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page19,q,,693,0
+Missing Referrer-Policy Header,Medium,acme-webapp,https://acme-webapp.example-test.local/page0,,payload triggered anomalous response (sample #180),693,1
+SQL Injection - MySQL (time based),Low,dvwa,https://dvwa.example-test.local/page1,,payload triggered anomalous response (sample #181),89,1
+X-Content-Type-Options Header Missing,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page2,,,693,0
+Cross Site Scripting (DOM Based),High,dvwa,https://dvwa.example-test.local/page3,search,payload triggered anomalous response (sample #183),79,1
+Session ID in URL Rewrite,Low,example-saas-app,https://example-saas-app.example-test.local/page4,name,payload triggered anomalous response (sample #184),79,1
+Permissive CORS Policy,Informational,example-saas-app,https://example-saas-app.example-test.local/page5,name,payload triggered anomalous response (sample #185),693,1
+Session ID in URL Rewrite,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page6,search,payload triggered anomalous response (sample #186),79,1
+Missing Anti-clickjacking Header,Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page7,,,693,0
+Insecure HTTP Method Enabled,Informational,owasp juice shop,https://owasp-juice-shop.example-test.local/page8,,,200,0
+Permissive CORS Policy,Low,dvwa,https://dvwa.example-test.local/page9,,,693,0
+Missing X-XSS-Protection Header,Low,dvwa,https://dvwa.example-test.local/page10,,,693,0
+Content Security Policy (CSP) Header Not Set,High,example-saas-app,https://example-saas-app.example-test.local/page11,q,,693,0
+Strict-Transport-Security Header Not Set,Low,bwapp,https://bwapp.example-test.local/page12,q,payload triggered anomalous response (sample #192),693,1
+Format String Error,Low,bwapp,https://bwapp.example-test.local/page13,search,payload triggered anomalous response (sample #193),79,1
+Missing X-Frame-Options Header,Informational,example-saas-app,https://example-saas-app.example-test.local/page14,,payload triggered anomalous response (sample #194),693,1
+SQL Injection,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page15,q,payload triggered anomalous response (sample #195),89,1
+Insecure HTTP Method Enabled,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page16,search,,200,0
+Strict-Transport-Security Header Not Set,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page17,search,payload triggered anomalous response (sample #197),693,1
+Directory Browsing Enabled,Low,bwapp,https://bwapp.example-test.local/page18,search,,200,0
+Missing HSTS Header,High,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page19,,,693,0
+SQL Injection,Low,dvwa,https://dvwa.example-test.local/page0,,payload triggered anomalous response (sample #200),89,1
+Cross Site Scripting (DOM Based),Low,bwapp,https://bwapp.example-test.local/page1,id,payload triggered anomalous response (sample #201),79,1
+X-Content-Type-Options Header Missing,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page2,id,,693,0
+Missing Referrer-Policy Header,Medium,dvwa,https://dvwa.example-test.local/page3,,,693,0
+Outdated JavaScript Library Detected,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page4,name,,200,0
+Cookie Without HttpOnly Flag,Low,example-saas-app,https://example-saas-app.example-test.local/page5,search,,200,0
+Content Security Policy (CSP) Header Not Set,Low,dvwa,https://dvwa.example-test.local/page6,,,693,0
+SQL Injection - MySQL,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page7,,payload triggered anomalous response (sample #207),89,1
+SQL Injection - MySQL,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page8,id,payload triggered anomalous response (sample #208),89,1
+Cross Site Scripting (DOM Based),Low,acme-webapp,https://acme-webapp.example-test.local/page9,,payload triggered anomalous response (sample #209),79,1
+Missing Anti-clickjacking Header,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page10,,payload triggered anomalous response (sample #210),693,1
+Missing X-XSS-Protection Header,Low,acme-webapp,https://acme-webapp.example-test.local/page11,q,,693,0
+SQL Injection,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page12,q,payload triggered anomalous response (sample #212),89,1
+X-Content-Type-Options Header Missing,High,acme-webapp,https://acme-webapp.example-test.local/page13,q,,693,0
+Missing Anti-clickjacking Header,Low,acme-webapp,https://acme-webapp.example-test.local/page14,search,payload triggered anomalous response (sample #214),693,1
+Content Security Policy (CSP) Header Not Set,Low,example-saas-app,https://example-saas-app.example-test.local/page15,name,,693,0
+Cross Site Scripting (DOM Based),Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page16,q,payload triggered anomalous response (sample #216),79,1
+Cookie Without Secure Flag,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page17,id,,200,0
+Cross Site Scripting (Persistent),Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page18,name,payload triggered anomalous response (sample #218),79,1
+Outdated JavaScript Library Detected,Informational,owasp juice shop,https://owasp-juice-shop.example-test.local/page19,q,,200,0
+Strict-Transport-Security Header Not Set,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page0,search,,693,0
+Cross Site Scripting (DOM Based),High,example-saas-app,https://example-saas-app.example-test.local/page1,,payload triggered anomalous response (sample #221),79,1
+Missing HSTS Header,Low,dvwa,https://dvwa.example-test.local/page2,name,,693,0
+SQL Injection,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page3,id,payload triggered anomalous response (sample #223),89,1
+SQL Injection,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page4,q,payload triggered anomalous response (sample #224),89,1
+Directory Browsing Enabled,High,owasp juice shop,https://owasp-juice-shop.example-test.local/page5,name,payload triggered anomalous response (sample #225),200,1
+Missing HSTS Header,Informational,bwapp,https://bwapp.example-test.local/page6,,,693,0
+Format String Error,Low,demo-corp-site,https://demo-corp-site.example-test.local/page7,,payload triggered anomalous response (sample #227),79,1
+Directory Browsing Enabled,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page8,search,,200,0
+Cookie Without Secure Flag,Low,demo-corp-site,https://demo-corp-site.example-test.local/page9,,payload triggered anomalous response (sample #229),200,1
+Cross Site Scripting (Persistent),Medium,demo-corp-site,https://demo-corp-site.example-test.local/page10,,payload triggered anomalous response (sample #230),79,1
+SQL Injection - MySQL,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page11,,payload triggered anomalous response (sample #231),89,1
+Cross Site Scripting (Reflected),Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page12,,payload triggered anomalous response (sample #232),79,1
+Outdated JavaScript Library Detected,Medium,acme-webapp,https://acme-webapp.example-test.local/page13,search,,200,0
+SQL Injection - MySQL,Low,acme-webapp,https://acme-webapp.example-test.local/page14,name,payload triggered anomalous response (sample #234),89,1
+Strict-Transport-Security Header Not Set,High,demo-corp-site,https://demo-corp-site.example-test.local/page15,name,,693,0
+Cross Site Scripting (Reflected),Medium,acme-webapp,https://acme-webapp.example-test.local/page16,,payload triggered anomalous response (sample #236),79,1
+SQL Injection,Informational,owasp juice shop,https://owasp-juice-shop.example-test.local/page17,q,payload triggered anomalous response (sample #237),89,1
+Missing X-Frame-Options Header,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page18,,payload triggered anomalous response (sample #238),693,1
+Cross Site Scripting (Reflected),Low,example-saas-app,https://example-saas-app.example-test.local/page19,q,payload triggered anomalous response (sample #239),79,1
+Insecure HTTP Method Enabled,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page0,,payload triggered anomalous response (sample #240),200,1
+Session ID in URL Rewrite,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page1,name,payload triggered anomalous response (sample #241),79,1
+Cookie Without Secure Flag,Medium,acme-webapp,https://acme-webapp.example-test.local/page2,q,payload triggered anomalous response (sample #242),200,1
+Insecure HTTP Method Enabled,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page3,name,,200,0
+Missing X-Frame-Options Header,Low,acme-webapp,https://acme-webapp.example-test.local/page4,,,693,0
+SQL Injection - MySQL,Low,demo-corp-site,https://demo-corp-site.example-test.local/page5,name,payload triggered anomalous response (sample #245),89,1
+Strict-Transport-Security Header Not Set,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page6,name,,693,0
+Permissive CORS Policy,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page7,,payload triggered anomalous response (sample #247),693,1
+Cross Site Scripting (DOM Based),High,bwapp,https://bwapp.example-test.local/page8,,payload triggered anomalous response (sample #248),79,1
+Missing HSTS Header,Low,example-saas-app,https://example-saas-app.example-test.local/page9,search,,693,0
+Information Disclosure - Debug Error Messages,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page10,,payload triggered anomalous response (sample #250),200,1
+Missing HSTS Header,Informational,acme-webapp,https://acme-webapp.example-test.local/page11,,,693,0
+Cookie Without HttpOnly Flag,High,dvwa,https://dvwa.example-test.local/page12,q,payload triggered anomalous response (sample #252),200,1
+Cookie Without Secure Flag,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page13,name,,200,0
+Cross Site Scripting (DOM Based),Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page14,,payload triggered anomalous response (sample #254),79,1
+Cookie Without HttpOnly Flag,Informational,bwapp,https://bwapp.example-test.local/page15,q,,200,0
+Cross Site Scripting (DOM Based),Low,example-saas-app,https://example-saas-app.example-test.local/page16,,payload triggered anomalous response (sample #256),79,1
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page17,name,,693,0
+Content Security Policy (CSP) Header Not Set,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page18,,,693,0
+Strict-Transport-Security Header Not Set,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page19,,,693,0
+Information Disclosure - Debug Error Messages,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page0,q,,200,0
+SQL Injection,Informational,dvwa,https://dvwa.example-test.local/page1,name,payload triggered anomalous response (sample #261),89,1
+Missing HSTS Header,Informational,bwapp,https://bwapp.example-test.local/page2,,payload triggered anomalous response (sample #262),693,1
+Missing X-Frame-Options Header,Informational,example-saas-app,https://example-saas-app.example-test.local/page3,,,693,0
+Missing X-Frame-Options Header,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page4,,,693,0
+Cookie Without Secure Flag,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page5,,payload triggered anomalous response (sample #265),200,1
+SQL Injection - MySQL (time based),Medium,acme-webapp,https://acme-webapp.example-test.local/page6,,payload triggered anomalous response (sample #266),89,1
+Directory Browsing Enabled,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page7,,,200,0
+SQL Injection - MySQL (time based),Medium,demo-corp-site,https://demo-corp-site.example-test.local/page8,name,payload triggered anomalous response (sample #268),89,1
+Cookie Without HttpOnly Flag,Low,dvwa,https://dvwa.example-test.local/page9,,,200,0
+Directory Browsing Enabled,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page10,search,,200,0
+Missing Anti-clickjacking Header,Informational,acme-webapp,https://acme-webapp.example-test.local/page11,,,693,0
+Cross Site Scripting (Persistent),Medium,acme-webapp,https://acme-webapp.example-test.local/page12,search,payload triggered anomalous response (sample #272),79,1
+Missing HSTS Header,Low,demo-corp-site,https://demo-corp-site.example-test.local/page13,,,693,0
+X-Content-Type-Options Header Missing,Medium,acme-webapp,https://acme-webapp.example-test.local/page14,,,693,0
+Cookie Without Secure Flag,Low,dvwa,https://dvwa.example-test.local/page15,search,payload triggered anomalous response (sample #275),200,1
+Directory Browsing Enabled,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page16,,,200,0
+Cross Site Scripting (DOM Based),Medium,acme-webapp,https://acme-webapp.example-test.local/page17,,payload triggered anomalous response (sample #277),79,1
+Cross Site Scripting (Persistent),Medium,dvwa,https://dvwa.example-test.local/page18,,payload triggered anomalous response (sample #278),79,1
+Cross Site Scripting (DOM Based),Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page19,,payload triggered anomalous response (sample #279),79,1
+XSLT Injection,Informational,acme-webapp,https://acme-webapp.example-test.local/page0,,payload triggered anomalous response (sample #280),79,1
+Cookie Without Secure Flag,High,sample-blog-platform,https://sample-blog-platform.example-test.local/page1,search,,200,0
+Format String Error,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page2,,payload triggered anomalous response (sample #282),79,1
+Missing X-Frame-Options Header,Informational,acme-webapp,https://acme-webapp.example-test.local/page3,q,payload triggered anomalous response (sample #283),693,1
+Cross Site Scripting (DOM Based),Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page4,name,payload triggered anomalous response (sample #284),79,1
+XSLT Injection,Informational,example-saas-app,https://example-saas-app.example-test.local/page5,search,payload triggered anomalous response (sample #285),79,1
+Missing Referrer-Policy Header,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page6,,,693,0
+X-Content-Type-Options Header Missing,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page7,,,693,0
+X-Content-Type-Options Header Missing,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page8,id,payload triggered anomalous response (sample #288),693,1
+Missing Anti-clickjacking Header,Low,acme-webapp,https://acme-webapp.example-test.local/page9,,,693,0
+Cross Site Scripting (Reflected),Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page10,id,payload triggered anomalous response (sample #290),79,1
+Content Security Policy (CSP) Header Not Set,High,example-saas-app,https://example-saas-app.example-test.local/page11,name,,693,0
+Cookie Without Secure Flag,Low,acme-webapp,https://acme-webapp.example-test.local/page12,id,payload triggered anomalous response (sample #292),200,1
+Cookie Without Secure Flag,Medium,example-saas-app,https://example-saas-app.example-test.local/page13,,,200,0
+SQL Injection - MySQL,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page14,name,payload triggered anomalous response (sample #294),89,1
+Content Security Policy (CSP) Header Not Set,Medium,bwapp,https://bwapp.example-test.local/page15,,payload triggered anomalous response (sample #295),693,1
+Strict-Transport-Security Header Not Set,Low,demo-corp-site,https://demo-corp-site.example-test.local/page16,search,,693,0
+X-Content-Type-Options Header Missing,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page17,,payload triggered anomalous response (sample #297),693,1
+Directory Browsing Enabled,Low,example-saas-app,https://example-saas-app.example-test.local/page18,id,,200,0
+Outdated JavaScript Library Detected,High,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page19,,payload triggered anomalous response (sample #299),200,1
+Missing X-XSS-Protection Header,Informational,bwapp,https://bwapp.example-test.local/page0,,,693,0
+Format String Error,Low,demo-corp-site,https://demo-corp-site.example-test.local/page1,q,payload triggered anomalous response (sample #301),79,1
+Permissive CORS Policy,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page2,id,,693,0
+SQL Injection - MySQL,Low,example-saas-app,https://example-saas-app.example-test.local/page3,name,payload triggered anomalous response (sample #303),89,1
+SQL Injection,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page4,search,payload triggered anomalous response (sample #304),89,1
+XSLT Injection,Low,demo-corp-site,https://demo-corp-site.example-test.local/page5,id,payload triggered anomalous response (sample #305),79,1
+Cross Site Scripting (Reflected),Low,dvwa,https://dvwa.example-test.local/page6,search,payload triggered anomalous response (sample #306),79,1
+Missing HSTS Header,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page7,name,,693,0
+Missing X-Frame-Options Header,Low,bwapp,https://bwapp.example-test.local/page8,search,,693,0
+Cookie Without Secure Flag,Low,bwapp,https://bwapp.example-test.local/page9,id,,200,0
+Strict-Transport-Security Header Not Set,Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page10,,,693,0
+Missing X-Frame-Options Header,Informational,dvwa,https://dvwa.example-test.local/page11,name,,693,0
+Content Security Policy (CSP) Header Not Set,Low,acme-webapp,https://acme-webapp.example-test.local/page12,name,,693,0
+Session ID in URL Rewrite,Low,acme-webapp,https://acme-webapp.example-test.local/page13,search,payload triggered anomalous response (sample #313),79,1
+SQL Injection - MySQL,Low,demo-corp-site,https://demo-corp-site.example-test.local/page14,,payload triggered anomalous response (sample #314),89,1
+SQL Injection - MySQL,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page15,id,payload triggered anomalous response (sample #315),89,1
+Missing Anti-clickjacking Header,Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page16,id,,693,0
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page17,,,693,0
+Cross Site Scripting (Persistent),Informational,acme-webapp,https://acme-webapp.example-test.local/page18,name,payload triggered anomalous response (sample #318),79,1
+Missing X-Frame-Options Header,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page19,,,693,0
+SQL Injection,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page0,search,payload triggered anomalous response (sample #320),89,1
+Permissive CORS Policy,Low,dvwa,https://dvwa.example-test.local/page1,id,,693,0
+Missing X-XSS-Protection Header,Low,dvwa,https://dvwa.example-test.local/page2,,payload triggered anomalous response (sample #322),693,1
+Session ID in URL Rewrite,Low,acme-webapp,https://acme-webapp.example-test.local/page3,id,payload triggered anomalous response (sample #323),79,1
+Strict-Transport-Security Header Not Set,Low,example-saas-app,https://example-saas-app.example-test.local/page4,,,693,0
+Session ID in URL Rewrite,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page5,name,payload triggered anomalous response (sample #325),79,1
+Cross Site Scripting (DOM Based),High,bwapp,https://bwapp.example-test.local/page6,,payload triggered anomalous response (sample #326),79,1
+Insecure HTTP Method Enabled,Low,acme-webapp,https://acme-webapp.example-test.local/page7,,payload triggered anomalous response (sample #327),200,1
+Content Security Policy (CSP) Header Not Set,Medium,dvwa,https://dvwa.example-test.local/page8,,payload triggered anomalous response (sample #328),693,1
+Missing Referrer-Policy Header,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page9,,payload triggered anomalous response (sample #329),693,1
+Format String Error,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page10,id,payload triggered anomalous response (sample #330),79,1
+XSLT Injection,Medium,dvwa,https://dvwa.example-test.local/page11,,payload triggered anomalous response (sample #331),79,1
+Information Disclosure - Debug Error Messages,Informational,bwapp,https://bwapp.example-test.local/page12,,,200,0
+Missing Anti-clickjacking Header,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page13,name,,693,0
+Cookie Without Secure Flag,Informational,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page14,,,200,0
+Permissive CORS Policy,Medium,example-saas-app,https://example-saas-app.example-test.local/page15,id,payload triggered anomalous response (sample #335),693,1
+Missing X-Frame-Options Header,Low,example-saas-app,https://example-saas-app.example-test.local/page16,q,,693,0
+SQL Injection,Low,bwapp,https://bwapp.example-test.local/page17,,payload triggered anomalous response (sample #337),89,1
+SQL Injection - MySQL,Low,dvwa,https://dvwa.example-test.local/page18,,payload triggered anomalous response (sample #338),89,1
+Format String Error,Low,acme-webapp,https://acme-webapp.example-test.local/page19,search,payload triggered anomalous response (sample #339),79,1
+Cross Site Scripting (DOM Based),High,demo-corp-site,https://demo-corp-site.example-test.local/page0,name,payload triggered anomalous response (sample #340),79,1
+Cookie Without Secure Flag,Informational,acme-webapp,https://acme-webapp.example-test.local/page1,,,200,0
+SQL Injection,Low,acme-webapp,https://acme-webapp.example-test.local/page2,,payload triggered anomalous response (sample #342),89,1
+Cross Site Scripting (DOM Based),Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page3,id,payload triggered anomalous response (sample #343),79,1
+SQL Injection - MySQL (time based),Medium,acme-webapp,https://acme-webapp.example-test.local/page4,search,payload triggered anomalous response (sample #344),89,1
+Content Security Policy (CSP) Header Not Set,Low,example-saas-app,https://example-saas-app.example-test.local/page5,,,693,0
+Cross Site Scripting (Persistent),Informational,demo-corp-site,https://demo-corp-site.example-test.local/page6,name,payload triggered anomalous response (sample #346),79,1
+X-Content-Type-Options Header Missing,Low,bwapp,https://bwapp.example-test.local/page7,name,,693,0
+Content Security Policy (CSP) Header Not Set,Medium,acme-webapp,https://acme-webapp.example-test.local/page8,name,payload triggered anomalous response (sample #348),693,1
+XSLT Injection,Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page9,,payload triggered anomalous response (sample #349),79,1
+Directory Browsing Enabled,Informational,dvwa,https://dvwa.example-test.local/page10,,,200,0
+SQL Injection,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page11,q,payload triggered anomalous response (sample #351),89,1
+Cookie Without Secure Flag,High,demo-corp-site,https://demo-corp-site.example-test.local/page12,search,payload triggered anomalous response (sample #352),200,1
+Cross Site Scripting (Persistent),Low,acme-webapp,https://acme-webapp.example-test.local/page13,,payload triggered anomalous response (sample #353),79,1
+X-Content-Type-Options Header Missing,Medium,sample-blog-platform,https://sample-blog-platform.example-test.local/page14,,,693,0
+Permissive CORS Policy,Low,example-saas-app,https://example-saas-app.example-test.local/page15,,payload triggered anomalous response (sample #355),693,1
+Missing Anti-clickjacking Header,Informational,demo-corp-site,https://demo-corp-site.example-test.local/page16,,,693,0
+Information Disclosure - Debug Error Messages,Low,owasp juice shop,https://owasp-juice-shop.example-test.local/page17,,payload triggered anomalous response (sample #357),200,1
+Insecure HTTP Method Enabled,Low,acme-webapp,https://acme-webapp.example-test.local/page18,q,,200,0
+XSLT Injection,High,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page19,,payload triggered anomalous response (sample #359),79,1
+Missing Referrer-Policy Header,Medium,demo-corp-site,https://demo-corp-site.example-test.local/page0,name,,693,0
+X-Content-Type-Options Header Missing,Low,acme-webapp,https://acme-webapp.example-test.local/page1,name,,693,0
+Information Disclosure - Debug Error Messages,Low,dvwa,https://dvwa.example-test.local/page2,,,200,0
+Cross Site Scripting (Persistent),Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page3,name,payload triggered anomalous response (sample #363),79,1
+Format String Error,Low,sample-blog-platform,https://sample-blog-platform.example-test.local/page4,,payload triggered anomalous response (sample #364),79,1
+Information Disclosure - Debug Error Messages,Low,bwapp,https://bwapp.example-test.local/page5,q,payload triggered anomalous response (sample #365),200,1
+"Server Leaks Version Information via ""Server"" HTTP Response Header Field",Informational,acme-webapp,https://acme-webapp.example-test.local/page6,,,693,0
+Permissive CORS Policy,Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page7,,,693,0
+Information Disclosure - Debug Error Messages,Low,demo-corp-site,https://demo-corp-site.example-test.local/page8,name,,200,0
+SQL Injection - MySQL,Medium,dvwa,https://dvwa.example-test.local/page9,search,payload triggered anomalous response (sample #369),89,1
+Outdated JavaScript Library Detected,Low,example-saas-app,https://example-saas-app.example-test.local/page10,q,,200,0
+Missing X-XSS-Protection Header,Informational,bwapp,https://bwapp.example-test.local/page11,q,,693,0
+Missing HSTS Header,Medium,dvwa,https://dvwa.example-test.local/page12,,,693,0
+Missing Referrer-Policy Header,High,owasp juice shop,https://owasp-juice-shop.example-test.local/page13,name,,693,0
+Missing HSTS Header,High,dvwa,https://dvwa.example-test.local/page14,q,,693,0
+Cross Site Scripting (Reflected),Low,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page15,q,payload triggered anomalous response (sample #375),79,1
+Insecure HTTP Method Enabled,Medium,bwapp,https://bwapp.example-test.local/page16,,payload triggered anomalous response (sample #376),200,1
+Strict-Transport-Security Header Not Set,Low,dvwa,https://dvwa.example-test.local/page17,id,,693,0
+Missing X-Frame-Options Header,Informational,acme-webapp,https://acme-webapp.example-test.local/page18,,payload triggered anomalous response (sample #378),693,1
+SQL Injection - MySQL (time based),Informational,dvwa,https://dvwa.example-test.local/page19,,payload triggered anomalous response (sample #379),89,1
+Permissive CORS Policy,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page0,search,,693,0
+Permissive CORS Policy,Informational,example-saas-app,https://example-saas-app.example-test.local/page1,,payload triggered anomalous response (sample #381),693,1
+Cross Site Scripting (DOM Based),Medium,demo-corp-site,https://demo-corp-site.example-test.local/page2,,payload triggered anomalous response (sample #382),79,1
+Cross Site Scripting (DOM Based),High,dvwa,https://dvwa.example-test.local/page3,search,payload triggered anomalous response (sample #383),79,1
+Permissive CORS Policy,Medium,acme-webapp,https://acme-webapp.example-test.local/page4,name,,693,0
+Cross Site Scripting (Reflected),Low,demo-corp-site,https://demo-corp-site.example-test.local/page5,id,payload triggered anomalous response (sample #385),79,1
+Missing X-Frame-Options Header,Medium,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page6,search,payload triggered anomalous response (sample #386),693,1
+SQL Injection - MySQL (time based),Informational,sample-blog-platform,https://sample-blog-platform.example-test.local/page7,search,payload triggered anomalous response (sample #387),89,1
+Session ID in URL Rewrite,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page8,search,payload triggered anomalous response (sample #388),79,1
+Outdated JavaScript Library Detected,Low,demo-corp-site,https://demo-corp-site.example-test.local/page9,,payload triggered anomalous response (sample #389),200,1
+XSLT Injection,Low,bwapp,https://bwapp.example-test.local/page10,,payload triggered anomalous response (sample #390),79,1
+Permissive CORS Policy,Medium,acme-webapp,https://acme-webapp.example-test.local/page11,q,payload triggered anomalous response (sample #391),693,1
+Cross Site Scripting (DOM Based),Low,bwapp,https://bwapp.example-test.local/page12,,payload triggered anomalous response (sample #392),79,1
+Cross Site Scripting (Persistent),Low,dvwa,https://dvwa.example-test.local/page13,,payload triggered anomalous response (sample #393),79,1
+Insecure HTTP Method Enabled,Low,demo-corp-site,https://demo-corp-site.example-test.local/page14,search,,200,0
+Strict-Transport-Security Header Not Set,High,owasp juice shop,https://owasp-juice-shop.example-test.local/page15,,,693,0
+Missing X-XSS-Protection Header,Medium,acme-webapp,https://acme-webapp.example-test.local/page16,name,,693,0
+Missing HSTS Header,High,vulnerable app demo,https://vulnerable-app-demo.example-test.local/page17,,,693,0
+Content Security Policy (CSP) Header Not Set,Low,example-saas-app,https://example-saas-app.example-test.local/page18,name,payload triggered anomalous response (sample #398),693,1
+Directory Browsing Enabled,Medium,owasp juice shop,https://owasp-juice-shop.example-test.local/page19,,,200,0

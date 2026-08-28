@@ -139,7 +139,12 @@ class EnhancedDiscoveryEngine:
         
         try:
             # Try different subfinder locations
-            subfinder_paths = ['/usr/local/bin/subfinder', '/home/hannan/subfinder', 'subfinder']
+            subfinder_paths = [p for p in [
+                os.environ.get('SUBFINDER_PATH'),
+                '/usr/local/bin/subfinder',
+                os.path.expanduser('~/.local/bin/subfinder'),
+                'subfinder',
+            ] if p]
             subfinder_cmd = None
             
             for path in subfinder_paths:

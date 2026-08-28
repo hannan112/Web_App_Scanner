@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Missing Anti-clickjacking Header",
+    "severity": "Low",
+    "url": "https://demo.example.com/",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "1021"
+  },
+  {
+    "name": "Strict-Transport-Security Header Not Set",
+    "severity": "Low",
+    "url": "https://demo.example.com/login",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "319"
+  },
+  {
+    "name": "X-Content-Type-Options Header Missing",
+    "severity": "Low",
+    "url": "https://demo.example.com/assets/app.js",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "693"
+  },
+  {
+    "name": "SQL Injection",
+    "severity": "High",
+    "url": "https://demo.example.com/search",
+    "parameter": "q",
+    "evidence": "' OR '1'='1' -- returned 200 with extra rows",
+    "cwe_id": "89"
+  },
+  {
+    "name": "Cross Site Scripting (Reflected)",
+    "severity": "High",
+    "url": "https://demo.example.com/profile",
+    "parameter": "name",
+    "evidence": "<script>alert(1)</script> reflected unescaped in response body",
+    "cwe_id": "79"
+  },
+  {
+    "name": "Permissive CORS Policy",
+    "severity": "Medium",
+    "url": "https://demo.example.com/api/user",
+    "parameter": "",
+    "evidence": "Access-Control-Allow-Origin: *",
+    "cwe_id": "942"
+  },
+  {
+    "name": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
+    "severity": "Informational",
+    "url": "https://demo.example.com/",
+    "parameter": "",
+    "evidence": "Server: nginx/1.24.0",
+    "cwe_id": "200"
+  },
+  {
+    "name": "SQL Injection - MySQL (Time Based)",
+    "severity": "High",
+    "url": "https://demo.example.com/products",
+    "parameter": "id",
+    "evidence": "response delayed ~5s with SLEEP(5) payload",
+    "cwe_id": "89"
+  },
+  {
+    "name": "Missing X-Frame-Options Header",
+    "severity": "Low",
+    "url": "https://demo.example.com/dashboard",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "1021"
+  },
+  {
+    "name": "Cross Site Scripting (DOM Based)",
+    "severity": "High",
+    "url": "https://demo.example.com/redirect",
+    "parameter": "url",
+    "evidence": "location.href assigned from unsanitized URL fragment",
+    "cwe_id": "79"
+  },
+  {
+    "name": "Content Security Policy (CSP) Header Not Set",
+    "severity": "Low",
+    "url": "https://demo.example.com/",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "693"
+  },
+  {
+    "name": "CSP: Wildcard Directive",
+    "severity": "Low",
+    "url": "https://demo.example.com/",
+    "parameter": "",
+    "evidence": "script-src *",
+    "cwe_id": "693"
+  },
+  {
+    "name": "Session ID in URL Rewrite",
+    "severity": "Medium",
+    "url": "https://demo.example.com/checkout;jsessionid=ABC123",
+    "parameter": "jsessionid",
+    "evidence": "session token present in URL path",
+    "cwe_id": "598"
+  },
+  {
+    "name": "Missing Referrer-Policy Header",
+    "severity": "Informational",
+    "url": "https://demo.example.com/blog",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "200"
+  },
+  {
+    "name": "Format String Error",
+    "severity": "Medium",
+    "url": "https://demo.example.com/export",
+    "parameter": "filename",
+    "evidence": "%s%s%s%s in filename param caused 500 response",
+    "cwe_id": "134"
+  },
+  {
+    "name": "X-ASPNET-Version Response Header",
+    "severity": "Informational",
+    "url": "https://demo.example.com/legacy",
+    "parameter": "",
+    "evidence": "X-AspNet-Version: 4.0.30319",
+    "cwe_id": "200"
+  },
+  {
+    "name": "Cross Site Scripting (Persistent)",
+    "severity": "High",
+    "url": "https://demo.example.com/comments",
+    "parameter": "body",
+    "evidence": "stored payload rendered unescaped on comment thread page",
+    "cwe_id": "79"
+  },
+  {
+    "name": "Multiple X-Frame-Options Header Entries",
+    "severity": "Low",
+    "url": "https://demo.example.com/embed",
+    "parameter": "",
+    "evidence": "X-Frame-Options: DENY, SAMEORIGIN",
+    "cwe_id": "1021"
+  },
+  {
+    "name": "SQL Injection - SQLite (Time Based)",
+    "severity": "High",
+    "url": "https://demo.example.com/api/orders",
+    "parameter": "order_id",
+    "evidence": "response delayed with randomblob-based sleep payload",
+    "cwe_id": "89"
+  },
+  {
+    "name": "Missing X-XSS-Protection Header",
+    "severity": "Informational",
+    "url": "https://demo.example.com/",
+    "parameter": "",
+    "evidence": "",
+    "cwe_id": "693"
+  }
+]

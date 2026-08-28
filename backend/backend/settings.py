@@ -35,9 +35,16 @@ if _USER_LOCAL_BIN and _USER_LOCAL_BIN not in os.environ.get("PATH", ""):
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY", "***REMOVED-SECRET***"
-)
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    from django.core.exceptions import ImproperlyConfigured
+
+    raise ImproperlyConfigured(
+        "SECRET_KEY environment variable is not set. Copy backend/.env.example to "
+        "backend/.env and set a value (e.g. via "
+        "`python -c \"from django.core.management.utils import get_random_secret_key; "
+        'print(get_random_secret_key())"`).'
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "True").lower() == "true"

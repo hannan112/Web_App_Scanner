@@ -56,16 +56,14 @@ for cat, count in sorted(categories.items(), key=lambda x: x[1], reverse=True):
     print(f"  {cat}: {count} ({percentage:.1f}%)")
 
 print("\n=== SITE TYPE DIVERSITY ===")
+# Update this with your own scanned targets - kept generic here since the
+# original author's targets were scanned under private authorization.
 sites = {
-    'example.com': 'Production (Real)',
-    'localhost:8005': 'Development (Local)',
+    'localhost:8000': 'Development (Local)',
     'juice-shop.herokuapp.com': 'Vulnerable App (Training)',
     'demo.testfire.net': 'Vulnerable App (Training)',
-    'localhost:5001': 'Development (Local)',
-    'example-training.test': 'Production (Real)',
-    'example-cloud.test': 'Production (Cloud)',
+    'testphp.vulnweb.com': 'Vulnerable App (Training)',
     'example.com': 'Demo',
-    'example-demo.test': 'Production (Real)'
 }
 
 site_types = defaultdict(int)
